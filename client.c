@@ -56,13 +56,13 @@ int main(int argc, char *argv[])
 
 	 if ((n = send(sockfd, buffer, strlen(buffer), 0)) < 0) { /* stuur bericht */
 		printf("Error writing to socket");
-		error(1);
+		exit(1);
 	 }
 
 	 memset(buffer, 0, sizeof(buffer)); /* maak buffer leeg */
 	 if ((n = read(sockfd, buffer, 255)) < 0) { /* lees sockfd en sla het op in buffer */
 		printf("Error reading from socket");
-		error(1);
+		exit(1);
 	 }
 
 	 printf("%s\n", buffer); /* print de inhoud van buffer */
