@@ -16,7 +16,7 @@
 int main(int argc, char *argv[])
 {
   if (argc != 2) {
-	 printf("usage: ./filename <hostname>");
+	 printf("Usage: ./filename <hostname>");
 	 exit(1);
   }
 
@@ -33,18 +33,19 @@ int main(int argc, char *argv[])
 
   if ((getaddrinfo(argv[1], NULL, &hints, &result)) < 0) { /* DNS lookup en slaat het resultaat op */
 	 printf("getaddrinfo error");
+	 exit(1);
   }
 
   server_addr = (struct sockaddr_in *) result->ai_addr; /* convert generic socket adres naar internet socket adres */
   server_addr->sin_port = htons(PORT); /* set de port */
 
   if ((sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0) { /* maak socket aan (domain, type, protocol) en kijk vervolgens of het gelukt is */
-	 printf("error opening socket");
+	 printf("Error opening socket");
 	 exit(1);
   }
 
   if (connect(sockfd, (struct sockaddr *) server_addr, sizeof(*server_addr)) < 0) { /* connect naar de server */
-	 printf("error connecting");
+	 printf("Error connecting");
 	 exit(1);
   }
 
@@ -54,12 +55,14 @@ int main(int argc, char *argv[])
 	 fgets(buffer, sizeof(buffer), stdin); /* stop input in buffer */
 
 	 if ((n = send(sockfd, buffer, strlen(buffer), 0)) < 0) { /* stuur bericht */
-		printf("error writing to socket");
+		printf("Error writing to socket");
+		error(1);
 	 }
 
 	 memset(buffer, 0, sizeof(buffer)); /* maak buffer leeg */
 	 if ((n = read(sockfd, buffer, 255)) < 0) { /* lees sockfd en sla het op in buffer */
-		printf("error reading from socket");
+		printf("Error reading from socket");
+		error(1);
 	 }
 
 	 printf("%s\n", buffer); /* print de inhoud van buffer */
