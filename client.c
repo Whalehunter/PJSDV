@@ -23,7 +23,7 @@ int main(int argc, char *argv[])
   int sockfd, n;  
   char buffer[256]; /* hier wordt de (read en write) data in opgeslagen */
 
-  struct addrinfo *result;	/* hierin wordt het resultaat van de hostname lookup gestopt */
+  struct addrinfo *result; /* hierin wordt het resultaat van de hostname lookup gestopt */
   struct addrinfo hints; /* relevante informatie m.b.t. de lookup */
 
   struct sockaddr_in *server_addr; /* informatie van de server wordt hierin opgeslagen */
@@ -51,13 +51,13 @@ int main(int argc, char *argv[])
   while(1) {
 	 printf("Enter message (g = draaiknop waarde, h = led aan, j = led uit): ");
 	 memset(buffer, 0, sizeof(buffer)); /* maak buffer leeg */
-	 fgets(buffer, sizeof(buffer), stdin);	/* stop input in buffer */
+	 fgets(buffer, sizeof(buffer), stdin); /* stop input in buffer */
 
 	 if ((n = send(sockfd, buffer, strlen(buffer), 0)) < 0) { /* stuur bericht */
 		printf("error writing to socket");
 	 }
 
-	 memset(buffer, 0, sizeof(buffer));	/* maak buffer leeg */
+	 memset(buffer, 0, sizeof(buffer)); /* maak buffer leeg */
 	 if ((n = read(sockfd, buffer, 255)) < 0) { /* lees sockfd en sla het op in buffer */
 		printf("error reading from socket");
 	 }
