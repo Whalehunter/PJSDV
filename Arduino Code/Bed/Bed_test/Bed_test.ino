@@ -7,7 +7,6 @@ void LedAanUit(int i);
 int leesDruksensor();
 int leesKnop();
 
-unsigned int outputs=0;
 void setup() {
   Serial.begin(115200);//Set serial Baud
   Wire.begin();
@@ -15,16 +14,13 @@ void setup() {
 
 void loop() {
   int drukknopwaarde = leesDruksensor();
-  Serial.print("Drukknop ");
+  Serial.print("Drukknop: ");
   Serial.println(drukknopwaarde);
   int knopwaarde = leesKnop();
   Serial.print("Knop ");
   Serial.println(knopwaarde);
   
-  LedAanUit (1);
-  delay (500);
-  LedAanUit (0);
-  delay(500);
+  LedAanUit (knopwaarde);
 }
 
 void LedAanUit(int i) {
@@ -68,34 +64,19 @@ int leesDruksensor(){
 }
 
 int leesKnop(){
-  //Config PCA9554
-  //Inside loop for debugging purpose (hot plugging wemos module into i/o board). 
-  //IO0-IO3 as input, IO4-IO7 as output.
   Wire.beginTransmission(0x38);
   Wire.write(byte(0x03));          
   Wire.write(byte(0x0F));         
   Wire.endTransmission();
   
-  //Set PCA9554 outputs (IO44-IO7)
   Wire.beginTransmission(0x38); 
-  Wire.write(byte(0x01));            
-  Wire.write(byte(outputs<<4));            
-  Wire.endTransmission(); 
-  Serial.print("Digital out: ");
-  Serial.println(outputs&0x0F);   
-  outputs++;
-  
-  //Read PCA9554 outputs (IO40-IO3)
-  Wire.beginTransmission(0x38); 
-  Wire.write(byte(0x00));      
-  Wire.endTransmission();
-  Wire.requestFrom(0x38, 1);   
-  unsigned int inputs = Wire.read();  
-  Serial.print("Digital in: ");
-  Serial.println(inputs&0x0F);  
-  if (inputs == 15){
+  Wire.write(byte(0x00));
+  Wire.endTransmission();  
+  Wire.requestFrom(0x38, 1);          
+  unsigned int knop = Wire.read();
+  if (knop&0x01 == 1){
     return 1;
-  }else if(inputs == 14){
+  } else{
     return 0;
   }
 }
