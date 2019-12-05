@@ -40,11 +40,11 @@ void loop(void) {
 
 void RGBstrip(){
   pixels.clear(); // Set all pixel colors to 'off'
-  pixels.show();
+  pixels.show();  // Send the updated pixel colors to the hardware
   delay(500);
-  for(int i=0; i<NUMPIXELS; i++) { // For each pixel...
-    pixels.setPixelColor(i, pixels.Color(0, 150, 0));
-    pixels.show();   // Send the updated pixel colors to the hardware.
+  for(int i=0; i<NUMPIXELS; i++) { //Elke pixel aanzetten
+    pixels.setPixelColor(i, pixels.Color(0, 150, 0)); // Set the pixel to green
+    pixels.show();   // Send the updated pixel colors to the hardware
   }
 }
 
