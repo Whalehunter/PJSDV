@@ -3,9 +3,9 @@
 #define I2C_SDL   D1
 #define I2C_SDA   D2
 
-void LedAanUit(int i);
-int leesDruksensor();
-int leesKnop();
+void LedAanUit(int i); //0: uit, 1: aan
+int leesDruksensor(); //0: niks, 1: ligt wat op de sensor
+int leesKnop(); //0: niet ingedrukt, 1: ingedrukt
 
 void setup() {
   Serial.begin(115200);//Set serial Baud
