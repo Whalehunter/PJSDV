@@ -7,6 +7,13 @@ void LedAanUit(int i); //0: uit, 1: aan
 int leesDruksensor(); //0: niks, 1: ligt wat op de sensor
 int leesKnop(); //0: niet ingedrukt, 1: ingedrukt
 
+
+int state = 0;      // the current state of the output pin
+int reading;           // the current reading from the input pin
+int previous = 0;    // the previous reading from the input pin
+
+
+
 void setup() {
   Serial.begin(115200);//Set serial Baud
   Wire.begin();
@@ -19,7 +26,6 @@ void loop() {
   int knopwaarde = leesKnop();
   Serial.print("Knop ");
   Serial.println(knopwaarde);
-  
   LedAanUit (knopwaarde);
 }
 
@@ -73,10 +79,17 @@ int leesKnop(){
   Wire.write(byte(0x00));
   Wire.endTransmission();  
   Wire.requestFrom(0x38, 1);          
-  unsigned int knop = Wire.read();
-  if (knop&0x01 == 1){
-    return 1;
-  } else{
-    return 0;
+  reading = Wire.read();
+  if ((reading&0x01 == 1) && previous == 0) {
+    if (state == 1){
+      state = 0;  
+      Serial.println("state to 0");
+    }
+    else {
+      state = 1;
+      Serial.println("state to 1");
+    }
   }
+  previous = reading&0x01;
+  return state;
 }
