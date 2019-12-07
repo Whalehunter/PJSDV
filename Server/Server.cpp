@@ -26,8 +26,6 @@ void Server::setupServer()
         cout << "Error listening" << endl;
     }
 
-    memset(buffer, 0, sizeof(buffer));
-
     /* het programma wacht bij accept(), daarom krijgt deze functie een aparte thread */
     thread threadManager(&Server::acceptConnection, this);
     threadManager.detach();
@@ -53,6 +51,9 @@ void Server::acceptConnection()
 
 void Server::threadHandler(int sock)
 {
+    char buffer[256];
+    memset(buffer, 0, sizeof(buffer));
+
     /* zolang de client connected is */
     while (recvMessage(buffer, sock)) {
         cout << buffer << endl;
@@ -70,12 +71,12 @@ void Server::threadHandler(int sock)
 
 void Server::sendMessage(char* buffer, int sock)
 {
-    if ((n = send(sock, buffer, strlen(buffer), 0)) < 0) {
+    if (send(sock, buffer, strlen(buffer), 0) < 0) {
         cout << "Error sending" << endl;
     }
 }
 
 bool Server::recvMessage(char* buffer, int sock)
 {
-    return ((n = recv(sock, buffer, 255, 0)) > 0);
+    return (recv(sock, buffer, 255, 0) > 0);
 }

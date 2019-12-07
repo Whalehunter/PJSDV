@@ -22,8 +22,6 @@ class Server
     private:
         int csock;
         int sockfd;
-        int n;
-        char buffer[256];
         struct sockaddr_in server_addr;
         unsigned int socksize;
 
