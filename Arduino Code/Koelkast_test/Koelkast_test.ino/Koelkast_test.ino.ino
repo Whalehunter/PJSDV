@@ -15,7 +15,7 @@ void loop(void) {
   digitalWrite(D4, HIGH);  //LED D4 ON.
   delay(500); 
 
-  analogWrite(D5, 120);  //
+  analogWrite(D5, 255);  //
   
   Wire.beginTransmission(0x38); 
   Wire.write(byte(0x00));      
