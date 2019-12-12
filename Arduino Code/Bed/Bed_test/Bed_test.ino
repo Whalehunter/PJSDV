@@ -1,7 +1,16 @@
 #include <Wire.h>
+#include <ESP8266WiFi.h>
 
 #define I2C_SDL   D1
 #define I2C_SDA   D2
+
+int port = 8883;
+//WiFiServer server(port);
+
+const char *ssid = "piiWAP";
+const char *password = "aanwezig";
+const char* host = "192.168.4.1";
+
 
 void LedAanUit(int i); //0: uit, 1: aan
 int leesDruksensor(); //0: niks, 1: ligt wat op de sensor
@@ -12,21 +21,68 @@ int state = 0;      // the current state of the output pin
 int reading;           // the current reading from the input pin
 int previous = 0;    // the previous reading from the input pin
 
-
-
 void setup() {
-  Serial.begin(115200);//Set serial Baud
+  Serial.begin(115200);
+  Serial.println();
+
+  Serial.printf("Connecting to %s ", ssid);
+  WiFi.begin(ssid, password);
+  while (WiFi.status() != WL_CONNECTED)
+  {
+    delay(500);
+    Serial.print(".");
+  }
+  Serial.println(" connected");
   Wire.begin();
 }
 
+String line;
+
 void loop() {
-  int drukknopwaarde = leesDruksensor();
-  Serial.print("Drukknop: ");
-  Serial.println(drukknopwaarde);
-  int knopwaarde = leesKnop();
-  Serial.print("Knop ");
-  Serial.println(knopwaarde);
-  LedAanUit (knopwaarde);
+  WiFiClient client;
+
+  Serial.printf("\n[Connecting to %s ... ", host);
+  if (client.connect(host, port))
+  {
+    Serial.println("connected]");
+    while (client.connected() || client.available())
+    {
+      int sensor = leesKnop();
+      Serial.print("Knop: ");
+      Serial.println(sensor);
+      if(sensor == 1){
+        client.println(String("a"));
+        delay(100);      
+        line = client.readStringUntil('\r');
+        Serial.println(line);
+        if (line == "b"){
+          Serial.println("kaas");
+          LedAanUit(1);
+        }
+      }
+      else if(sensor == 0){
+        LedAanUit(0);
+        Serial.println("nietkaas");
+      }
+      delay(100);
+    }
+    client.println("Connectie gestopt");
+    client.stop();
+    Serial.println("\n[Disconnected]");
+  }
+  else
+  {
+    Serial.println("connection failed!]");
+    client.stop();
+  }
+
+//  int drukknopwaarde = leesDruksensor();
+//  Serial.print("Drukknop: ");
+//  Serial.println(drukknopwaarde);
+//  int knopwaarde = leesKnop();
+//  Serial.print("Knop ");
+//  Serial.println(knopwaarde);
+//  LedAanUit (knopwaarde);
 }
 
 void LedAanUit(int i) {
