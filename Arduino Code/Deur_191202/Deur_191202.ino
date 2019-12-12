@@ -1,4 +1,8 @@
 #include <Wire.h>
+#include <Servo.h>
+
+Servo myservo;
+int i = 0;
 
 #define I2C_SDL    D1
 #define I2C_SDA    D2
@@ -10,24 +14,52 @@ void setup(void) {
   Wire.begin();  //Start wire.
   Serial.begin(115200);  //Set serial Baud.
 
+  myservo.attach(D5);
+
   int i = 0;  //Define i for for loops.
 }
 
 void loop(void) {
-  int i = 0;
   digitalWrite(D4, HIGH);  //LED D4 ON.
-  for(i; i<1024; i+=10){  //Go through 0 / 1024.
-    analogWrite(D5, i);  //Deur Output pin D5, <1-1024>.
-    Serial.println(i);  //Serial print value of i.
-    delay(100);  //Wait for 0.1s.
+  delay(500);
+
+  Wire.beginTransmission(0x38);
+  Wire.write(byte(0x03));           
+  Wire.write(byte(0x0F));            
+  Wire.endTransmission();
+
+  Wire.beginTransmission(0x38);
+  Wire.write(byte(0x01));           
+  Wire.write(byte(0x30));            
+  Wire.endTransmission();
+
+  Wire.beginTransmission(0x38); 
+  Wire.write(byte(0x00));      
+  Wire.endTransmission();
+  Wire.requestFrom(0x38, 1);  //request data from 0x38   
+  unsigned int inputs = Wire.read();//Write value on address of inputs.
+  Serial.print("Digital in: "); 
+  Serial.println(inputs&0x01);
+  Serial.print("Digital in: "); 
+  Serial.println(inputs&0x02);
+  
+  if ((inputs&0x01) == 1){
+    for(i; i<=180; i+=1){  //Go through 0 / 1024.
+      myservo.write(i);
+      delay(15);  //Wait for 0.1s.
+    }
   }
   
   digitalWrite(D4, LOW);  //LED D4 OFF.
-  for(i; i>0; i-=10){  //Go through 1024 / 0.
-    analogWrite(D5, i);  //Deur Output pin D5, <1-1024>.
-    Serial.println(i);  //Serial print value of i.
-    delay(100);  //Wait for 0.1s.
+
+  if ((inputs&0x02) == 2){
+    for(i; i>=0; i-=1){  //Go through 1024 / 0.
+      myservo.write(i);
+      delay(15);  //Wait for 0.1s.
+    }
   }
+  digitalWrite(D4, LOW);  //LED D4 ON.
+  delay(500);
   /*
   Wire.beginTransmission(0x38);  //I2C Address.
   Wire.write(byte(0x03));  //Set outputs.            
