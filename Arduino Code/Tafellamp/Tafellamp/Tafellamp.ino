@@ -20,6 +20,7 @@ void loop() {
   int sensor = leesPIR();
   Serial.print("PIR waarde: ");
   Serial.println(sensor);
+  RGBstrip();
 }
 
 int leesPIR(){
