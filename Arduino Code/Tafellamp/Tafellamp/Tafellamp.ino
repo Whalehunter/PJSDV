@@ -9,7 +9,7 @@
 Adafruit_NeoPixel pixels(NUMPIXELS, RGB, NEO_GRB + NEO_KHZ800);
 
 int leesPIR(); 
-void RGBstrip();
+void ledRGB();
 
 void setup() {
   Wire.begin();//Start wire
@@ -20,7 +20,7 @@ void loop() {
   int sensor = leesPIR();
   Serial.print("PIR waarde: ");
   Serial.println(sensor);
-  RGBstrip();
+  ledRGB();
 }
 
 int leesPIR(){
@@ -32,7 +32,7 @@ int leesPIR(){
   return reading;
 }
 
-void RGBstrip(){
+void ledRGB(){
   pixels.clear(); // Set all pixel colors to 'off'
   pixels.show();  // Send the updated pixel colors to the hardware
   delay(500);
