@@ -14,12 +14,13 @@ void ledRGB();
 void setup() {
   Wire.begin();//Start wire
   Serial.begin(115200);//Set serial Baud
+  pixels.begin();
 }
 
 void loop() {
   int sensor = leesPIR();
-  Serial.print("PIR waarde: ");
-  Serial.println(sensor);
+  Serial.print("Bewegingsensor: ");
+  Serial.println(sensor&0x01);
   ledRGB();
 }
 
@@ -35,9 +36,8 @@ int leesPIR(){
 void ledRGB(){
   pixels.clear(); // Set all pixel colors to 'off'
   pixels.show();  // Send the updated pixel colors to the hardware
-  delay(500);
-  for(int i=0; i<NUMPIXELS; i++) { //Elke pixel aanzetten
-    pixels.setPixelColor(i, pixels.Color(0, 150, 0)); // Set the pixel to green
-    pixels.show();   // Send the updated pixel colors to the hardware
-  }
+  delay(250);
+  pixels.setPixelColor(0, pixels.Color(255, 255, 255)); // Set the pixel to green
+  pixels.show();   // Send the updated pixel colors to the hardware
+  delay(250);
 }
