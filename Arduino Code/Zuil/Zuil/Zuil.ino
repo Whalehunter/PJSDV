@@ -21,8 +21,8 @@ void setup() {
 
 void loop() {
   int knopwaarde = leesKnop();
-  Serial.print("Knop: ");
-  Serial.println(knopwaarde);
+  //Serial.print("Knop: ");
+  //Serial.println(knopwaarde);
   BuzzerAanUit(knopwaarde);
   //brandalarm();
   LedAanUit(knopwaarde);
