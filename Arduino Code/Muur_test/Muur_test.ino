@@ -6,7 +6,8 @@
 #define RGB       D5
 #define NUMPIXELS 3
 
-void RGBstrip();
+void RGBstrip(int i); //0 is uit, 1 is aan, 2 is disco mode
+void RGBdisco();
 void AanUitLCD(int i);
 int leesinput(int i);
 Adafruit_NeoPixel pixels(NUMPIXELS, RGB, NEO_GRB + NEO_KHZ800);
@@ -22,7 +23,7 @@ void setup(void) {
 
 void loop(void) {
 
-  RGBstrip();
+  RGBstrip(2);
   AanUitLCD(1);//aan
   delay(DELAYVAL);
   AanUitLCD(0);//uit
@@ -32,19 +33,39 @@ void loop(void) {
 
   Serial.print("LDR waarde: ");
   Serial.println(ldr);  
-  delay(DELAYVAL); 
+  delay(DELAYVAL);
   Serial.print("Potmeter: ");
   Serial.println(pot);   
   delay(DELAYVAL);
 }
 
-void RGBstrip(){
-  pixels.clear(); // Set all pixel colors to 'off'
-  pixels.show();  // Send the updated pixel colors to the hardware
-  delay(500);
-  for(int i=0; i<NUMPIXELS; i++) { //Elke pixel aanzetten
-    pixels.setPixelColor(i, pixels.Color(0, 150, 0)); // Set the pixel to green
-    pixels.show();   // Send the updated pixel colors to the hardware
+void RGBstrip(int i){
+  if (i==0){
+    pixels.clear();
+    pixels.show();
+  }
+  else if (i==1){
+    for(int a=0; a<NUMPIXELS; a++) { //Elke pixel aanzetten
+      pixels.setPixelColor(i, pixels.Color(255,255,255));
+      pixels.show();   // Send the updated pixel colors to the hardware
+    }
+  }
+  else if (i==3){
+    for(int a=0; a<NUMPIXELS; a++) { //Elke pixel aanzetten
+      pixels.setPixelColor(i, pixels.Color(0,0,255));
+      pixels.show();   // Send the updated pixel colors to the hardware
+    }    
+    delay(500);
+    for(int a=0; a<NUMPIXELS; a++) { //Elke pixel aanzetten
+      pixels.setPixelColor(i, pixels.Color(0,255,0));
+      pixels.show();   // Send the updated pixel colors to the hardware
+    }    
+    delay(500);
+    for(int a=0; a<NUMPIXELS; a++) { //Elke pixel aanzetten
+      pixels.setPixelColor(i, pixels.Color(255,0,0)); 
+      pixels.show();   // Send the updated pixel colors to the hardware
+    }
+    delay(500);
   }
 }
 
