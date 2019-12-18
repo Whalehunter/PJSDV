@@ -1,0 +1,27 @@
+@startuml
+title Aanmaken nieuwe device
+
+actor Wemos << Device >>
+participant SocketServer << (C,#ADD1B2) >>
+participant Appartement << (C,#ADD1B2) >>
+participant Bed << (C,#ADD1B2) >>
+actor GUI
+
+== Socket verbindt ==
+
+group Handshake
+        SocketServer -> Wemos: ID?
+        SocketServer <- Wemos: Bed
+        SocketServer -> Wemos: OK
+end
+SocketServer -> Appartement: createDevice(sockId, "Bed")
+Appartement -> Bed **: new
+Appartement -> Appartement: store("Bed")
+
+== GUI bed lamp toggle ==
+[-> GUI: verbonden
+note right: Alle devices zijn verbonden, etc.
+
+
+
+@enduml

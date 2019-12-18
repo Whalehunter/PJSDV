@@ -1,0 +1,35 @@
+@startuml
+
+abstract class Device{
+        -int socketId
+        -bool writeLock
+        -bool readLock
+        +readSocket()
+}
+Note right: readSocket() heeft\neigen thread
+abstract class GUI
+
+class Appartement {
+        +void createDevice(int sockId, string name)
+}
+Note right: Singleton
+
+class SocketServer {
+        +void start()
+        +void accept()
+        -void handshake()
+}
+Note right: Accept loop heeft\neen eigen thread
+
+class MessageQueue
+
+SocketServer -- Appartement
+Appartement *-- Device
+Device <|-- GUI
+Device <|-- Venster
+GUI <|-- GUIMary
+GUI <|-- GUIBewaker
+
+
+@enduml
+/' create socket -> bind socket -> listen socket -> create connection (new thread) ->  '/
