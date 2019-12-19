@@ -14,13 +14,13 @@
 class SocketServer
 {
     public:
-        SocketServer(Appartement*);
+        SocketServer(const Appartement&);
         ~SocketServer();
         
         void startServer();
         void acceptConnection();
     private:
-        Appartement* appartement;
+        Appartement a;
 
         int csock;
         int sockfd;

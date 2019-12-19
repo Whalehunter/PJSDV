@@ -1,22 +1,17 @@
 #include "Device.hpp"
-#include "Devices/Bed.hpp"
-#include "Devices/Gui.hpp"
-#include "Devices/Stoel.hpp"
-#include <cstring>
-#include <iostream>
 
-using namespace std;
-
-Device::Device(int n, Appartement* a): sock(n), appartement(a)
-{}
+Device::Device(int n, Appartement* ap): sock(n), a(ap)
+{
+}
 
 Device::~Device()
-{}
+{
+}
 
 void Device::sendMsg(char* data)
 {
     if (send(sock, data, strlen(data), 0) < 0) {
-        cout << "Error sending" << endl;
+        std::cout << "Error sending" << std::endl;
     }
 }
 
@@ -32,5 +27,6 @@ int Device::getSock()
 
 void Device::setSock(int x)
 {
-    this->sock = x;
+    sock = x;
 }
+

@@ -1,14 +1,18 @@
 #ifndef DEVICE_HPP
 #define DEVICE_HPP
 
-#include "SocketServer.hpp"
-class Appartement;
+#include "Appartement.hpp"
+//#include "Devices/Gui.hpp"
+#include <cstring>
+#include <netdb.h>
+#include <iostream>
+#include <unistd.h>
 
 class Device
 {
     protected:
         int sock;
-        Appartement* appartement;
+        Appartement* a;
     public:
         Device(int, Appartement*);
         virtual ~Device();

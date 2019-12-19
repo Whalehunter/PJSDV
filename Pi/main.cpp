@@ -1,16 +1,16 @@
-#include "SocketServer.hpp"
 #include "Appartement.hpp"
-#include "Device.hpp"
+#include "SocketServer.hpp"
 
 using namespace std;
 
 int main()
 {
-    Appartement* appartement = new Appartement;
-    SocketServer server(appartement);
+    Appartement a;
+    SocketServer s(a);
 
     while(1)
     {
 
     }
 }
+

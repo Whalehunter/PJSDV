@@ -4,10 +4,14 @@ using namespace std;
 
 #define PORT 8883
 
-SocketServer::SocketServer(Appartement* a)
+SocketServer::SocketServer(const Appartement& appartement)
 {
-    appartement = a;
+    a = appartement;
     startServer();
+}
+
+SocketServer::~SocketServer()
+{
 }
 
 void SocketServer::startServer()
@@ -25,28 +29,27 @@ void SocketServer::startServer()
         cout << "Error binding socket" << endl;
     }
 
-    /* listen to socket */
+    /* listen */
     if (listen(sockfd, 5) < 0) {
         cout << "Error listening" << endl;
     }
 
-    /* start accepting connections in a separate thread */
-    thread acceptConnections(&SocketServer::acceptConnection, this);
-    acceptConnections.detach();
+    thread acceptCon(&SocketServer::acceptConnection, this);
+    acceptCon.detach();
 }
 
 void SocketServer::acceptConnection()
 {
-    while(1)
-    {
+    while(1) {
         if ((csock = accept(sockfd, (struct sockaddr*) &server_addr, &socksize)) != -1) {
-                /* get peer IP */
-                getpeername(csock, (struct sockaddr*) &server_addr, &socksize);
-                char clientip[20];
-                strcpy(clientip, inet_ntoa(server_addr.sin_addr));
+            getpeername(csock, (struct sockaddr*) &server_addr, &socksize);
+            char clientip[20];
+            strcpy(clientip, inet_ntoa(server_addr.sin_addr));
 
-                cout << "Accepting connection from: " << clientip << ", on socket: " << csock << endl;
-                thread handshake(&SocketServer::handshake, this, csock);
+            cout << "Accepting connection from " << clientip << " on socket " << csock << endl;
+
+            thread handshakeThread(&SocketServer::handshake, this, csock);
+            handshakeThread.detach();
         }
         else {
             cout << "Error accepting connection" << endl;
@@ -59,22 +62,22 @@ void SocketServer::handshake(int sock)
     char response[100];
     strcpy(response, "ID?");
 
-    /* send */
     if (send(sock, response, strlen(response), 0) < 0) {
         cout << "Error sending" << endl;
     }
 
     memset(response, 0, sizeof(response));
 
-    /* receive */
     if (recv(sock, response, 99, 0) < 0) {
-        cout << "Error receiving" << endl;
+        cout << "Error listening" << endl;
     }
 
     switch(response[0]) {
-        case 'x': appartement->createDevice("GUI"); break;
-        case 'y': appartement->createDevice("Bed"); break;
-        case 'z': appartement->createDevice("Stoel"); break;
-        default: close(sock); cout << "Socket number " << csock << " closed. (Unknown ID)" << endl; break;
+        case 'x':
+        case 'y':
+        case 'z': a.createDevice(sock, response[0]);
+                  strcpy(response, "OK");
+                  send(sock, response, strlen(response), 0); break;
+        default: cout << "Wrong ID on socket " << sock << endl; close(sock); break;
     }
 }
