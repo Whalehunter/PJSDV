@@ -1,6 +1,8 @@
 #ifndef SOCKETSERVER_HPP
 #define SOCKETSERVER_HPP
 
+#include "Appartement.hpp"
+
 #include <cstring>
 #include <netdb.h>
 #include <sys/socket.h>
@@ -15,8 +17,8 @@ class SocketServer
         SocketServer(Appartement*);
         ~SocketServer();
         
-        void start();
-        void accept();
+        void startServer();
+        void acceptConnection();
     private:
         Appartement* appartement;
 
@@ -24,6 +26,7 @@ class SocketServer
         int sockfd;
         struct sockaddr_in server_addr;
         void handshake(int);
+        unsigned int socksize;
 };
 
 #endif

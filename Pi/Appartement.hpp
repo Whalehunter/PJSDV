@@ -1,7 +1,9 @@
 #ifndef APPARTEMENT_HPP
 #define APPARTEMENT_HPP
 
+#include "Device.hpp"
 #include <string>
+class Device;
 
 class Appartement
 {
@@ -11,8 +13,8 @@ class Appartement
 
         Device* device;
 
-        void createDevice(int, string);
-}
+        void createDevice(int, std::string);
+};
 
 #endif
 

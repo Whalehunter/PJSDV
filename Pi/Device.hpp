@@ -1,7 +1,8 @@
 #ifndef DEVICE_HPP
 #define DEVICE_HPP
 
-#include "Appartement.hpp"
+#include "SocketServer.hpp"
+class Appartement;
 
 class Device
 {
@@ -19,7 +20,7 @@ class Device
         int getSock();
         void setSock(int);
 
-        void getStatus();
+        virtual void getStatus() = 0;
 };
 
 #endif
