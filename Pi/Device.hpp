@@ -22,31 +22,4 @@ class Device
         void getStatus();
 };
 
-class Gui: public Device
-{
-    public:
-        Gui(int, Appartement*);
-        ~Gui();
-
-        void operator()();
-};
-
-class Bed: public Device
-{
-    public:
-        Bed(int, Appartement*);
-        ~Bed();
-
-        void operator()();
-};
-
-class Stoel: public Device
-{
-    public:
-        Stoel(int, Appartement*);
-        ~Stoel();
-
-        void operator()();
-};
-
 #endif
