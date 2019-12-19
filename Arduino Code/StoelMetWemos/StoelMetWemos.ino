@@ -4,8 +4,14 @@
 #define I2C_SDL    D1
 #define I2C_SDA    D2
 
-void lampAanUit(int i);
 void trilSensorAanUit(int i);
+void lampAanUit(int i);
+int leesPbUit();
+int leesDsUit();
+
+String line = "";
+int pb = 0;
+int ds = 0;
 
 int hex = 0x00;
 int port = 8883;
@@ -49,9 +55,14 @@ void setup(void) {
   if (client.connect(host, port))
   {
     Serial.println("connected]");
-
-    Serial.println("[Sending a request]");
-    client.print(String("HALLO"));
+    line = client.readStringUntil('\r');
+    if (line == "ID?"){
+      client.print(String("ei"));
+    }
+    line = client.readStringUntil('\r');
+    if (line == "OK"){
+      client.print(String("ei"));
+    }
   }*/
 }
 
@@ -65,47 +76,21 @@ void loop(void) {
   
   lampAanUit(1);
   trilSensorAanUit(0);
-  
-  String line = "";
+  pb = leesPbUit();
+  ds = leesDsUit();
 
+  Serial.println(pb);
+  Serial.println(ds);
+  Serial.println();
   
   if (client.connect(host, port)){
     line = client.readStringUntil('\r');
-    if (line == "ID?"){
-      client.print(String("ei"));
-    }
-    line = client.readStringUntil('\r');
-    if (line == "OK"){  
+    while (line == "getStatus"){  
       while (client.connected() || client.available()){
-        Serial.println("Connected!");
-        Wire.beginTransmission(0x38); 
-        Wire.write(byte(0x00));      
-        Wire.endTransmission();
-        Wire.requestFrom(0x38, 1);  //request data from 0x38   
-        unsigned int inputs = Wire.read();//Write value on address of inputs.
-        Serial.print("Digital in: "); 
-        Serial.println(inputs&0x01);
-        
-        Wire.requestFrom(0x36, 4);  //request data from 0x36   
-        unsigned int anin0 = Wire.read()&0x03;  
-        anin0=anin0<<8;
-        anin0 = anin0|Wire.read();
-        Serial.println(anin0);
-  
-        if (anin0 >= 100){
-          client.print(String("STOEL: Druksensor") + anin0);
-        }
-        if ((inputs&0x01) == 1){
-          //client.print(String("STOEL: Knoppie") + (inputs&0x01));
-          client.print(String("a"));
-          String line = client.readStringUntil('\r');
-            if (line == "b"){
-              Serial.println("kaas");
-              line = "a";
-            }
-          Serial.println(line);
-        }
-        delay(1000);
+        pb = leesPbUit();
+        ds = leesDsUit();
+        client.print(String(pb));
+        client.print(String(ds));
       }
       client.stop();
     }
@@ -132,7 +117,6 @@ void trilSensorAanUit(int i){
     Wire.write(byte(hex &= !(0x20)));            
     Wire.endTransmission(); 
   }
-  //delay(1000);
 }
 
 void lampAanUit(int i){
@@ -153,13 +137,29 @@ void lampAanUit(int i){
     Wire.write(byte(hex &= !(0x10)));            
     Wire.endTransmission(); 
   }
-  //delay(1000);
 }
 
+int leesPbUit(){
+  Wire.beginTransmission(0x38); 
+  Wire.write(byte(0x00));      
+  Wire.endTransmission();
+  Wire.requestFrom(0x38, 1);  //request data from 0x38   
+  unsigned int inputs = Wire.read();//Write value on address of inputs.
+  return inputs&0x01;
+}
 
-
-
-
+int leesDsUit(){
+  Wire.requestFrom(0x36, 4);  //request data from 0x36   
+  unsigned int anin0 = Wire.read()&0x03;  
+  anin0=anin0<<8;
+  anin0 = anin0|Wire.read();
+  if (anin0 >= 100){
+    return 1;
+  }
+  else {
+    return 0;
+  }
+}
 
 
 
