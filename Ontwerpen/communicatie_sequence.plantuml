@@ -2,10 +2,11 @@
 title Aanmaken nieuwe device
 
 actor Wemos << Device >>
+actor GUI
 participant SocketServer << (C,#ADD1B2) >>
 participant Appartement << (C,#ADD1B2) >>
+participant Gui << (C,#ADD1B2) >>
 participant Bed << (C,#ADD1B2) >>
-actor GUI
 
 == Socket verbindt ==
 
@@ -21,6 +22,9 @@ Appartement -> Appartement: store("Bed")
 == GUI bed lamp toggle ==
 [-> GUI: verbonden
 note right: Alle devices zijn verbonden, etc.
+GUI -> SocketServer: handshake
+SocketServer -> Gui **: new
+
 
 
 

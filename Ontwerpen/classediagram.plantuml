@@ -2,8 +2,6 @@
 
 abstract class Device{
         -int socketId
-        -bool writeLock
-        -bool readLock
         +readSocket()
 }
 Note right: readSocket() heeft\neigen thread
