@@ -4,6 +4,11 @@
 #define I2C_SDL    D1
 #define I2C_SDA    D2
 
+int port = 8883;
+const char *ssid = "piiWAP";
+const char *password = "aanwezig";
+const char* host = "192.168.4.1";
+
 void trilSensorAanUit(int i);
 void lampAanUit(int i);
 int leesPbUit();
@@ -12,17 +17,10 @@ int leesDsUit();
 String line = "";
 int pb = 0;
 int ds = 0;
-
 int hex = 0x00;
-int port = 8883;
-WiFiServer server(port);
-const char* host = "192.168.4.1";
-
-const char *ssid = "piiWAP";
-const char *password = "aanwezig";
   
 void setup(void) {
-  pinMode(D4, OUTPUT);  //Set D5 as Output.
+  pinMode(D4, OUTPUT);  //Set D4 as Output.
   pinMode(D5, OUTPUT);  //Set D5 as Output.
   
   Wire.begin();  //Start wire.
@@ -160,9 +158,3 @@ int leesDsUit(){
     return 0;
   }
 }
-
-
-
-
-
-
