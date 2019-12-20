@@ -39,6 +39,7 @@ void setup() {
 }
 
 void loop() {
+  LedAanUit(0);
   WiFiClient client;
   Serial.printf("\n[Connecting to %s ... ", host);
   if (client.connect(host, port))
@@ -60,7 +61,7 @@ void loop() {
           client.print(String(knopwaarde));          
           line = '0';
         }
-        if (line == "lampAan"){
+        else if (line == "lampAan"){
           LedAanUit(1);
         }
         else if (line == "lampUit"){
@@ -119,8 +120,8 @@ int leesDruksensor(){
 
 int leesKnop(){
   Wire.beginTransmission(0x38);
-  Wire.write(byte(0x03));          
-  Wire.write(byte(0x0F));         
+  Wire.write(byte(0x03));
+  Wire.write(byte(0x0F));
   Wire.endTransmission();
   
   Wire.beginTransmission(0x38); 
@@ -128,16 +129,17 @@ int leesKnop(){
   Wire.endTransmission();  
   Wire.requestFrom(0x38, 1);          
   reading = Wire.read();
-  if ((reading&0x01 == 1) && previous == 0) {
-    if (state == 1){
-      state = 0;  
-      Serial.println("state to 0");
-    }
-    else {
-      state = 1;
-      Serial.println("state to 1");
-    }
-  }
-  previous = reading&0x01;
-  return state;
+  return (0x01&reading);
+//  if ((reading&0x01 == 1) && previous == 0) {
+//    if (state == 1){
+//      state = 0;  
+//      Serial.println("state to 0");
+//    }
+//    else {
+//      state = 1;
+//      Serial.println("state to 1");
+//    }
+//  }
+//  previous = reading&0x01;
+//  return state;
 }

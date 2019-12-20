@@ -19,26 +19,33 @@ Adafruit_NeoPixel pixels(NUMPIXELS, RGB, NEO_GRB + NEO_KHZ800);
 
 void setup(void) {
   pixels.begin(); // INITIALIZE NeoPixel strip object (REQUIRED)
+  pixels.show();
   Wire.begin();//Start wire
   Serial.begin(115200);//Set serial Baud
 }
 
 void loop(void) {
 
-  RGBstrip(1);
-  AanUitLCD(1);//aan
-  delay(DELAYVAL);
-  AanUitLCD(0);//uit
-  delay(DELAYVAL);
-  int ldr = leesinput(1); //1:uitlezen van LDR
+  RGBstrip(2);
   int pot = leesinput(2); //2:uitlezen van potmeter
-
-  Serial.print("LDR waarde: ");
-  Serial.println(ldr);  
-  delay(DELAYVAL);
-  Serial.print("Potmeter: ");
-  Serial.println(pot);   
-  delay(DELAYVAL);
+  int ldr = leesinput(1); //1:uitlezen van LDR
+  pixels.setBrightness(pot/4);
+//  delay(DELAYVAL);
+//  RGBstrip(0);
+//  delay(DELAYVAL);
+//  AanUitLCD(1);//aan
+//  delay(DELAYVAL);
+//  AanUitLCD(0);//uit
+//  delay(DELAYVAL);
+//  int ldr = leesinput(1); //1:uitlezen van LDR
+//  int pot = leesinput(2); //2:uitlezen van potmeter
+//
+//  Serial.print("LDR waarde: ");
+//  Serial.println(ldr);  
+//  delay(DELAYVAL);
+//  Serial.print("Potmeter: ");
+//  Serial.println(pot);   
+//  delay(DELAYVAL);
 }
 
 void RGBstrip(int i){
@@ -48,23 +55,23 @@ void RGBstrip(int i){
   }
   else if (i==1){
     for(int a=0; a<NUMPIXELS; a++) { //Elke pixel aanzetten
-      pixels.setPixelColor(i, pixels.Color(255,255,255));
+      pixels.setPixelColor(i,255,0,0);
       pixels.show();   // Send the updated pixel colors to the hardware
     }
   }
   else if (i==3){
     for(int a=0; a<NUMPIXELS; a++) { //Elke pixel aanzetten
-      pixels.setPixelColor(i, pixels.Color(0,0,255));
+      pixels.setPixelColor(i,0,0,255);
       pixels.show();   // Send the updated pixel colors to the hardware
     }    
     delay(500);
     for(int a=0; a<NUMPIXELS; a++) { //Elke pixel aanzetten
-      pixels.setPixelColor(i, pixels.Color(0,255,0));
+      pixels.setPixelColor(i,0,255,0);
       pixels.show();   // Send the updated pixel colors to the hardware
     }    
     delay(500);
     for(int a=0; a<NUMPIXELS; a++) { //Elke pixel aanzetten
-      pixels.setPixelColor(i, pixels.Color(255,0,0)); 
+      pixels.setPixelColor(i,255,0,0); 
       pixels.show();   // Send the updated pixel colors to the hardware
     }
     delay(500);
