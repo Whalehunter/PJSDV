@@ -2,7 +2,7 @@
 
 Stoel::Stoel(int n, Appartement* ap): Device(n, ap)
 {
-    std::cout << "Bed aangemaakt" << std::endl;
+    std::cout << "Stoel aangemaakt" << std::endl;
 }
 
 Stoel::~Stoel()
