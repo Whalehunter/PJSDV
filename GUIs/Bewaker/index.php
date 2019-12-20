@@ -8,27 +8,30 @@
     <script src="semantic/dist/semantic.min.js"></script>
     <script>
     $(document).ready(function(){
-        $('.bedsync').click(function() {
-            $.ajax('command.php', {
-                dataType: 'json',
-                data: {
-                    id:'x',
-                    msg:'d'
-                },
-                error: function(data) {
-                    $('.bed .lamp .checkbox').checkbox('uncheck');
-                }
-            }).done(function(data){
-                if (data.success) {
-                    let toggler = 'uncheck';
-                    if (data.lamp === '1')
-                        toggler = 'check'
+         $('.bed .lamp .checkbox').checkbox({
+             onChecked: function() {
+                 $.ajax('command.php', {
+                     dataType: 'json',
+                     data: {
+                         id:'x',
+                         msg:'d'
+                     },
+                     error: function(data) {
+                         $('.bed .lamp .checkbox').checkbox('uncheck');
+                     }
+                 }).done(function(data){
+                     if (data.success) {
+                         let toggler = 'uncheck';
+                         if (data.lamp === '1')
+                             toggler = 'check'
 
-                    $('.bed .lamp .checkbox').checkbox(toggler);
-                }
-            });
-        });
-
+                         setTimeout(function() {
+                             $('.bed .lamp .checkbox').checkbox(toggler);
+                         }, 100);
+                     }
+                 });
+             }
+         });
 
          // function request(name, value, button) {
          //     button.checkbox('set disabled');
@@ -253,7 +256,6 @@
           </div>
           <div class="content">
             <h2 class="header">Bed</h2>
-            <button class="icon bedsync button"><i class="sync alternate icon"></i></button>
             <div class="ui divider"></div>
             <div class="description">
               <div class="ui divided three column grid">
