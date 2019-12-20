@@ -9,7 +9,7 @@
     <script>
     $(document).ready(function(){
          $('.bed .lamp .checkbox').checkbox({
-             onChecked: function() {
+             onChange: function() {
                  $.ajax('command.php', {
                      dataType: 'json',
                      data: {
