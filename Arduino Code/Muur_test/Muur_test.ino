@@ -10,6 +10,8 @@ void RGBstrip(int i); //0 is uit, 1 is aan, 2 is disco mode
 void RGBdisco();
 void AanUitLCD(int i);
 int leesinput(int i);
+int hex = 0x00;
+
 Adafruit_NeoPixel pixels(NUMPIXELS, RGB, NEO_GRB + NEO_KHZ800);
 
 #define DELAYVAL 500 // Time (in milliseconds) to pause between pixels
@@ -23,7 +25,7 @@ void setup(void) {
 
 void loop(void) {
 
-  RGBstrip(2);
+  RGBstrip(1);
   AanUitLCD(1);//aan
   delay(DELAYVAL);
   AanUitLCD(0);//uit
@@ -76,16 +78,16 @@ void AanUitLCD(int i){
   Wire.endTransmission();
   
   if (i==1){
-  Wire.beginTransmission(0x38);
-  Wire.write(byte(0x01));          
-  Wire.write(byte(0x10));         
-  Wire.endTransmission();
+    Wire.beginTransmission(0x38);
+    Wire.write(byte(0x01));          
+    Wire.write(byte(hex |= 0x10));         
+    Wire.endTransmission();
   }
-  else if(i==0){
-  Wire.beginTransmission(0x38);
-  Wire.write(byte(0x01));          
-  Wire.write(byte(0x00));         
-  Wire.endTransmission();
+  else {
+    Wire.beginTransmission(0x38);
+    Wire.write(byte(0x01));          
+    Wire.write(byte(hex &= !(0x00)));         
+    Wire.endTransmission();
   }
 }
 
