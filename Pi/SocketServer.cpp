@@ -60,7 +60,7 @@ void SocketServer::acceptConnection()
 void SocketServer::handshake(int sock)
 {
     char response[100];
-    strcpy(response, "ID?");
+    strcpy(response, "ID?\r");
 
     if (send(sock, response, strlen(response), 0) < 0) {
         cout << "Error sending" << endl;
@@ -76,7 +76,7 @@ void SocketServer::handshake(int sock)
         case 'x':
         case 'y':
         case 'z': a.createDevice(sock, response[0]);
-                  strcpy(response, "OK");
+                  strcpy(response, "OK\r");
                   send(sock, response, strlen(response), 0); break;
         default: cout << "Wrong ID on socket " << sock << endl; close(sock); break;
     }

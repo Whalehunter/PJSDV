@@ -17,7 +17,7 @@ void Gui::operator()()
     memset(buffer, 0, sizeof(buffer));
 
     while(recvMsg(buffer)) {
-        std::cout << a->bed << std::endl;
+        std::cout << this << std::endl;
 
         if(buffer[0] == 'b' && a->bed != 0) {
             strcpy(buffer, "teringjong");
@@ -25,7 +25,14 @@ void Gui::operator()()
         }
 
         if(buffer[0] == 'd' && a->bed != 0) {
+      //      strcpy(buffer, "lampAan\r");
+      //      a->bed->sendMsg(buffer);
+
+      //      memset(buffer, 0, sizeof(buffer));
+
             int bedKnoppie = a->bed->getStatus();
+            sprintf(buffer, "%d", bedKnoppie);
+            sendMsg(buffer);
             std::cout << "knopwaarde van bed = " << bedKnoppie << std::endl;
         }
 

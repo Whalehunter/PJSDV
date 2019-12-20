@@ -13,7 +13,7 @@ void Bed::operator()()
 {
     char buffer[256];
 
-    strcpy(buffer, "getStatus");
+    strcpy(buffer, "getStatus\r");
 
     sendMsg(buffer);
 
@@ -23,9 +23,9 @@ void Bed::operator()()
         std::stringstream s(buffer);
         s >> knopValue;
 
-        std::cout << knopValue << std::endl;
+        std::cout << "Bed: " << knopValue << std::endl;
 
-        strcpy(buffer, "getStatus");
+        strcpy(buffer, "getStatus\r");
         sendMsg(buffer);
         memset(buffer, 0, sizeof(buffer));
     }
