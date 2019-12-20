@@ -1,6 +1,8 @@
 #ifndef STOEL_HPP
 #define STOEL_HPP
 
+#include "../Device.hpp"
+
 class Stoel: public Device
 {
     public:
@@ -8,6 +10,7 @@ class Stoel: public Device
         ~Stoel();
 
         void operator()();
+        int getStatus();
 };
 
 #endif

@@ -1,15 +1,15 @@
-#include "Bed.hpp"
+#include "Stoel.hpp"
 
-Bed::Bed(int n, Appartement* ap): Device(n, ap)
+Stoel::Stoel(int n, Appartement* ap): Device(n, ap)
 {
     std::cout << "Bed aangemaakt" << std::endl;
 }
 
-Bed::~Bed()
+Stoel::~Stoel()
 {
 }
 
-void Bed::operator()()
+void Stoel::operator()()
 {
     char buffer[256];
 
@@ -33,7 +33,7 @@ void Bed::operator()()
     std::cout << "Connection closed on socket " << sock << std::endl;
 }
 
-int Bed::getStatus()
+int Stoel::getStatus()
 {
     return knopValue;
 }

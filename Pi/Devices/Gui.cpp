@@ -1,4 +1,5 @@
 #include "Gui.hpp"
+#include <string>
 
 Gui::Gui(int n, Appartement* ap): Device(n, ap)
 {
@@ -12,15 +13,20 @@ Gui::~Gui()
 void Gui::operator()()
 {
     char buffer[256];
-    int timestamp = 0;
+    int bedKnoppie = 0;
     memset(buffer, 0, sizeof(buffer));
 
     while(recvMsg(buffer)) {
         std::cout << a->bed << std::endl;
-        timestamp++;
 
         if(buffer[0] == 'b' && a->bed != 0) {
+            strcpy(buffer, "teringjong");
             a->bed->sendMsg(buffer);
+        }
+
+        if(buffer[0] == 'd' && a->bed != 0) {
+            int bedKnoppie = a->bed->getStatus();
+            std::cout << "knopwaarde van bed = " << bedKnoppie << std::endl;
         }
 
         memset(buffer, 0, sizeof(buffer));
@@ -29,7 +35,7 @@ void Gui::operator()()
     std::cout << "Connection closed on socket " << sock << std::endl;
 }
 
-void Gui::getStatus()
+int Gui::getStatus()
 {
-    std::cout << "anders" << std::endl;
+    return knopValue; // placeholder, we gaan hoop ik JSON gebruiken
 }

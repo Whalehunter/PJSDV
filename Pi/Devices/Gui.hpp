@@ -10,7 +10,7 @@ class Gui: public Device
         ~Gui();
 
         void operator()();
-        void getStatus();
+        int getStatus();
 };
 
 #endif

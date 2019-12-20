@@ -2,6 +2,7 @@
 #include "Device.hpp"
 #include "Devices/Gui.hpp"
 #include "Devices/Bed.hpp"
+#include "Devices/Stoel.hpp"
 
 Appartement::Appartement(): gui (0), bed(0), stoel(0)
 {
@@ -10,6 +11,8 @@ Appartement::Appartement(): gui (0), bed(0), stoel(0)
 Appartement::~Appartement()
 {
     delete gui;
+    delete stoel;
+    delete bed;
 }
 
 void Appartement::createDevice(int sock, char id)
@@ -29,5 +32,10 @@ void Appartement::createDevice(int sock, char id)
         bedThread.detach();
     }
     else if (id == 'z') {
+        if(stoel != 0) delete stoel;
+
+        stoel = new Stoel(sock, this);
+        std::thread stoelThread(&Device::operator(), stoel);
+        stoelThread.detach();
     }
 }

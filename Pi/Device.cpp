@@ -1,6 +1,6 @@
 #include "Device.hpp"
 
-Device::Device(int n, Appartement* ap): sock(n), a(ap)
+Device::Device(int n, Appartement* ap): sock(n), a(ap), knopValue(0), sensorValue(0)
 {
 }
 

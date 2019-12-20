@@ -2,16 +2,19 @@
 #define DEVICE_HPP
 
 #include "Appartement.hpp"
-//#include "Devices/Gui.hpp"
 #include <cstring>
 #include <netdb.h>
 #include <iostream>
+#include <sstream>
 #include <unistd.h>
 
 class Device
 {
     protected:
         int sock;
+        int knopValue;
+        int sensorValue;
+
         Appartement* a;
     public:
         Device(int, Appartement*);
@@ -24,7 +27,7 @@ class Device
         int getSock();
         void setSock(int);
 
-        virtual void getStatus() = 0;
+        virtual int getStatus() = 0;
 };
 
 #endif

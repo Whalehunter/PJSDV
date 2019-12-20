@@ -10,7 +10,7 @@ class Bed: public Device
         ~Bed();
 
         void operator()();
-        void getStatus();
+        int getStatus();
 };
 
 #endif
