@@ -13,6 +13,7 @@ int leesinput(int i);//1 is anin0, 2 is anin1
 int state = 0;      // the current state of the output pin
 int reading;           // the current reading from the input pin
 int previous = 0;    // the previous reading from the input pin
+int hex = 0x00;
 
 void setup() {
   Wire.begin();//Start wire
@@ -61,13 +62,13 @@ void BuzzerAanUit(int i) {
   if (i == 1) {
     Wire.beginTransmission(0x38);
     Wire.write(byte(0x01));
-    Wire.write(byte(1<<4));
+    Wire.write(byte(hex |= 0x10));
     Wire.endTransmission();
   }
   else if (i == 0) {
     Wire.beginTransmission(0x38);
     Wire.write(byte(0x01));
-    Wire.write(byte(0<<4));
+    Wire.write(byte(hex &= !(0x10)));
     Wire.endTransmission();
   }
 }
@@ -86,13 +87,13 @@ void LedAanUit(int i) {
   if (i == 1) {
     Wire.beginTransmission(0x38);
     Wire.write(byte(0x01));
-    Wire.write(byte(1<<5));
+    Wire.write(byte(hex |= 0x20));
     Wire.endTransmission();
   }
   else if (i == 0) {
     Wire.beginTransmission(0x38);
     Wire.write(byte(0x01));
-    Wire.write(byte(0<<5));
+    Wire.write(byte(hex &= (0x20)));
     Wire.endTransmission();
   }
 }

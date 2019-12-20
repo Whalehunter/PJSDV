@@ -6,7 +6,7 @@
 
 int port = 8883;
 const char *ssid = "piiWAP";
-const char *password = "aanwezig";
+const char *password = "aanwezig2";
 const char* host = "192.168.4.1";
 
 
@@ -23,26 +23,23 @@ int hex = 0x00;
 void setup() {
   pinMode(D4, OUTPUT);  //Set D4 as Output.
   pinMode(D5, OUTPUT);  //Set D5 as Output.
-
+  
   Wire.begin();
-  Serial.begin(115200);
 
-  Serial.printf("Connecting");
-    while (WiFi.status() != WL_CONNECTED) {
-      delay(500);
-      Serial.print(".");
-      delay(500);
-    }
+  Serial.begin(115200);
+  Serial.printf("Connecting to %s ", ssid);
+  WiFi.begin(ssid, password);
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+    delay(500);
+  }
   Serial.print("connected to ");
   Serial.println(ssid);
-  Wire.begin();
 }
-
-String line;
 
 void loop() {
   WiFiClient client;
-
   Serial.printf("\n[Connecting to %s ... ", host);
   if (client.connect(host, port))
   {
@@ -52,26 +49,27 @@ void loop() {
     }
     line = client.readStringUntil('\r');
     if (line=="OK"){
-      Serial.println("Authenticated");
+      Serial.println("Verified");
       while (client.connected() || client.available()){
         line = client.readStringUntil('\r');
+        Serial.println(line);
         if (line == "getStatus"){
           int drukknopwaarde = leesDruksensor();
           int knopwaarde = leesKnop();
-          client.print(String(drukknopwaarde));
+          //client.print(String(drukknopwaarde));
           client.print(String(knopwaarde));          
           line = '0';
         }
-        if (line == "aan"){
+        if (line == "lampAan"){
           LedAanUit(1);
         }
-        else if (line == "uit"){
+        else if (line == "lampUit"){
           LedAanUit(0);
         }
       }
     }
     else{
-      Serial.print("Failed authentication.");
+      Serial.print("Failed verification.");
     }
     Serial.println("Failed connection.");
     client.stop();
@@ -87,13 +85,13 @@ void LedAanUit(int i) {
   if (i == 1) {
     Wire.beginTransmission(0x38);
     Wire.write(byte(0x01));
-    Wire.write(byte(0x10));
+    Wire.write(byte(hex |= (0x10)));
     Wire.endTransmission();
   }
   else if (i == 0) {
     Wire.beginTransmission(0x38);
     Wire.write(byte(0x01));
-    Wire.write(byte(0x00));
+    Wire.write(byte(hex &= !(0x10)));
     Wire.endTransmission();
   }
 }
