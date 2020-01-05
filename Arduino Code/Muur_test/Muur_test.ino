@@ -97,17 +97,17 @@ WiFiClient client;
 }
 
 void RGBstrip(int i){
-  if (i==0){
+  if (i==0){		//aan
     pixels.clear();
     pixels.show();
   }
-  else if (i==1){
+  else if (i==1){	//uit
     for(int a=0; a<NUMPIXELS; a++) { //Elke pixel aanzetten
       pixels.setPixelColor(i,255,0,0);
       pixels.show();   // Send the updated pixel colors to the hardware
     }
   }
-  else if (i==2){
+  else if (i==2){	//disco
     for(int a=0; a<NUMPIXELS; a++) {
       pixels.setPixelColor(i,0,0,255);
       pixels.show();   // Send the updated pixel colors to the hardware
