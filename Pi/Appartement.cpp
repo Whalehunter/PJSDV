@@ -3,20 +3,16 @@
 #include "Devices/Gui.hpp"
 #include "Devices/Bed.hpp"
 #include "Devices/Stoel.hpp"
+#include <thread>
 
-Appartement::Appartement(): gui (0), bed(0), stoel(0)
+Appartement::Appartement()
 {
+    this->deviceNamePair = {};
 }
 
-Appartement::~Appartement()
+void Appartement::registerDevice(std::string name, int sockId)
 {
-    delete gui;
-    delete stoel;
-    delete bed;
-}
 
-void Appartement::createDevice(int sock, char id)
-{
     if (id == 'x') {
         if(gui != 0) delete gui;
 

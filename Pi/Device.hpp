@@ -15,10 +15,8 @@ class Device
         int knopValue;
         int sensorValue;
 
-        Appartement* a;
     public:
-        Device(int, Appartement*);
-        virtual ~Device();
+        Device(int);
 
         virtual void sendMsg(char*);
         virtual bool recvMsg(char*);

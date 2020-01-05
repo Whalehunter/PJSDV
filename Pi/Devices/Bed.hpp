@@ -6,8 +6,7 @@
 class Bed: public Device
 {
     public:
-        Bed(int, Appartement*);
-        ~Bed();
+        Bed(int);
 
         void operator()();
         int getStatus();

@@ -5,10 +5,6 @@ Bed::Bed(int n, Appartement* ap): Device(n, ap)
     std::cout << "Bed aangemaakt" << std::endl;
 }
 
-Bed::~Bed()
-{
-}
-
 void Bed::operator()()
 {
     char buffer[256];
@@ -37,4 +33,3 @@ int Bed::getStatus()
 {
     return knopValue;
 }
-

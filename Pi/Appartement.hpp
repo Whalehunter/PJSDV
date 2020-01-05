@@ -1,24 +1,20 @@
 #ifndef APPARTEMENT_HPP
 #define APPARTEMENT_HPP
 
-//#include "Device.hpp"
-//#include "Devices/Gui.hpp"
-#include <string>
-#include <iostream>
-#include <thread>
-class Device;
+#include "Device.hpp"
+#include <map>
+
 class Appartement
 {
-    public:
-        Appartement();
-        ~Appartement();
+    static Appartement* instance;
+    std::map<std::string, Device*> deviceNamePair;
 
-        Device* gui;
-        Device* bed;
-        Device* stoel;
+    Appartement();
 
-        void createDevice(int, char);
+public:
+
+    static Appartement* getInstance();
+    void registerDevice(std::string, int);
 };
 
 #endif
-
