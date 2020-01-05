@@ -17,6 +17,8 @@ void RGBbrightness(int i);
 void RGBdisco();
 void AanUitLCD(int i);
 int leesinput(int i); //1 is LDR waarde, 2 is POTmeter
+
+String line = "";
 int hex = 0x00;
 
 Adafruit_NeoPixel pixels(NUMPIXELS, RGB, NEO_GRB + NEO_KHZ800);
@@ -73,8 +75,8 @@ WiFiClient client;
           AanUitLCD(0);
           line = "";
         }
-        if ((line >= "A" & <= "Z" )|(line >= "a" & <= "z"){
-          int temp = toInt(line);
+        if ((line >= "A" & line <= "Z" )|(line >= "a" & line <= "z")){
+          int temp = line.toInt();
           if (temp >= 0 & temp <=1024){
             RGBbrightness(temp);
           }
