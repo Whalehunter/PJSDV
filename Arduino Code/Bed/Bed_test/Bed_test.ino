@@ -59,13 +59,15 @@ void loop() {
           int knopwaarde = leesKnop();
           //client.print(String(drukknopwaarde));
           client.print(String(knopwaarde));          
-          line = '0';
+          line = "0";
         }
         else if (line == "lampAan"){
           LedAanUit(1);
+          line = "0";
         }
         else if (line == "lampUit"){
           LedAanUit(0);
+          line = "0";
         }
       }
     }
