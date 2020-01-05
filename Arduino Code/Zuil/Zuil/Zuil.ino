@@ -18,19 +18,66 @@ int hex = 0x00;
 void setup() {
   Wire.begin();//Start wire
   Serial.begin(115200);//Set serial Baud
+
+  Serial.printf("Connecting to %s ", ssid);
+  WiFi.begin(ssid, password);
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+    delay(500);
+  }
+  Serial.print("connected to ");
+  Serial.println(ssid);
 }
 
 void loop() {
-  int knopwaarde = leesKnop();
-  //Serial.print("Knop: ");
-  //Serial.println(knopwaarde);
-  BuzzerAanUit(knopwaarde);
-  //brandalarm();
-  LedAanUit(knopwaarde);
-  int input = leesinput(1);
-  Serial.print("Gas sensor: ");
-  Serial.println(input);
-  delay(10);
+  WiFiClient client;
+  Serial.printf("\n[Connecting to %s ... ", host);
+  if (client.connect(host, port))
+  {
+    line = client.readStringUntil('\r');
+    if (line=="ID?"){
+      client.println(String("y")); //eigenlijk "Zuil"
+    }
+    line = client.readStringUntil('\r');
+    if (line=="OK"){
+      Serial.println("Verified");
+      while (client.connected() || client.available()){
+        line = client.readStringUntil('\r');
+        Serial.println(line);
+        switch (line){
+          case "getStatus":
+            int drukknopwaarde = leesDruksensor();
+            int input = leesinput(1);
+            client.print(String(leesDruksensor));
+            //client.print(String(input));
+            line = "0"; 
+            break;
+          case "buzzerAan":
+            BuzzerAanUit(1);
+            line = "0";
+            break;
+          case "buzzerUit":
+            BuzzerAanUit(0);
+            line = "0";
+            break;
+          case "ledAan":
+            LedAanUit(1);
+            line = "0";
+            break;
+          case "ledUit":
+            LedAanUit(0);
+            line = "0";
+            break;
+        }
+      }
+    }
+    else{
+      Serial.print("Failed verification.");
+    }
+    Serial.println("Failed connection.");
+    client.stop();
+  }
 }
 
 int leesKnop(){
