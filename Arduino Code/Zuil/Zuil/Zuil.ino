@@ -57,23 +57,23 @@ void loop() {
           int input = leesinput(1);
           client.print(String(drukknop));
           //client.print(String(input));
-          line = "0"; 
+          line = ""; 
         }
         else if (line == "buzzerAan"){
           BuzzerAanUit(1);
-          line = "0";
+          line = "";
         }
         else if (line == "buzzerUit"){
           BuzzerAanUit(0);
-          line = "0";
+          line = "";
         }
         else if (line == "ledAan"){
           LedAanUit(1);
-          line = "0";
+          line = "";
         }
         else if (line == "ledUit"){
           LedAanUit(0);
-          line = "0";
+          line = "";
         }
       }
     }
