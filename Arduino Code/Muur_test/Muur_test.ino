@@ -14,7 +14,6 @@ const char* host = "192.168.4.1";
 
 void RGBstrip(int i); //0 is uit, 1 is aan, 2 is disco mode
 void RGBbrightness(int i);
-void RGBdisco();
 void AanUitLCD(int i);
 int leesinput(int i); //1 is LDR waarde, 2 is POTmeter
 
@@ -75,7 +74,13 @@ WiFiClient client;
           AanUitLCD(0);
           line = "";
         }
-        if ((line >= "A" & line <= "Z" )|(line >= "a" & line <= "z")){
+        else if (line == "disco"){
+          RGBstrip(2);
+        }
+        else if (line == "RGBuit"){
+          RGBstrip(0);
+        }
+        else if ((line >= "A" & line <= "Z" )|(line >= "a" & line <= "z")){
           int temp = line.toInt();
           if (temp >= 0 & temp <=1024){
             RGBbrightness(temp);
@@ -102,7 +107,7 @@ void RGBstrip(int i){
       pixels.show();   // Send the updated pixel colors to the hardware
     }
   }
-  else if (i==3){
+  else if (i==2){
     for(int a=0; a<NUMPIXELS; a++) { //Elke pixel aanzetten
       pixels.setPixelColor(i,0,0,255);
       pixels.show();   // Send the updated pixel colors to the hardware
