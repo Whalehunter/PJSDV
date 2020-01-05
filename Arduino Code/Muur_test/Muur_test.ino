@@ -108,17 +108,17 @@ void RGBstrip(int i){
     }
   }
   else if (i==2){
-    for(int a=0; a<NUMPIXELS; a++) { //Elke pixel aanzetten
+    for(int a=0; a<NUMPIXELS; a++) {
       pixels.setPixelColor(i,0,0,255);
       pixels.show();   // Send the updated pixel colors to the hardware
     }    
     delay(500);
-    for(int a=0; a<NUMPIXELS; a++) { //Elke pixel aanzetten
+    for(int a=0; a<NUMPIXELS; a++) {
       pixels.setPixelColor(i,0,255,0);
       pixels.show();   // Send the updated pixel colors to the hardware
     }    
     delay(500);
-    for(int a=0; a<NUMPIXELS; a++) { //Elke pixel aanzetten
+    for(int a=0; a<NUMPIXELS; a++) {
       pixels.setPixelColor(i,255,0,0); 
       pixels.show();   // Send the updated pixel colors to the hardware
     }
