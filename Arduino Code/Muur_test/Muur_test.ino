@@ -1,15 +1,22 @@
 #include <Wire.h>
 #include <Adafruit_NeoPixel.h>
+#include <ESP8266WiFi.h>
 
 #define I2C_SDL   D1
 #define I2C_SDA   D2
 #define RGB       D5
 #define NUMPIXELS 3
 
+int port = 8883;
+const char *ssid = "piiWAP";
+const char *password = "aanwezig2";
+const char* host = "192.168.4.1";
+
 void RGBstrip(int i); //0 is uit, 1 is aan, 2 is disco mode
+void RGBbrightness(int i);
 void RGBdisco();
 void AanUitLCD(int i);
-int leesinput(int i);
+int leesinput(int i); //1 is LDR waarde, 2 is POTmeter
 int hex = 0x00;
 
 Adafruit_NeoPixel pixels(NUMPIXELS, RGB, NEO_GRB + NEO_KHZ800);
@@ -18,34 +25,68 @@ Adafruit_NeoPixel pixels(NUMPIXELS, RGB, NEO_GRB + NEO_KHZ800);
 
 
 void setup(void) {
+  pinMode(D4, OUTPUT);  //Set D4 as Output.
+  pinMode(D5, OUTPUT);  //Set D5 as Output.
+  
   pixels.begin(); // INITIALIZE NeoPixel strip object (REQUIRED)
   pixels.show();
   Wire.begin();//Start wire
   Serial.begin(115200);//Set serial Baud
+  Serial.printf("Connecting to %s ", ssid);
+  WiFi.begin(ssid, password);
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+    delay(500);
+  }
+  Serial.print("connected to ");
+  Serial.println(ssid);
 }
 
 void loop(void) {
-
-  RGBstrip(2);
-  int pot = leesinput(2); //2:uitlezen van potmeter
-  int ldr = leesinput(1); //1:uitlezen van LDR
-  pixels.setBrightness(pot/4);
-//  delay(DELAYVAL);
-//  RGBstrip(0);
-//  delay(DELAYVAL);
-//  AanUitLCD(1);//aan
-//  delay(DELAYVAL);
-//  AanUitLCD(0);//uit
-//  delay(DELAYVAL);
-//  int ldr = leesinput(1); //1:uitlezen van LDR
-//  int pot = leesinput(2); //2:uitlezen van potmeter
-//
-//  Serial.print("LDR waarde: ");
-//  Serial.println(ldr);  
-//  delay(DELAYVAL);
-//  Serial.print("Potmeter: ");
-//  Serial.println(pot);   
-//  delay(DELAYVAL);
+WiFiClient client;
+  Serial.printf("\n[Connecting to %s ... ", host);
+  if (client.connect(host, port))
+  {
+    line = client.readStringUntil('\r');
+    if (line=="ID?"){
+      client.println(String("y")); //eigenlijk Muur
+    }
+    line = client.readStringUntil('\r');
+    if (line=="OK"){
+      Serial.println("Verified");
+      while (client.connected() || client.available()){
+        line = client.readStringUntil('\r');
+        Serial.println(line);
+        if (line == "getStatus"){
+          int LDR = leesinput(1);
+          int POT = leesinput(2);
+          //client.print(String(LDR));
+          client.print(String(POT));          
+          line = "";
+        }
+        else if (line == "LCDAan"){
+          AanUitLCD(1);
+          line = "";
+        }
+        else if (line == "LCDUit"){
+          AanUitLCD(0);
+          line = "";
+        }
+        if ((line >= "A" & <= "Z" )|(line >= "a" & <= "z"){
+          int temp = toInt(line);
+          if (temp >= 0 & temp <=1024){
+            RGBbrightness(temp);
+          }
+        }
+      }
+    }
+    else{
+      Serial.print("Failed verification.");
+    }
+    Serial.println("Failed connection.");
+    client.stop();
+  }
 }
 
 void RGBstrip(int i){
@@ -76,6 +117,10 @@ void RGBstrip(int i){
     }
     delay(500);
   }
+}
+
+void RGBbrightness(int i){
+  pixels.setBrightness(i/4);
 }
 
 void AanUitLCD(int i){
