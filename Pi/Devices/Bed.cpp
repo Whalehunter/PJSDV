@@ -40,20 +40,27 @@ int Bed::getStatus()
 
 void Bed::updateWaardes()
 {
-
+	//ontvang waardes van de WEMOS en sla die op in eigen variabelen
 }
 
-void activeerBewegingssensor()
+void Bed::activeerBewegingssensor()
+{
+	if(druksensor > 100)
+	{
+		//bewegingssensor van zuil activeren
+	}
+/* 	kan ook zoals hieronder, maar dan functienaam veranderen naar alarm geven, en deactiveerBewegingssensor verwijderen
+	if (druksensor > 100 & bewegingssensor){
+		alarm geven
+	} */
+}
+
+void Bed::deactiveerBewegingssensor()
 {
 	
 }
 
-void deactiveerBewegingssensor()
-{
-	
-}
-
-void toggleLed()
+void Bed::toggleLed()
 {
 	if(ledStatus == 0 & drukknop == 0){
 		//led blijft uit
