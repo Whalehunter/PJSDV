@@ -15,9 +15,9 @@ int leesDruksensor(); //0: niks, 1: ligt wat op de sensor
 int leesKnop(); //0: niet ingedrukt, 1: ingedrukt
 
 String line = "";
-int state = 0;      // the current state of the output pin
-int reading;           // the current reading from the input pin
-int previous = 0;    // the previous reading from the input pin
+//int state = 0;      // the current state of the output pin
+//int reading;           // the current reading from the input pin
+//int previous = 0;    // the previous reading from the input pin
 int hex = 0x00;
 
 void setup() {
