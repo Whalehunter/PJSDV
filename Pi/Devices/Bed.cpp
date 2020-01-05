@@ -38,3 +38,33 @@ int Bed::getStatus()
     return knopValue;
 }
 
+void Bed::updateWaardes()
+{
+
+}
+
+void activeerBewegingssensor()
+{
+	
+}
+
+void deactiveerBewegingssensor()
+{
+	
+}
+
+void toggleLed()
+{
+	if(ledStatus == 0 & drukknop == 0){
+		//led blijft uit
+	}
+	else if (ledStatus == 0 & drukknop == 1){
+		//led gaat aan
+	}
+	else if (ledStatus == 1 & drukknop == 0){
+		//led blijft aan
+	}
+	else if (ledStatus == 1 & drukknop == 1){
+		//led gaat uit
+	}
+}
