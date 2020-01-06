@@ -14,6 +14,7 @@ void LedAanUit(int i); //0: uit, 1: aan
 int leesDruksensor(); //0: niks, 1: ligt wat op de sensor
 int leesKnop(); //0: niet ingedrukt, 1: ingedrukt
 
+int reading;
 String line = "";
 //int state = 0;      // the current state of the output pin
 //int reading;           // the current reading from the input pin
@@ -46,7 +47,7 @@ void loop() {
   {
     line = client.readStringUntil('\r');
     if (line=="ID?"){
-      client.println(String("y"));
+      client.println(String("y"));//eigenlijk bed
     }
     line = client.readStringUntil('\r');
     if (line=="OK"){
