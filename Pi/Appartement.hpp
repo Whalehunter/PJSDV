@@ -10,7 +10,7 @@ class Appartement
     static Appartement* instance;
     std::map<std::string, Device*> deviceNamePairs;
     Appartement();
-    const Device* getDevice(std::string name);
+    const Device* getDevice(std::string name, int sock);
     std::string capitalize(const std::string name);
 public:
     ~Appartement();

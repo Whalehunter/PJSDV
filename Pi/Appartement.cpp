@@ -61,6 +61,8 @@ const Device* Appartement::getDevice(const std::string name, int sock = 0)
         newDevice = new Deur(sock);
     }
 
+    this->deviceNamePairs.insert(std::pair<std::string, Device*>(capitalized, newDevice));
+
     return newDevice;
 }
 
