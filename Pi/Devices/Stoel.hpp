@@ -6,7 +6,7 @@
 class Stoel: public Device
 {
     public:
-        Stoel(int, Appartement*);
+    Stoel(int sock);
         ~Stoel();
 
         void operator()();

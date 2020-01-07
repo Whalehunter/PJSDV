@@ -6,10 +6,9 @@
 class Bed: public Device
 {
     public:
-        Bed(int);
-
-        void operator()();
-        int getStatus();
+    Bed(int sock);
+    void operator()();
+    int getStatus();
 };
 
 #endif

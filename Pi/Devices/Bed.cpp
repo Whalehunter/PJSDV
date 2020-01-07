@@ -1,6 +1,6 @@
 #include "Bed.hpp"
 
-Bed::Bed(int n, Appartement* ap): Device(n, ap)
+Bed::Bed(int n): Device(n)
 {
     std::cout << "Bed aangemaakt" << std::endl;
 }

@@ -1,7 +1,6 @@
 #ifndef DEVICE_HPP
 #define DEVICE_HPP
 
-#include "Appartement.hpp"
 #include <cstring>
 #include <netdb.h>
 #include <iostream>
@@ -11,12 +10,14 @@
 class Device
 {
     protected:
+    	std::string name;
         int sock;
         int knopValue;
         int sensorValue;
 
     public:
-        Device(int);
+    Device(int, std::string);
+    virtual ~Device();
 
         virtual void sendMsg(char*);
         virtual bool recvMsg(char*);
