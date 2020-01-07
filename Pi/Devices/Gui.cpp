@@ -7,8 +7,7 @@ Gui::Gui(int n, Appartement* ap): Device(n, ap)
 }
 
 Gui::~Gui()
-{
-}
+{}
 
 void Gui::operator()()
 {
@@ -22,13 +21,17 @@ void Gui::operator()()
         if(buffer[0] == 'b' && a->bed != 0) {
             strcpy(buffer, "teringjong");
             a->bed->sendMsg(buffer);
-        }
-
-        if(buffer[0] == 'd' && a->bed != 0) {
+        } else if(buffer[0] == 'd' && a->bed != 0) {
             int bedKnoppie = a->bed->getStatus();
             sprintf(buffer, "%d", bedKnoppie);
             sendMsg(buffer);
             std::cout << "knopwaarde van bed = " << bedKnoppie << std::endl;
+        } else if(buffer[0] == 'x' && a->deur != 0) {
+            if (buffer[1] == 'o') {
+                a->deur->openDeur();
+            } else {
+                a->deur->sluitDeur();
+            }
         }
 
         memset(buffer, 0, sizeof(buffer));
