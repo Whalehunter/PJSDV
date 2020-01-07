@@ -7,6 +7,9 @@
 //#include <string>
 //#include <iostream>
 #include <thread>
+#include <map>
+#include <string>
+
 class Device;
 class Appartement
 {
@@ -14,6 +17,7 @@ class Appartement
         Appartement();
         ~Appartement();
 
+        std::map<char, Device*> devices;
         Device* zuil;
         Device* deur;
         Device* gui;

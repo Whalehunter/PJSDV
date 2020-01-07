@@ -1,5 +1,8 @@
 #include "Gui.hpp"
+#include "Deur.hpp"
 #include <string>
+
+using json = nlohmann::json;
 
 Gui::Gui(int n, Appartement* ap): Device(n, ap)
 {
@@ -16,7 +19,7 @@ void Gui::operator()()
     memset(buffer, 0, sizeof(buffer));
 
     while(recvMsg(buffer)) {
-        std::cout << this << std::endl;
+        std::cout << buffer << std::endl;
 
         if(buffer[0] == 'b' && a->bed != 0) {
             strcpy(buffer, "teringjong");
@@ -26,11 +29,17 @@ void Gui::operator()()
             sprintf(buffer, "%d", bedKnoppie);
             sendMsg(buffer);
             std::cout << "knopwaarde van bed = " << bedKnoppie << std::endl;
-        } else if(buffer[0] == 'x' && a->deur != 0) {
+        } else if(buffer[0] == 'x') {
+            Deur * deur = dynamic_cast<Deur *>(a->devices.find('d')->second);
+            std::cout << "1" << std::endl;
             if (buffer[1] == 'o') {
-                a->deur->openDeur();
+                std::cout << "2" << std::endl;
+                sendMsg(buffer);
+                deur->openDeur();
+
             } else {
-                a->deur->sluitDeur();
+                deur->sluitDeur();
+                sendMsg(buffer);
             }
         }
 

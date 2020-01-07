@@ -16,6 +16,7 @@ void Deur::operator()()
     char buffer[256];
     int knopBinnenPrev = 0;
     int knopBuitenPrev = 0;
+    //clock_t t;
 
     while(1) {
        // std::cout << getDeurStatus() << std::endl;
@@ -33,7 +34,7 @@ void Deur::operator()()
             return;
         }
 
-        std::cout << buffer << std::endl;
+       // std::cout << buffer << std::endl;
 
         auto j_deur = json::parse(buffer); // hier moeten ook exceptions afgehandeld worden
 
@@ -46,7 +47,7 @@ void Deur::operator()()
             case OPEN:
                 if(knopBinnen == 1 && knopBinnenPrev != knopBinnen) {
                     sluitDeur();
-                }
+                } 
                 break;
             case DICHT:
                 if(knopBinnen == 1 && knopBinnenPrev != knopBinnen) {
@@ -55,9 +56,9 @@ void Deur::operator()()
                 break;
         }
 
-      /*  if (knopBuiten == 1 && knopBuitenPrev != knopBuiten) {
+        if (knopBuiten == 1 && knopBuitenPrev != knopBuiten) {
             deurBel();
-        }*/
+        }
 
         knopBinnenPrev = knopBinnen;
         knopBuitenPrev = knopBuiten;

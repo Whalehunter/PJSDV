@@ -6,6 +6,8 @@
 #include "Devices/Stoel.hpp"
 #include "Devices/Zuil.hpp"
 
+#include <map>
+
 Appartement::Appartement(): deur(0), gui(0), bed(0), stoel(0), zuil(0)
 {
 }
@@ -23,9 +25,10 @@ void Appartement::createDevice(int sock, char id)
 {
     if (id == 'd') {
         if(deur != 0) delete deur;
-
-        deur = new Deur(sock, this);
-        std::thread deurThread(&Device::operator(), deur);
+          Deur * pDeur = new Deur(sock, this);
+       // deur = new Deur(sock, this);
+        devices.insert(std::pair<char, Deur*>(id, pDeur));
+        std::thread deurThread(&Device::operator(), pDeur);
         deurThread.detach();
     }
     else if (id == 'f') {
