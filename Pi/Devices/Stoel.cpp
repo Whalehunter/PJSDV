@@ -1,6 +1,6 @@
 #include "Stoel.hpp"
 
-Stoel::Stoel(int sock): Device{sock}
+Stoel::Stoel(int sock): Device(sock)
 {
     this->name = "Stoel";
 }

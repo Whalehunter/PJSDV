@@ -1,7 +1,8 @@
 #include "Bed.hpp"
 
-Bed::Bed(int n): Device(n)
+Bed::Bed(int socketId): Device(socketId)
 {
+    this->name = "Bed";
     std::cout << "Bed aangemaakt" << std::endl;
 }
 

@@ -5,12 +5,12 @@
 
 class Stoel: public Device
 {
-    public:
-    Stoel(int sock);
-        ~Stoel();
+public:
+    Stoel(int);
+    ~Stoel();
 
-        void operator()();
-        int getStatus();
+    void operator()();
+    int getStatus();
 };
 
 #endif

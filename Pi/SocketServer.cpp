@@ -1,18 +1,17 @@
 #include "SocketServer.hpp"
+#include "Appartement.hpp"
 
 using namespace std;
 
 #define PORT 8883
 
-SocketServer::SocketServer(const Appartement& appartement)
+SocketServer::SocketServer()
 {
-    a = appartement;
     startServer();
 }
 
 SocketServer::~SocketServer()
-{
-}
+{}
 
 void SocketServer::startServer()
 {
@@ -73,11 +72,15 @@ void SocketServer::handshake(int sock)
     }
 
     switch(response[0]) {
-        case 'x':
-        case 'y':
-        case 'z': a.createDevice(sock, response[0]);
-                  strcpy(response, "OK\r");
-                  send(sock, response, strlen(response), 0); break;
-        default: cout << "Wrong ID on socket " << sock << endl; close(sock); break;
+    case 'x':
+    case 'y':
+    case 'z':
+        Appartement::getInstance()->registerDevice(sock, response[0]);
+        strcpy(response, "OK\r");
+        send(sock, response, strlen(response), 0);
+        break;
+    default:
+        cout << "Wrong ID on socket " << sock << endl; close(sock);
+        break;
     }
 }

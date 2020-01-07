@@ -4,7 +4,10 @@
 #include "Devices/Bed.hpp"
 #include "Devices/Stoel.hpp"
 #include "Devices/Schemerlamp.hpp"
+#include "Devices/Koelkast.hpp"
 #include "Devices/Zuil.hpp"
+#include "Devices/Muur.hpp"
+#include "Devices/Deur.hpp"
 #include <thread>
 #include <string>
 
@@ -49,8 +52,8 @@ const Device* Appartement::getDevice(const std::string name, int sock = 0)
         newDevice = new Bed(sock);
     } else if ("Stoel" == capitalized) {
         newDevice = new Stoel(sock);
-    } else if ("Tafellamp" == capitalized) {
-        newDevice = new Tafellamp(sock);
+    } else if ("Muur" == capitalized) {
+        newDevice = new Muur(sock);
     } else if ("Schemerlamp" == capitalized) {
         newDevice = new Schemerlamp(sock);
     } else if ("Zuil" == capitalized) {
