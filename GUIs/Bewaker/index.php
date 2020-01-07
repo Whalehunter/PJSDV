@@ -33,6 +33,39 @@
              }
          });
 
+
+         $('.deur .inside.switch .checkbox').checkbox({
+             onEnable: function() {
+                 $.ajax('command.php', {
+                     dataType: 'json',
+                     data: {
+                         id: 'x',
+                         msg: 'xo'
+                     },
+                     error: function(data) {
+                         console.log(data);
+                     }
+                 }).done(function(data){
+                     console.log(data);
+                 });
+             },
+             onDisable: function() {
+                 $.ajax('command.php', {
+                     dataType: 'json',
+                     data: {
+                         id: 'x',
+                         msg: 'xx'
+                     },
+                     error: function(data) {
+                         console.log(data);
+                     }
+                 }).done(function(data){
+                     console.log(data);
+                 });
+             }
+         });
+
+
          // function request(name, value, button) {
          //     button.checkbox('set disabled');
          //     $.ajax('command.php', {
