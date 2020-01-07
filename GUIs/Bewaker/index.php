@@ -35,7 +35,7 @@
 
 
          $('.deur .inside.switch .checkbox').checkbox({
-             onEnable: function() {
+             onChecked: function() {
                  $.ajax('command.php', {
                      dataType: 'json',
                      data: {
@@ -49,7 +49,7 @@
                      console.log(data);
                  });
              },
-             onDisable: function() {
+             onUnchecked: function() {
                  $.ajax('command.php', {
                      dataType: 'json',
                      data: {
