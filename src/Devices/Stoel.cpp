@@ -37,6 +37,26 @@ void Stoel::operator()()//Overloaded functies moeten met 2 haakjes zodat je er z
 
 		drukknop = j_deur.at("drukknop");
 		trilStatus = j_deur.at("trilStatus");
+
+		if ((drukknop == 1) & (ledStatus == 0)){
+				sendMsg("ledAan/r");
+				ledStatus = 1;
+		}
+		else if ((drukknop == 1) & (ledStatus == 1)){
+			sendMsg("ledUit/r");
+			ledStatus = 0;
+		}
+
+		if ((drukknop == 1) & (druksensor == 1) & (trilStatus == 0)){
+				sendMsg("trilAan/r");
+				trilStatus = 1;
+			}
+		else if ((drukknop == 1) & (druksensor == 1) & (trilStatus == 1)){
+			sendMsg("trilUit/r");
+			trilStatus = 0;
+		}
+		/*ledAanUit();
+		trilAanUit();*/
     }
     close(sock);
     std::cout << "Connection closed on socket " << sock << std::endl;
@@ -49,22 +69,22 @@ json Stoel::getStatus()
 
 void Stoel::ledAanUit(){
 	if ((drukknop == 1) & (ledStatus == 0)){
-		sendMsg("ledAan");
+		sendMsg("ledAan/r");
 		ledStatus = 1;
 	}
 	else if ((drukknop == 1) & (ledStatus == 1)){
-		sendMsg("ledUit");
+		sendMsg("ledUit/r");
 		ledStatus = 0;
 	}
 }
 
 void Stoel::trilAanUit(){
 	if ((drukknop == 1) & (druksensor == 1) & (trilStatus == 0)){
-		sendMsg("trilAan");
+		sendMsg("trilAan/r");
 		trilStatus = 1;
 	}
 	else if ((drukknop == 1) & (druksensor == 1) & (trilStatus == 1)){
-		sendMsg("trilUit");
+		sendMsg("trilUit/r");
 		trilStatus = 0;
 	}
 }
