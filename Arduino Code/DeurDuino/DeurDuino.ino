@@ -97,6 +97,12 @@ void loop(void) {
           deurDicht();
           line = "";
         }
+        else if (line == "buitenLampAan"){
+          buitenLampAanUit(1);
+        }
+        else if (line == "buitenLampUit"){
+          buitenLampAanUit(0);
+        }
        /* else if (line == "deurBel"){
           buitenLampAanUit(1);
         }*/
