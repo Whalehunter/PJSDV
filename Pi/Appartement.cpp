@@ -36,6 +36,7 @@ const Device* Appartement::getDevice(const std::string name, int sock = 0)
     std::string capitalized = this->capitalize(name);
 
     if ("Mary" == capitalized) {
+        return new GUI(sock);
     } else if ("Bewaker" == capitalized) {
     }
 
@@ -54,17 +55,19 @@ const Device* Appartement::getDevice(const std::string name, int sock = 0)
         newDevice = new Stoel(sock);
     } else if ("Muur" == capitalized) {
         newDevice = new Muur(sock);
-    } else if ("Schemerlamp" == capitalized) {
-        newDevice = new Schemerlamp(sock);
-    } else if ("Zuil" == capitalized) {
-        newDevice = new Zuil(sock);
+    // } else if ("Schemerlamp" == capitalized) {
+        // newDevice = new Schemerlamp(sock);
+    // } else if ("Zuil" == capitalized) {
+        // newDevice = new Zuil(sock);
     } else if ("Koelkast" == capitalized) {
         newDevice = new Koelkast(sock);
-    } else if ("Deur" == capitalized) {
+    } else if ('d' == name[0]) {
         newDevice = new Deur(sock);
     }
 
     this->deviceNamePairs.insert(std::pair<std::string, Device*>(capitalized, newDevice));
+    std::thread newThread(&Device::operator(), newDevice);
+    newThread.detach();
 
     return newDevice;
 }
@@ -81,25 +84,13 @@ const Device * Appartement::deviceExists(std::string name) {
 
 void Appartement::registerDevice(std::string name, int sockId)
 {
-    if (id == 'x') {
+    // x = gui
+    // d = deur
+    if (id == 'x')
         if(gui != 0) delete gui;
-
-        gui = new Gui(sock, this);
-        std::thread guiThread(&Device::operator(), gui);
-        guiThread.detach();
-    }
-    else if (id == 'y') {
-        if(bed != 0) delete bed;
-
-        bed = new Bed(sock, this);
-        std::thread bedThread(&Device::operator(), bed);
-        bedThread.detach();
-    }
-    else if (id == 'z') {
+        else if (id == 'y')
+            if(bed != 0) delete bed;
+            else if (id == 'z')
         if(stoel != 0) delete stoel;
 
-        stoel = new Stoel(sock, this);
-        std::thread stoelThread(&Device::operator(), stoel);
-        stoelThread.detach();
-    }
 }

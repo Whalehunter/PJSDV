@@ -8,6 +8,7 @@ Bed::Bed(int socketId): Device(socketId)
 
 void Bed::operator()()
 {
+    Appartement::getInstance()->getDevice()
     char buffer[256];
 
     strcpy(buffer, "getStatus\r");
