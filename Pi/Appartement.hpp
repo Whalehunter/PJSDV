@@ -8,7 +8,7 @@
 //#include <iostream>
 #include <thread>
 #include <map>
-#include <string>
+//#include <string>
 
 class Device;
 class Appartement

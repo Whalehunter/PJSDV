@@ -2,7 +2,6 @@
 #define DEUR_HPP
 
 #include "../Device.hpp"
-//#include "../nlohmann/json.hpp"
 
 class Deur: public Device
 {
@@ -11,6 +10,7 @@ class Deur: public Device
 
         Deur::deurStatus state;
         std::clock_t timer;
+
         int knopBinnen;
         int knopBuiten;
         int ledBinnen;
@@ -18,8 +18,6 @@ class Deur: public Device
     public:
         Deur(int, Appartement*);
         ~Deur();
-
-       // enum status {dicht, open, opSlot};
 
         void operator()();
         void openDeur();

@@ -31,10 +31,20 @@ void Deur::operator()()
             return;
         }
 
-        auto j_deur = json::parse(buffer); // hier moeten ook exceptions afgehandeld worden
+        /* try and catch json parse exceptions */
 
-        knopBinnen = j_deur.at("binnenKnop");
-        knopBuiten = j_deur.at("buitenKnop");
+        try {
+            auto j_deur = json::parse(buffer); // hier moeten ook exceptions afgehandeld worden
+
+            knopBinnen = j_deur.at("binnenKnop");
+            knopBuiten = j_deur.at("buitenKnop");
+        }
+        catch(json::parse_error) {
+            std::cout << "Parsing error at Deur on socket " << sock << std::endl;
+        }
+
+       // knopBinnen = j_deur.at("binnenKnop");
+       // knopBuiten = j_deur.at("buitenKnop");
 
         /* state machine */
 
@@ -66,7 +76,7 @@ void Deur::operator()()
         knopBuitenPrev = knopBuiten;
     }
 
-   close(sock);
+    close(sock);
 }
 
 void Deur::openDeur()
