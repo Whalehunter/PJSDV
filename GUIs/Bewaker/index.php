@@ -250,10 +250,17 @@
             <img alt="" src="img/deur.png"/>
           </div>
           <div class="content">
-            <h2 class="header">Deur</h2>
+              <h2 class="header">Deur</h2>
             <div class="ui divider"></div>
             <div class="description">
-              <div class="ui divided two column grid">
+                <div class="ui divided three column grid">
+                    <div class="column deur">
+                        <p><b>Deur</b></p>
+                        <div class="ui fitted toggle checkbox">
+                            <input name="" type="checkbox" value=""/>
+                        </div>
+                    </div>
+
                 <div class="column outside lamp">
                   <p><b>Buiten Lamp</b></p>
                   <div class="ui fitted toggle checkbox">
@@ -267,14 +274,14 @@
                     </div>
                 </div>
                 <div class="column outside switch">
-                  <p><b>Buiten Schakelaar</b></p>
-                  <div class="ui fitted toggle checkbox">
+                  <p><b>Buiten Knop</b></p>
+                  <div class="ui fitted slider checkbox">
                       <input name="" type="checkbox" value=""/>
                   </div>
                 </div>
                 <div class="column inside switch">
-                    <p><b>Binnen Schakelaar</b></p>
-                    <div class="ui fitted toggle checkbox">
+                    <p><b>Binnen Knop</b></p>
+                    <div class="ui fitted slider checkbox">
                         <input name="" type="checkbox" value=""/>
                     </div>
                 </div>
