@@ -15,24 +15,19 @@ Gui::~Gui()
 void Gui::operator()()
 {
     char buffer[256];
-    int bedKnoppie = 0;
     memset(buffer, 0, sizeof(buffer));
 
     while(recvMsg(buffer)) {
         std::cout << buffer << std::endl;
-
-        if(buffer[0] == 'b' && a->bed != 0) {
+        if(*buffer == 'b' && a->bed != 0) {
             strcpy(buffer, "teringjong");
             a->bed->sendMsg(buffer);
-        } else if(buffer[0] == 'd' && a->bed != 0) {
-            int bedKnoppie = a->bed->getStatus();
-            sprintf(buffer, "%d", bedKnoppie);
-            sendMsg(buffer);
-            std::cout << "knopwaarde van bed = " << bedKnoppie << std::endl;
-        } else if(buffer[0] == 'x') {
+        } else if(*buffer == 'd') {
+            sendMsg(a->devices.find(*buffer)->second->getStatus().dump().c_str());
+        } else if(*buffer == 'x') {
             Deur * deur = dynamic_cast<Deur *>(a->devices.find('d')->second);
             std::cout << "1" << std::endl;
-            if (buffer[1] == 'o') {
+            if (++*buffer == 'o') {
                 std::cout << "2" << std::endl;
                 sendMsg(buffer);
                 deur->openDeur();

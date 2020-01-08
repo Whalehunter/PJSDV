@@ -18,6 +18,13 @@ void Device::sendMsg(char* data)
     }
 }
 
+void Device::sendMsg(const char* data)
+{
+    if (send(sock, data, strlen(data), 0) < 0) {
+        std::cout << "Error sending" << std::endl;
+    }
+}
+
 bool Device::recvMsg(char* data)
 {
     return (recv(sock, data, 255, 0) > 0);
@@ -32,4 +39,3 @@ void Device::setSock(int x)
 {
     sock = x;
 }
-

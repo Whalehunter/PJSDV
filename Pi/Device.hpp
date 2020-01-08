@@ -25,9 +25,10 @@ class Device
         virtual ~Device();
 
         virtual void sendMsg(char*);
+        virtual void sendMsg(const char*);
         virtual bool recvMsg(char*);
         virtual void operator()() = 0;
-        
+
 //        json dicks = {{"one","two"}};
 
         int getSock();
