@@ -20,6 +20,9 @@ int ds = 0;
 int hex = 0x00;
   
 void setup(void) {
+  trilSensorAanUit(0);
+  lampAanUit(0);
+  
   Wire.begin();  //Start wire.
   Serial.begin(115200);  //Set serial Baud.
   Serial.printf("Connecting to", ssid);
@@ -45,6 +48,9 @@ void loop(void) {
   Serial.println(pb);
   Serial.println(ds);
   Serial.println();
+
+  trilSensorAanUit(0);
+  lampAanUit(0);
   
   Serial.printf("\n[Connecting to %s ... ", host);
   if (client.connect(host, port)){
