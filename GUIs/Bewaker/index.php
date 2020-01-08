@@ -58,8 +58,6 @@
 
          $('.muur .lamp .checkbox').checkbox();
 
-
-
          /* Update interval */
          /* setInterval(function() { */
          /* msg('d', updateElements); */
