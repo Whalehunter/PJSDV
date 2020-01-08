@@ -7,63 +7,95 @@
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
     <script src="semantic/dist/semantic.min.js"></script>
     <script>
-    $(document).ready(function(){
-         $('.bed .lamp .checkbox').checkbox({
-             onChange: function() {
-                 $.ajax('command.php', {
-                     dataType: 'json',
-                     data: {
-                         id:'x',
-                         msg:'d'
-                     },
-                     error: function(data) {
-                         $('.bed .lamp .checkbox').checkbox('uncheck');
-                     }
-                 }).done(function(data){
-                     if (data.success) {
-                         let toggler = 'uncheck';
-                         if (data.lamp === '1')
-                             toggler = 'check'
-
-                         setTimeout(function() {
-                             $('.bed .lamp .checkbox').checkbox(toggler);
-                         }, 100);
-                     }
-                 });
+     function msg(txt, hook) {
+         $.ajax('command.php', {
+             dataType: 'json',
+             data: {
+                 id: 'x',
+                 msg:txt,
+             },
+             error: (data) => {
+                 console.log(data);
              }
-         });
+         }).done(hook(data));
+     }
 
+     $(document).ready(()=>{
+
+         $('.schemerlamp .lamp .checkbox').checkbox();
+
+         $('.stoel .trillen .checkbox').checkbox();
+
+         $('.zuil .licht .checkbox').checkbox();
+         $('.zuil .rookmelder .checkbox').checkbox();
+         $('.zuil .zoemer .checkbox').checkbox();
+
+         $('.koelkast .deur .checkbox').checkbox();
+         $('.koelkast .koeler .checkbox').checkbox();
 
          $('.deur .inside.switch .checkbox').checkbox({
-             onChecked: function() {
-                 $.ajax('command.php', {
-                     dataType: 'json',
-                     data: {
-                         id: 'x',
-                         msg: 'xo'
-                     },
-                     error: function(data) {
-                         console.log(data);
+             onChecked:()=>{msg('xo',(data)=>{console.log(data)})},
+             onUnchecked:()=>{msg('xx',(data)=>{console.log(data)})}
+         });
+
+         $('.deur .outside.switch .checkbox').checkbox();
+         $('.deur .inside.lamp .checkbox').checkbox();
+         $('.deur .outside.lamp .checkbox').checkbox();
+         $('.deur .deur .checkbox').checkbox();
+
+         $('.bed .alarm .checkbox').checkbox();
+         $('.bed .lamp .checkbox').checkbox({
+             onChange:()=>{
+                 msg('d', (data) => {
+                     if (data) {
+                         let toggler = 'uncheck';
+                         if (data.lamp === '1') toggler = 'check';
+                         setTimeout(()=>{$('.bed .lamp .checkbox').checkbox(toggler)}, 100);
                      }
-                 }).done(function(data){
-                     console.log(data);
-                 });
-             },
-             onUnchecked: function() {
-                 $.ajax('command.php', {
-                     dataType: 'json',
-                     data: {
-                         id: 'x',
-                         msg: 'xx'
-                     },
-                     error: function(data) {
-                         console.log(data);
-                     }
-                 }).done(function(data){
-                     console.log(data);
                  });
              }
          });
+
+         $('.muur .lamp .checkbox').checkbox();
+
+
+
+         /* Update interval */
+         /* setInterval(function() { */
+         /* msg('d', updateElements); */
+         /* }, 2000); */
+
+         function updateElements(data) {
+             /* Deur */
+             if (data.deur) {
+                 let buitenKnop = '.outside.switch', binnenKnop = '.inside.switch', buitenLed = '.outside.led', binnenLed = '.inside.led', deur = '.deur';
+                 let d = data.deur, c = 'set checked';
+
+                 if (!d.Binnenknop) c = 'set unchecked';
+                 setCheckbox('.deur '+binnenKnop, c);
+
+                 if(d.Buitenknop) c = 'set checked';
+                 else c = 'set unchecked';
+                 setCheckbox('.deur '+buitenKnop, c);
+
+                 if (d.Binnenled) c = 'set checked';
+                 else c = 'set unchecked';
+                 setCheckbox('.deur '+binnenLed, c);
+
+                 if (d.Buitenled) c = 'set checked';
+                 else c = 'set unchecked';
+                 setCheckbox('.deur '+buitenLed, c);
+
+                 if (d.Deur == 'open')
+                     $('.deuropen').checkbox('set checked');
+                 else
+                     $('.deuropen').checkbox('set unchecked');
+             }
+         }
+
+         function setCheckbox(where, action) {
+             $(where+" .checkbox").checkbox(action);
+         }
 
 
          // function request(name, value, button) {
@@ -144,13 +176,13 @@
             <div class="ui divider"></div>
             <div class="description">
               <div class="ui divided two column grid">
-                <div class="column">
+                <div class="column lamp">
                   <p><b>Lamp</b></p>
                   <div class="ui fitted toggle checkbox">
                     <input name="" type="checkbox" value=""/>
                   </div>
                 </div>
-                <div class="column">
+                <div class="column movement">
                   <p><b>Bewegingdetector</b></p>
                   <p><span id="bewegingssensor">Aan</span></p>
                 </div>
@@ -168,13 +200,13 @@
             <div class="ui divider"></div>
             <div class="description">
               <div class="ui divided two column grid">
-                <div class="column">
+                <div class="column trillen">
                   <p><b>Trillen</b></p>
                   <div class="ui fitted toggle checkbox">
                     <input name="" type="checkbox" value=""/>
                   </div>
                 </div>
-                <div class="column">
+                <div class="column plek">
                   <p><b>Plek</b></p>
                   <p>Beschikbaar</p>
                 </div>
@@ -192,19 +224,19 @@
             <div class="ui divider"></div>
             <div class="description">
               <div class="ui divided three column grid">
-                <div class="column">
+                <div class="column licht">
                   <p><b>Licht</b></p>
                   <div class="ui fitted toggle checkbox">
                     <input name="" type="checkbox" value=""/>
                   </div>
                 </div>
-                <div class="column">
+                <div class="column rookmelder">
                   <p><b>Rookmelder</b></p>
-                  <div class="ui fitted toggle checkbox">
+                  <div class="ui fitted slider disabled checkbox">
                     <input name="" type="checkbox" value=""/>
                   </div>
                 </div>
-                <div class="column">
+                <div class="column zoemer">
                   <p><b>Zoemer</b></p>
                   <div class="ui fitted toggle checkbox">
                     <input name="" type="checkbox" value=""/>
@@ -226,7 +258,7 @@
               <div class="ui divided three column grid">
                 <div class="column deur">
                   <p><b>Deur</b></p>
-                  <div class="ui fitted toggle disabled checkbox">
+                  <div class="ui fitted slider disabled checkbox">
                     <input name="" type="checkbox" value=""/>
                   </div>
                 </div>
