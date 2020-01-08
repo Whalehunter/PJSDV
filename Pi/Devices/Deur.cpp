@@ -52,7 +52,7 @@ void Deur::operator()()
             case OPEN:
                 if(knopBinnen == 1 && knopBinnenPrev != knopBinnen) {
                     sluitDeur();
-                } 
+                }
                 break;
             case DICHT:
                 if(knopBinnen == 1 && knopBinnenPrev != knopBinnen) {
@@ -131,7 +131,7 @@ void Deur::buitenLampUit()
 
 json Deur::getStatus()
 {
-    json deurData = {{"State", state}, {"Binnenknop", knopBinnen}, {"Buitenknop", knopBuiten}, {"Binnenled", ledBinnen}, {"Buitenled", ledBuiten}};
+    json deurData = {{"Deur", state ? "open" : "dicht"}, {"Binnenknop", knopBinnen}, {"Buitenknop", knopBuiten}, {"Binnenled", ledBinnen}, {"Buitenled", ledBuiten}};
 
     return deurData;
 }
