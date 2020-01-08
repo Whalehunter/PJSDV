@@ -39,4 +39,4 @@ while($out = socket_read($s, SOCKSIZE)) {
     socket_write($s, $msg, strlen($msg));
 }
 
-echo json_encode(['success' => true, 'lamp' => $out]);
+echo $out;
