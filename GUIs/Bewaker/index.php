@@ -17,7 +17,7 @@
              error: (data) => {
                  console.log(data);
              }
-         }).done(hook);
+         }).done((data)=>{hook(data)});
      }
 
      $(document).ready(()=>{
@@ -59,15 +59,15 @@
          $('.muur .lamp .checkbox').checkbox();
 
          /* Update interval */
-         /* setInterval(function() { */
-         /* msg('d', updateElements); */
-         /* }, 2000); */
+         setInterval(function() {
+             msg('d', updateElements);
+         }, 100);
 
          function updateElements(data) {
              /* Deur */
-             if (data.deur) {
-                 let buitenKnop = '.outside.switch', binnenKnop = '.inside.switch', buitenLed = '.outside.led', binnenLed = '.inside.led', deur = '.deur';
-                 let d = data.deur, c = 'set checked';
+             if (data.Deur) {
+                 let buitenKnop = '.outside.switch', binnenKnop = '.inside.switch', buitenLed = '.outside.lamp', binnenLed = '.inside.lamp', deur = '.deur';
+                 let d = data.Deur, c = 'set checked';
 
                  if (!d.Binnenknop) c = 'set unchecked';
                  setCheckbox('.deur '+binnenKnop, c);
@@ -84,10 +84,9 @@
                  else c = 'set unchecked';
                  setCheckbox('.deur '+buitenLed, c);
 
-                 if (d.Deur == 'open')
-                     $('.deuropen').checkbox('set checked');
-                 else
-                     $('.deuropen').checkbox('set unchecked');
+                 if (d.Deur == 'open') c = 'set checked';
+                 else c = 'set unchecked';
+                 setCheckbox('.deur '+deur, c);
              }
          }
 
