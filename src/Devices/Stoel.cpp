@@ -39,22 +39,22 @@ void Stoel::operator()()//Overloaded functies moeten met 2 haakjes zodat je er z
 		trilStatus = j_deur.at("trilStatus");
 
 		if ((drukknop == 1) & (ledStatus == 0)){
-				sendMsg("ledAan/r");
-				ledStatus = 1;
-		}
+			sendMsg("ledAan/r");
+			ledStatus = 1;
+		}/*
 		else if ((drukknop == 1) & (ledStatus == 1)){
 			sendMsg("ledUit/r");
 			ledStatus = 0;
-		}
+		}*/
 
 		if ((drukknop == 1) & (druksensor == 1) & (trilStatus == 0)){
 				sendMsg("trilAan/r");
 				trilStatus = 1;
-			}
+		}/*
 		else if ((drukknop == 1) & (druksensor == 1) & (trilStatus == 1)){
 			sendMsg("trilUit/r");
 			trilStatus = 0;
-		}
+		}*/
 		/*ledAanUit();
 		trilAanUit();*/
     }
