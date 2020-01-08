@@ -49,7 +49,8 @@ void Gui::operator()()
     std::cout << "Connection closed on socket " << sock << std::endl;
 }
 
-int Gui::getStatus()
+json Gui::getStatus()
 {
-    return knopValue; // placeholder, we gaan hoop ik JSON gebruiken
+    json data = {"Placeholder", 0};
+    return data; // placeholder, we gaan hoop ik JSON gebruiken
 }

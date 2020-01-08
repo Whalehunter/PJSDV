@@ -25,8 +25,8 @@ void Appartement::createDevice(int sock, char id)
 {
     if (id == 'd') {
         if(deur != 0) delete deur;
-          Deur * pDeur = new Deur(sock, this);
-       // deur = new Deur(sock, this);
+
+        Deur * pDeur = new Deur(sock, this); 
         devices.insert(std::pair<char, Deur*>(id, pDeur));
         std::thread deurThread(&Device::operator(), pDeur);
         deurThread.detach();

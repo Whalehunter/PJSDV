@@ -10,7 +10,7 @@ class Stoel: public Device
         ~Stoel();
 
         void operator()();
-        int getStatus();
+        nlohmann::json getStatus();
 };
 
 #endif

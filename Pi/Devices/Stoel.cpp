@@ -33,8 +33,10 @@ void Stoel::operator()()
     std::cout << "Connection closed on socket " << sock << std::endl;
 }
 
-int Stoel::getStatus()
+nlohmann::json Stoel::getStatus()
 {
-    return knopValue;
+   nlohmann::json data = {"Placeholder", 0};
+   return data;
+   // return knopValue;
 }
 

@@ -90,14 +90,9 @@ void Zuil::zoemerUit()
     zoemer = 0;
 }
 
-json Zuil::getZuilStatus()
+json Zuil::getStatus()
 {
     json zuilData = {{"Zoemer", zoemer}, {"Nood", nood}, {"Brand", brand}};
 
     return zuilData;
-}
-
-int Zuil::getStatus()
-{
-    return 1; //placeholder
 }

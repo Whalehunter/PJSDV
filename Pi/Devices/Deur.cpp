@@ -2,7 +2,7 @@
 
 using json = nlohmann::json;
 
-Deur::Deur(int n, Appartement* ap): Device(n, ap), state(DICHT), knopBinnen(0), knopBuiten(0), ledBinnen(0), ledBuiten(0)
+Deur::Deur(int n, Appartement* ap): Device(n, ap), state(DICHT), knopBinnen(0), knopBuiten(0), ledBinnen(0), ledBuiten(0), timer(0)
 {
     std::cout << "Deur aangemaakt" << std::endl;
 }
@@ -16,11 +16,8 @@ void Deur::operator()()
     char buffer[256];
     int knopBinnenPrev = 0;
     int knopBuitenPrev = 0;
-    //clock_t t;
 
     while(1) {
-       // std::cout << getDeurStatus() << std::endl;
-
         /* get and store JSON values */
 
         memset(buffer, 0, sizeof(buffer));
@@ -28,13 +25,11 @@ void Deur::operator()()
         sendMsg(buffer);
 
         memset(buffer, 0, sizeof(buffer));
-        if(recv(sock, buffer, 255, 0) < 1) { // voor nu even geen functie van gemaakt, wordt geintegreerd in Device
+        if(recv(sock, buffer, 255, 0) < 1) { // dit wordt een functie
             std::cout << "Deur disconnected from socket: " << sock << std::endl;
             close(sock);
             return;
         }
-
-       // std::cout << buffer << std::endl;
 
         auto j_deur = json::parse(buffer); // hier moeten ook exceptions afgehandeld worden
 
@@ -56,14 +51,19 @@ void Deur::operator()()
                 break;
         }
 
+        /* checks */
+
         if (knopBuiten == 1 && knopBuitenPrev != knopBuiten) {
             deurBel();
+            buitenLampAan();
+        }
+
+        if (ledBuiten == 1 && (std::clock() - timer / (double) CLOCKS_PER_SEC) >= 5.0) {
+            buitenLampUit();
         }
 
         knopBinnenPrev = knopBinnen;
         knopBuitenPrev = knopBuiten;
-
-    //    std::cout << getDeurStatus() << std::endl;
     }
 
    close(sock);
@@ -97,15 +97,31 @@ void Deur::deurBel()
     sendMsg(buff);
 }
 
-json Deur::getDeurStatus()
+void Deur::buitenLampAan()
+{
+    char buff[256];
+    memset(buff, 0, sizeof(buff));
+    strcpy(buff, "buitenLampAan\r");
+    sendMsg(buff);
+
+    ledBuiten = 1;
+    timer = std::clock();
+}
+
+void Deur::buitenLampUit()
+{
+    char buff[256];
+    memset(buff, 0, sizeof(buff));
+    strcpy(buff, "buitenLampUit\r");
+    sendMsg(buff);
+
+    ledBuiten = 0;
+    timer = 0;
+}
+
+json Deur::getStatus()
 {
     json deurData = {{"State", state}, {"Binnenknop", knopBinnen}, {"Buitenknop", knopBuiten}, {"Binnenled", ledBinnen}, {"Buitenled", ledBuiten}};
 
     return deurData;
 }
-
-int Deur::getStatus()
-{
-    return state; // placeholder
-}
-

@@ -8,6 +8,7 @@
 #include <iostream>
 #include <sstream>
 #include <unistd.h>
+#include <ctime>
 
 //using json = nlohmann::json;
 
@@ -32,7 +33,7 @@ class Device
         int getSock();
         void setSock(int);
 
-        virtual int getStatus() = 0;
+        virtual nlohmann::json getStatus() = 0;
 };
 
 #endif

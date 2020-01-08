@@ -10,6 +10,7 @@ class Deur: public Device
         enum deurStatus {DICHT, OPEN, OPSLOT};
 
         Deur::deurStatus state;
+        std::clock_t timer;
         int knopBinnen;
         int knopBuiten;
         int ledBinnen;
@@ -24,10 +25,11 @@ class Deur: public Device
         void openDeur();
         void sluitDeur();
         void deurBel();
-        int getStatus();
+        void buitenLampAan();
+        void buitenLampUit();
         int getLedStatus();
 
-        nlohmann::json getDeurStatus();
+        nlohmann::json getStatus();
 };
 
 #endif

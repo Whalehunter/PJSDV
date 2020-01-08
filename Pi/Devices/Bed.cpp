@@ -33,8 +33,9 @@ void Bed::operator()()
     std::cout << "Connection closed on socket " << sock << std::endl;
 }
 
-int Bed::getStatus()
+nlohmann::json Bed::getStatus()
 {
-    return knopValue;
+    nlohmann::json data = {"Placeholder", 0};
+    return data;
 }
 

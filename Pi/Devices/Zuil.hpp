@@ -14,13 +14,12 @@ class Zuil: public Device
         ~Zuil();
 
         void operator()();
-        int getStatus();
         void noodAlarm(int);
         void brandAlarm(int);
         void zoemerAan();
         void zoemerUit();
 
-        nlohmann::json getZuilStatus();
+        nlohmann::json getStatus();
 };
 
 #endif
