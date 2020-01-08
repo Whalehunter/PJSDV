@@ -8,6 +8,7 @@ using json = nlohmann::json;
 
 Stoel::Stoel(int n, Appartement* ap): Device(n, ap)
 {
+    ledStatus = 0;
     std::cout << "Stoel aangemaakt" << std::endl;
 }
 
@@ -17,6 +18,7 @@ Stoel::~Stoel()
 
 void Stoel::operator()()//Overloaded functies moeten met 2 haakjes zodat je er zoveel mogelijk over kan sturen als je wilt.
 {
+
     char buffer[256];
 
     while(1) {
@@ -33,6 +35,8 @@ void Stoel::operator()()//Overloaded functies moeten met 2 haakjes zodat je er z
             return;
         }
 
+        std::cout << buffer << std::endl;
+
         try {
             auto j_deur = json::parse(buffer); // hier moeten ook exceptions afgehandeld worden
 
@@ -42,23 +46,29 @@ void Stoel::operator()()//Overloaded functies moeten met 2 haakjes zodat je er z
         catch(json::parse_error) {
             std::cout << "parse error" << std::endl;
         }
-        if ((drukknop == 1) & (ledStatus == 0)){
-            sendMsg("ledAan/r");
-            ledStatus = 1;
-        }
-        else if ((drukknop == 1) & (ledStatus == 1)){
-            sendMsg("ledUit/r");
-            ledStatus = 0;
-        }
+        std::cout << drukknop << std::endl;
 
-        if ((drukknop == 1) & (druksensor == 1) & (trilStatus == 0)){
-            sendMsg("trilAan/r");
+        if (drukknop == 1){
+            memset(buffer, 0, sizeof(buffer));
+            strcpy(buffer, "ledAan\r");
+            sendMsg(buffer);
+            ledStatus = 1;
+        }/*
+            else if ((drukknop == 1) & (ledStatus == 1)){
+            sendMsg("ledUit\r");
+            ledStatus = 0;
+            }*/
+
+        if ((drukknop == 1) && (trilStatus == 1)){
+            memset(buffer, 0, sizeof(buffer));
+            strcpy(buffer, "trilAan\r");
+            sendMsg(buffer);
             trilStatus = 1;
-        }
-        else if ((drukknop == 1) & (druksensor == 1) & (trilStatus == 1)){
-            sendMsg("trilUit/r");
+        }/*
+            else if ((drukknop == 1) & (druksensor == 1) & (trilStatus == 1)){
+            sendMsg("trilUit\r");
             trilStatus = 0;
-        }
+            }*/
         /*ledAanUit();
           trilAanUit();*/
     }
