@@ -31,6 +31,8 @@ void Deur::operator()()
             return;
         }
 
+        std::cout << buffer << std::endl;
+
         /* try and catch json parse exceptions */
 
         try {
@@ -50,12 +52,12 @@ void Deur::operator()()
 
         switch(state) {
             case OPEN:
-                if(knopBinnen == 1 && knopBinnenPrev != knopBinnen) {
+                if(knopBinnen == 2 && knopBinnenPrev != knopBinnen) {
                     sluitDeur();
                 }
                 break;
             case DICHT:
-                if(knopBinnen == 1 && knopBinnenPrev != knopBinnen) {
+                if(knopBinnen == 2 && knopBinnenPrev != knopBinnen) {
                     openDeur();
                 }
                 break;
@@ -64,11 +66,11 @@ void Deur::operator()()
         /* checks */
 
         if (knopBuiten == 1 && knopBuitenPrev != knopBuiten) {
-            deurBel();
+           // deurBel();
             buitenLampAan();
         }
 
-        if (ledBuiten == 1 && (std::clock() - timer / (double) CLOCKS_PER_SEC) >= 5.0) {
+        if (ledBuiten == 1 && ((std::clock() - timer) / (double) CLOCKS_PER_SEC) >= 5.0) {
             buitenLampUit();
         }
 
