@@ -141,6 +141,7 @@ int leesBuitenUit(){
   Serial.println(inputs&0x01);
   
   if (inputs&0x01 == 1){
+    Serial.print("Hallo"); 
     return 1;
   }
   else {
