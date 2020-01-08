@@ -27,7 +27,8 @@ void Gui::operator()()
         } else if(*buffer == 'x') {
             Deur * deur = dynamic_cast<Deur *>(a->devices.find('d')->second);
             std::cout << "1" << std::endl;
-            if (++*buffer == 'o') {
+            char *p = buffer;
+            if (*(++p) == 'o') {
                 std::cout << "2" << std::endl;
                 sendMsg(buffer);
                 deur->openDeur();

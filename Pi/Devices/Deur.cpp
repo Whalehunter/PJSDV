@@ -31,8 +31,6 @@ void Deur::operator()()
             return;
         }
 
-        std::cout << buffer << std::endl;
-
         /* try and catch json parse exceptions */
 
         try {
@@ -66,7 +64,7 @@ void Deur::operator()()
         /* checks */
 
         if (knopBuiten == 1 && knopBuitenPrev != knopBuiten) {
-           // deurBel();
+            deurBel();
             buitenLampAan();
         }
 
@@ -133,7 +131,8 @@ void Deur::buitenLampUit()
 
 json Deur::getStatus()
 {
-    json deurData = {{"Deur", state ? "open" : "dicht"}, {"Binnenknop", knopBinnen}, {"Buitenknop", knopBuiten}, {"Binnenled", ledBinnen}, {"Buitenled", ledBuiten}};
+    json deurData;
+    deurData["Deur"] = {{"Deur", state ? "open" : "dicht"}, {"Binnenknop", knopBinnen}, {"Buitenknop", knopBuiten}, {"Binnenled", ledBinnen}, {"Buitenled", ledBuiten}};
 
     return deurData;
 }
