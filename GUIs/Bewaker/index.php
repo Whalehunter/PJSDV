@@ -17,7 +17,7 @@
              error: (data) => {
                  console.log(data);
              }
-         }).done(hook(data));
+         }).done(hook);
      }
 
      $(document).ready(()=>{
@@ -33,15 +33,15 @@
          $('.koelkast .deur .checkbox').checkbox();
          $('.koelkast .koeler .checkbox').checkbox();
 
-         $('.deur .inside.switch .checkbox').checkbox({
-             onChecked:()=>{msg('xo',(data)=>{console.log(data)})},
-             onUnchecked:()=>{msg('xx',(data)=>{console.log(data)})}
-         });
+         $('.deur .inside.switch .checkbox').checkbox();
 
          $('.deur .outside.switch .checkbox').checkbox();
          $('.deur .inside.lamp .checkbox').checkbox();
          $('.deur .outside.lamp .checkbox').checkbox();
-         $('.deur .deur .checkbox').checkbox();
+         $('.deur .deur .checkbox').checkbox({
+             onChecked:()=>{msg('xo',(data)=>{console.log(data)})},
+             onUnchecked:()=>{msg('xx',(data)=>{console.log(data)})}
+         });
 
          $('.bed .alarm .checkbox').checkbox();
          $('.bed .lamp .checkbox').checkbox({
