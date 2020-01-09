@@ -22,40 +22,41 @@ Appartement::~Appartement()
 
 void Appartement::createDevice(int sock, char id)
 {
+    Device * ob = NULL;
     if (id == 'd') {
         if(deur != 0) delete deur;
-
-        Deur * pDeur = new Deur(sock, this); 
-        devices.insert(std::pair<char, Deur*>(id, pDeur));
-        std::thread deurThread(&Device::operator(), pDeur);
-        deurThread.detach();
+        deur = new Deur(sock, this);
+        ob = deur;
     }
     else if (id == 'f') {
         if(zuil != 0) delete zuil;
-
         zuil = new Zuil(sock, this);
-        std::thread zuilThread(&Device::operator(), zuil);
-        zuilThread.detach();
+        ob = zuil;
+    }
+    else if (id == 's') {
+        if(schemerlamp != 0) delete schemerlamp;
+        schemerlamp = new Schemerlamp(sock, this);
+        ob = schemerlamp;
     }
     else if (id == 'x') {
         if(gui != 0) delete gui;
-
         gui = new Gui(sock, this);
-        std::thread guiThread(&Device::operator(), gui);
-        guiThread.detach();
+        ob = gui;
     }
     else if (id == 'y') {
         if(bed != 0) delete bed;
-
         bed = new Bed(sock, this);
-        std::thread bedThread(&Device::operator(), bed);
-        bedThread.detach();
+        ob = bed;
     }
     else if (id == 'z') {
         if(stoel != 0) delete stoel;
-
         stoel = new Stoel(sock, this);
-        std::thread stoelThread(&Device::operator(), stoel);
-        stoelThread.detach();
+        ob = stoel;
+    }
+
+    if (ob != NULL) {
+        devices.insert(std::pair<char, Device*>(id, ob));
+        std::thread obThread(&Device::operator(), ob);
+        obThread.detach();
     }
 }

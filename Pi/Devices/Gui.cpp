@@ -22,7 +22,7 @@ void Gui::operator()()
         if(*buffer == 'b' && a->bed != 0) {
             strcpy(buffer, "teringjong");
             a->bed->sendMsg(buffer);
-        } else if(*buffer == 'd') {
+        } else if(*buffer == 'd' || *buffer == 's' || *buffer == 'f') {
             sendMsg(a->devices.find(*buffer)->second->getStatus().dump().c_str());
         } else if(*buffer == 'x') {
             Deur * deur = dynamic_cast<Deur *>(a->devices.find('d')->second);
