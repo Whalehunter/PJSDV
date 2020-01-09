@@ -1,3 +1,6 @@
+#ifndef RGB_HPP
+#define RGB_HPP
+
 #include <string>
 
 class RGB {
@@ -17,11 +20,10 @@ class RGBLed {
 public:
     RGB* rgb;
     RGBLed():rgb(new RGB()){}
-    void setKleur(int, int, int);
+    void setKleur(int r, int g , int b) {
+        rgb->red = r;
+        rgb->green = g;
+        rgb->blue = b;
+    }
 };
-
-void RGBLed::setKleur(int r, int g, int b) {
-    rgb->red = r;
-    rgb->green = g;
-    rgb->blue = b;
-}
+#endif
