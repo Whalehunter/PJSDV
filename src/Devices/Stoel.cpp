@@ -44,8 +44,8 @@ void Stoel::operator()()//Overloaded functies moeten met 2 haakjes zodat je er z
             drukknop = j_deur.at("drukknop");
             drukSensor = j_deur.at("drukSensor");
         }
-        catch(json::parse_error) {
-            std::cout << "parse error" << std::endl;
+        catch(json::exception& e) {
+            std::cout << e.what() << std::endl;
         }
         std::cout << drukknop << std::endl;
 
