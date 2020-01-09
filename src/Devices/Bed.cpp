@@ -34,18 +34,18 @@ void Bed::operator()()
             knop = j_bed.at("knop");
             druksensor = j_bed.at("druksensor");
         }
-        catch(json::parse_error) {
-            std::cout << "Parsing error at Bed on socket " << sock << std::endl;
+        catch(json::exception& e) {
+            std::cout << "Exception error at Bed: " << e.what() << std::endl;
         }
         switch(state){
             case LICHT:
                 if (knop == 1 && knopPrev != knop){
-                    ToggleLed(1);
+                    ToggleLed(0);
                 }
                 break;
             case DONKER:
                 if (knop == 1 && knopPrev != knop){
-                    ToggleLed(0);
+                    ToggleLed(1);
                 }
         }
         if (druksensor == 1){
