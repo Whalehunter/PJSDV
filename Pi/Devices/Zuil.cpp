@@ -2,7 +2,7 @@
 
 using json = nlohmann::json;
 
-Zuil::Zuil(int n, Appartement* ap): Device(n, ap), nood(0), brand(0)
+Zuil::Zuil(int n, Appartement* ap): Device(n, ap), nood(0), brand(0), zoemer(0)
 {
     std::cout << "Zuil aangemaakt" << std::endl;
 }
@@ -19,9 +19,7 @@ void Zuil::operator()()
     while(1) {
         /* get and store JSON values */
 
-        memset(buffer, 0, sizeof(buffer));
-        strcpy(buffer, "getStatus\r");
-        sendMsg(buffer);
+        sendMsg("getStatus\r");
 
         memset(buffer, 0, sizeof(buffer));
         if(recv(sock, buffer, 255, 0) < 1) {
@@ -29,6 +27,8 @@ void Zuil::operator()()
             close(sock);
             return;
         }
+
+      //  std::cout << buffer << std::endl;
 
         try {
             auto j_zuil = json::parse(buffer);
@@ -43,7 +43,7 @@ void Zuil::operator()()
         if(knopValue == 1 && knopValuePrev != knopValue) {
             noodAlarm(1);
         }
-        if(sensorValue == 1) {
+        if(sensorValue == 920) {
             brandAlarm(1);
         }
 
@@ -59,32 +59,21 @@ void Zuil::operator()()
 
 void Zuil::noodAlarm(int n)
 {
-    char buff[256];
-    memset(buff, 0, sizeof(buff));
-    if(n) strcpy(buff, "noodAlarmAan\r");
-    else strcpy(buff, "noodAlarmUit\r");
-    sendMsg(buff);
+    sendMsg("noodAlarm\r");
 
     nood = n;
 }
 
 void Zuil::brandAlarm(int n)
 {
-    char buff[256];
-    memset(buff, 0, sizeof(buff));
-    if(n) strcpy(buff, "brandAlarmAan\r");
-    else strcpy(buff, "brandAlarmUit\r");
-    sendMsg(buff);
+    sendMsg("brandAlarm\r");
 
     brand = n;
 }
 
 void Zuil::deurBelAan()
 {
-    char buff[256];
-    memset(buff, 0, sizeof(buff));
-    strcpy(buff, "deurBelAan\r");
-    sendMsg(buff);
+    sendMsg("deurBelAan\r");
 
     zoemer = 1;
     timer = clock();
@@ -92,17 +81,15 @@ void Zuil::deurBelAan()
 
 void Zuil::deurBelUit()
 {
-    char buff[256];
-    memset(buff, 0, sizeof(buff));
-    strcpy(buff, "deurBelUit\r");
-    sendMsg(buff);
+    sendMsg("deurBelUit\r");
 
     zoemer = 0;
 }
 
 json Zuil::getStatus()
 {
-    json zuilData = {{"Zoemer", zoemer}, {"Nood", nood}, {"Brand", brand}};
+    json zuilData;
+    zuilData["Zuil"] = {{"Zoemer", zoemer}, {"Noodalarm", nood}, {"Brandalarm", brand}, {"Gasmeter", sensorValue}, {"Knop", knopValue}};
 
     return zuilData;
 }

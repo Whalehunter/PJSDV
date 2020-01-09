@@ -11,13 +11,6 @@ Device::~Device()
 {
 }
 
-void Device::sendMsg(char* data)
-{
-    if (send(sock, data, strlen(data), 0) < 0) {
-        std::cout << "Error sending on socket: " << sock << std::endl;
-    }
-}
-
 void Device::sendMsg(const char* data)
 {
     if (send(sock, data, strlen(data), 0) < 0) {

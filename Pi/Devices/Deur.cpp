@@ -21,9 +21,7 @@ void Deur::operator()()
     while(1) {
         /* get and store JSON values */
 
-        memset(buffer, 0, sizeof(buffer));
-        strcpy(buffer, "getStatus\r");
-        sendMsg(buffer);
+        sendMsg("getStatus\r");
 
         memset(buffer, 0, sizeof(buffer));
         if(recv(sock, buffer, 255, 0) < 1) { // dit wordt een functie
@@ -43,9 +41,6 @@ void Deur::operator()()
         catch(json::exception& e) {
             std::cout << "Exception error at Deur: " << e.what() << std::endl;
         }
-
-       // knopBinnen = j_deur.at("binnenKnop");
-       // knopBuiten = j_deur.at("buitenKnop");
 
         /* state machine */
 
@@ -83,20 +78,14 @@ void Deur::operator()()
 
 void Deur::openDeur()
 {
-    char buff[256];
-    memset(buff, 0, sizeof(buff));
-    strcpy(buff, "deurOpen\r");
-    sendMsg(buff);
+    sendMsg("deurOpen\r");
 
     state = OPEN;
 }
 
 void Deur::sluitDeur()
 {
-    char buff[256];
-    memset(buff, 0, sizeof(buff));
-    strcpy(buff, "deurDicht\r");
-    sendMsg(buff);
+    sendMsg("deurDicht\r");
 
     state = DICHT;
 }
@@ -108,10 +97,7 @@ void Deur::deurBel()
 
 void Deur::buitenLampAan()
 {
-    char buff[256];
-    memset(buff, 0, sizeof(buff));
-    strcpy(buff, "buitenLampAan\r");
-    sendMsg(buff);
+    sendMsg("buitenLampAan\r");
 
     ledBuiten = 1;
     timer = std::clock();
@@ -119,10 +105,7 @@ void Deur::buitenLampAan()
 
 void Deur::buitenLampUit()
 {
-    char buff[256];
-    memset(buff, 0, sizeof(buff));
-    strcpy(buff, "buitenLampUit\r");
-    sendMsg(buff);
+    sendMsg("buitenLampUit\r");
 
     ledBuiten = 0;
     timer = 0;
