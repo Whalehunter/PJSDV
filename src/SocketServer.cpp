@@ -74,6 +74,7 @@ void SocketServer::handshake(int sock)
 
     switch(response[0]) {
         case 'd':
+        case 'k':
         case 'f':
         case 'x':
         case 'y':

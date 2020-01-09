@@ -39,13 +39,13 @@ void Stoel::operator()()//Overloaded functies moeten met 2 haakjes zodat je er z
         std::cout << buffer << std::endl;
 
         try {
-            auto j_deur = json::parse(buffer); // hier moeten ook exceptions afgehandeld worden
+            auto j_stoel = json::parse(buffer); // hier moeten ook exceptions afgehandeld worden
 
-            drukknop = j_deur.at("drukknop");
-            drukSensor = j_deur.at("drukSensor");
+            drukknop = j_stoel.at("drukknop");
+            drukSensor = j_stoel.at("drukSensor");
         }
-        catch(json::exception& e) {
-            std::cout << e.what() << std::endl;
+        catch(json::parse_error) {
+            std::cout << "parse error" << std::endl;
         }
         std::cout << drukknop << std::endl;
 
@@ -62,7 +62,7 @@ void Stoel::operator()()//Overloaded functies moeten met 2 haakjes zodat je er z
             trilAan();
             trilStatus = 1;
         }
-        else if ((drukknop == 1) && (drukSensor == 1) && (trilStatus == 1) && ((drukknopPrev != drukknop) || (drukSensorPrev != drukSensor))){
+        else if ((drukknop == 1) && (drukSensor == 0) && (trilStatus == 1) && ((drukknopPrev != drukknop) || (drukSensorPrev != drukSensor))){
             trilUit();
             trilStatus = 0;
         }

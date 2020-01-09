@@ -23,6 +23,7 @@ class Appartement
         Device* gui;
         Device* bed;
         Device* stoel;
+        Device* koelkast;
 
         void createDevice(int, char);
 };
