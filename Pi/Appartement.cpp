@@ -5,8 +5,7 @@
 #include "Devices/Bed.hpp"
 #include "Devices/Stoel.hpp"
 #include "Devices/Zuil.hpp"
-
-#include <map>
+#include "Devices/Schemerlamp.hpp"
 
 Appartement::Appartement(): deur(0), gui(0), bed(0), stoel(0), zuil(0)
 {

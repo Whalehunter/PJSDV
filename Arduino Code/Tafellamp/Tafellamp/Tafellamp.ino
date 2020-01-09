@@ -56,7 +56,6 @@ void loop() {
           data["rood"] = ((pixel>>16) & 0xFF);
           data["groen"] = ((pixel>>8) & 0xFF);
           data["blauw"] = (pixel & 0xFF);
-          data["brightness"] = pixels.getBrightness(0);
           data["beweging"] = (sensor&0x01);
           serializeJson(data, buffer);
           client.print(String(buffer));

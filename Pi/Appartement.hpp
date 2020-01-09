@@ -23,9 +23,9 @@ class Appartement
         Device* gui;
         Device* bed;
         Device* stoel;
+        Device* schemerlamp;
 
         void createDevice(int, char);
 };
 
 #endif
-

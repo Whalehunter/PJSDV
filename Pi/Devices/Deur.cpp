@@ -33,7 +33,7 @@ void Deur::operator()()
         /* try and catch json parse exceptions */
 
         try {
-            auto j_deur = json::parse(buffer); // hier moeten ook exceptions afgehandeld worden
+            auto j_deur = json::parse(buffer);
 
             knopBinnen = j_deur.at("binnenKnop");
             knopBuiten = j_deur.at("buitenKnop");
