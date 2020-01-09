@@ -9,6 +9,8 @@ class Zuil: public Device
         int zoemer;
         int brand;
         int nood;
+
+        clock_t timer;
     public:
         Zuil(int, Appartement*);
         ~Zuil();
@@ -16,8 +18,8 @@ class Zuil: public Device
         void operator()();
         void noodAlarm(int);
         void brandAlarm(int);
-        void zoemerAan();
-        void zoemerUit();
+        void deurBelAan();
+        void deurBelUit();
 
         nlohmann::json getStatus();
 };

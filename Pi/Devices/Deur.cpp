@@ -1,4 +1,5 @@
 #include "Deur.hpp"
+#include "Zuil.hpp"
 
 using json = nlohmann::json;
 
@@ -39,8 +40,8 @@ void Deur::operator()()
             knopBinnen = j_deur.at("binnenKnop");
             knopBuiten = j_deur.at("buitenKnop");
         }
-        catch(json::parse_error) {
-            std::cout << "Parsing error at Deur on socket " << sock << std::endl;
+        catch(json::exception& e) {
+            std::cout << "Exception error at Deur: " << e.what() << std::endl;
         }
 
        // knopBinnen = j_deur.at("binnenKnop");
@@ -64,7 +65,8 @@ void Deur::operator()()
         /* checks */
 
         if (knopBuiten == 1 && knopBuitenPrev != knopBuiten) {
-            deurBel();
+            Zuil * zuil = dynamic_cast<Zuil *>(a->devices.find('f')->second);
+            zuil->deurBelAan();
             buitenLampAan();
         }
 
@@ -101,10 +103,7 @@ void Deur::sluitDeur()
 
 void Deur::deurBel()
 {
-    char buff[256];
-    memset(buff, 0, sizeof(buff));
-    strcpy(buff, "deurBel\r");
-    sendMsg(buff);
+//    a->zuil->deurBel();
 }
 
 void Deur::buitenLampAan()

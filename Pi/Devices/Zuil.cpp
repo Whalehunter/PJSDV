@@ -30,16 +30,25 @@ void Zuil::operator()()
             return;
         }
 
-        auto j_zuil = json::parse(buffer);
+        try {
+            auto j_zuil = json::parse(buffer);
 
-        knopValue = j_zuil.at("knopValue");
-        sensorValue = j_zuil.at("sensorValue");
+            knopValue = j_zuil.at("knopValue");
+            sensorValue = j_zuil.at("sensorValue");
+        }
+        catch(json::exception& e) {
+            std::cout << "Exception error at Zuil: " << e.what() << std::endl;
+        }
 
         if(knopValue == 1 && knopValuePrev != knopValue) {
             noodAlarm(1);
         }
         if(sensorValue == 1) {
             brandAlarm(1);
+        }
+
+        if(zoemer == 1 && ((std::clock() - timer) / (double) CLOCKS_PER_SEC) >= 2.0) {
+            deurBelUit();
         }
 
         knopValuePrev = knopValue;
@@ -70,21 +79,22 @@ void Zuil::brandAlarm(int n)
     brand = n;
 }
 
-void Zuil::zoemerAan()
+void Zuil::deurBelAan()
 {
     char buff[256];
     memset(buff, 0, sizeof(buff));
-    strcpy(buff, "zoemerAan\r");
+    strcpy(buff, "deurBelAan\r");
     sendMsg(buff);
 
     zoemer = 1;
+    timer = clock();
 }
 
-void Zuil::zoemerUit()
+void Zuil::deurBelUit()
 {
     char buff[256];
     memset(buff, 0, sizeof(buff));
-    strcpy(buff, "zoemerUit\r");
+    strcpy(buff, "deurBelUit\r");
     sendMsg(buff);
 
     zoemer = 0;
