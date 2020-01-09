@@ -38,12 +38,12 @@ void Bed::operator()()
             std::cout << "Exception error at Bed: " << e.what() << std::endl;
         }
         switch(state){
-            case LICHT:
+            case AAN:
                 if (knop == 1 && knopPrev != knop){
                     ToggleLed(0);
                 }
                 break;
-            case DONKER:
+            case UIT:
                 if (knop == 1 && knopPrev != knop){
                     ToggleLed(1);
                 }
@@ -60,7 +60,7 @@ void Bed::operator()()
 
 nlohmann::json Bed::getStatus()
 {
-    json bedData = {{"Bed", state ? "licht" : "donker"}, {"knop", knop}, {"drukSensor", druksensor}};
+    json bedData = {{"Bed", state ? "aan" : "uit"}, {"knop", knop}, {"drukSensor", druksensor}};
 
     return bedData;
 
