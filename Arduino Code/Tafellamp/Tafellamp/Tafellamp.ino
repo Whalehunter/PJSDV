@@ -1,6 +1,7 @@
 #include <Wire.h>
 #include <Adafruit_NeoPixel.h>
 #include <ESP8266WiFi.h>
+#include <ArduinoJson.h>
 
 #define I2C_SDL   D1
 #define I2C_SDA   D2
@@ -16,8 +17,9 @@ Adafruit_NeoPixel pixels(NUMPIXELS, RGB, NEO_GRB + NEO_KHZ800);
 
 int leesPIR();
 void ledRGB();
+String line;
 
-string getLine(c) {
+String getLine(WiFiClient c) {
   return c.readStringUntil('\r');
 }
 
@@ -32,7 +34,7 @@ void setup() {
     Serial.print(".");
     delay(500);
   }
-  Serail.printf("Connected to ", SSID);
+  Serial.printf("Connected to ", SSID);
   pixels.setPixelColor(0, pixels.Color(255, 255, 255)); // ff een testje
 }
 
@@ -56,7 +58,7 @@ void loop() {
           data["rood"] = ((pixel>>16) & 0xFF);
           data["groen"] = ((pixel>>8) & 0xFF);
           data["blauw"] = (pixel & 0xFF);
-          data["beweging"] = (sensor&0x01);
+          data["beweging"] = (leesPIR()&0x01);
           serializeJson(data, buffer);
           client.print(String(buffer));
         } else if (line == "discoAan") {
