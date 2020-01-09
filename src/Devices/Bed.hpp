@@ -17,7 +17,7 @@ class Bed: public Device
         void deactiveersBewegingssensor();
         void ToggleLed(int);
     private:
-        enum bedStatus {LICHT, DONKER};
+        enum bedStatus {UIT, AAN};
 
         Bed::bedStatus state;
         int druksensor;
