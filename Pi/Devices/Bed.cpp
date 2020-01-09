@@ -20,10 +20,10 @@ void Bed::operator()()
     memset(buffer, 0, sizeof(buffer));
 
     while(recvMsg(buffer)) {
-        std::stringstream s(buffer);
-        s >> knopValue;
+      //  std::stringstream s(buffer);
+      //  s >> knopValue;
 
-        std::cout << "Bed: " << knopValue << std::endl;
+      //  std::cout << "Bed: " << knopValue << std::endl;
 
         strcpy(buffer, "getStatus\r");
         sendMsg(buffer);

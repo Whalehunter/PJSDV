@@ -25,7 +25,8 @@ class Deur: public Device
         void deurBel();
         void buitenLampAan();
         void buitenLampUit();
-        int getLedStatus();
+        void binnenLampAan();
+        void binnenLampUit();
 
         nlohmann::json getStatus();
 };

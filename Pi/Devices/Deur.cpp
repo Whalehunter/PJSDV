@@ -60,8 +60,7 @@ void Deur::operator()()
         /* checks */
 
         if (knopBuiten == 1 && knopBuitenPrev != knopBuiten) {
-            Zuil * zuil = dynamic_cast<Zuil *>(a->devices.find('f')->second);
-            zuil->deurBelAan();
+            deurBel();
             buitenLampAan();
         }
 
@@ -92,7 +91,8 @@ void Deur::sluitDeur()
 
 void Deur::deurBel()
 {
-//    a->zuil->deurBel();
+    Zuil * zuil = dynamic_cast<Zuil *>(a->devices.find('f')->second);
+    zuil->deurBelAan();
 }
 
 void Deur::buitenLampAan()
@@ -109,6 +109,20 @@ void Deur::buitenLampUit()
 
     ledBuiten = 0;
     timer = 0;
+}
+
+void Deur::binnenLampAan()
+{
+    sendMsg("binnenLampAan\r");
+
+    ledBinnen = 1;
+}
+
+void Deur::binnenLampUit()
+{
+    sendMsg("binnenLampUit\r");
+
+    ledBinnen = 0;
 }
 
 json Deur::getStatus()

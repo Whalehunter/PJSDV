@@ -16,7 +16,8 @@ class Zuil: public Device
         ~Zuil();
 
         void operator()();
-        void noodAlarm(int);
+        void noodAlarmAan();
+        void noodAlarmUit();
         void brandAlarm(int);
         void deurBelAan();
         void deurBelUit();

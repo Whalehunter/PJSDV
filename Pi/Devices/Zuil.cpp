@@ -40,14 +40,17 @@ void Zuil::operator()()
             std::cout << "Exception error at Zuil: " << e.what() << std::endl;
         }
 
-        if(knopValue == 1 && knopValuePrev != knopValue) {
-            noodAlarm(1);
+        if((knopValue == 1 && knopValuePrev != knopValue) || sensorValue >= 915) {
+            noodAlarmAan();
+
+            nood = knopValue;
+            brand = (sensorValue >= 915);
         }
         if(sensorValue == 920) {
             brandAlarm(1);
         }
 
-        if(zoemer == 1 && ((std::clock() - timer) / (double) CLOCKS_PER_SEC) >= 2.0) {
+        if(zoemer == 1 && (((std::clock() - timer) / (double) CLOCKS_PER_SEC) >= 1.5) && nood == 0) {
             deurBelUit();
         }
 
@@ -57,11 +60,20 @@ void Zuil::operator()()
     close(sock);
 }
 
-void Zuil::noodAlarm(int n)
+void Zuil::noodAlarmAan()
 {
     sendMsg("noodAlarm\r");
 
-    nood = n;
+    nood = 1;
+    zoemer = 1;
+}
+
+void Zuil::noodAlarmUit()
+{
+    sendMsg("noodAlarmUit\r");
+
+    zoemer = 0;
+    nood = 0;
 }
 
 void Zuil::brandAlarm(int n)
