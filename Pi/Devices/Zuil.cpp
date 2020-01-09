@@ -14,7 +14,6 @@ Zuil::~Zuil()
 void Zuil::operator()()
 {
     char buffer[256];
-    int knopValuePrev = 0;
 
     while(1) {
         /* get and store JSON values */
@@ -40,21 +39,16 @@ void Zuil::operator()()
             std::cout << "Exception error at Zuil: " << e.what() << std::endl;
         }
 
-        if((knopValue == 1 && knopValuePrev != knopValue) || sensorValue >= 915) {
+        if(knopValue) {
             noodAlarmAan();
-
-            nood = knopValue;
-            brand = (sensorValue >= 915);
         }
-        if(sensorValue == 920) {
-            brandAlarm(1);
+        if(sensorValue >= 920) {
+            brandAlarm();
         }
 
         if(zoemer == 1 && (((std::clock() - timer) / (double) CLOCKS_PER_SEC) >= 1.5) && nood == 0) {
             deurBelUit();
         }
-
-        knopValuePrev = knopValue;
     }
 
     close(sock);
@@ -76,11 +70,8 @@ void Zuil::noodAlarmUit()
     nood = 0;
 }
 
-void Zuil::brandAlarm(int n)
+void Zuil::brandAlarm()
 {
-    sendMsg("brandAlarm\r");
-
-    brand = n;
 }
 
 void Zuil::deurBelAan()
