@@ -11,11 +11,13 @@ class Stoel: public Device
         ~Stoel();
         void operator()();
         nlohmann::json getStatus();
-        void ledAanUit();
-        void trilAanUit();
+        void ledAan();
+        void ledUit();
+        void trilAan();
+        void trilUit();
     private:
         int drukknop{};
-        int druksensor{};
+        int drukSensor{};
         int ledStatus{};
         int trilStatus{};
 };

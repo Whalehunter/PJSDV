@@ -1,4 +1,4 @@
-//scp Kaas pi@192.168.2.90:/home/pi/Kaas
+//scp ProjectSD pi@192.168.2.90:/home/pi/ProjectSD/Kaas
 
 #include "Stoel.hpp"
 
@@ -18,8 +18,9 @@ Stoel::~Stoel()
 
 void Stoel::operator()()//Overloaded functies moeten met 2 haakjes zodat je er zoveel mogelijk over kan sturen als je wilt.
 {
-
     char buffer[256];
+    int drukSensorPrev = 0;
+    int drukknopPrev = 0;
 
     while(1) {
         /* get and store JSON values */
@@ -41,36 +42,32 @@ void Stoel::operator()()//Overloaded functies moeten met 2 haakjes zodat je er z
             auto j_deur = json::parse(buffer); // hier moeten ook exceptions afgehandeld worden
 
             drukknop = j_deur.at("drukknop");
-            trilStatus = j_deur.at("trilStatus");
+            drukSensor = j_deur.at("drukSensor");
         }
         catch(json::parse_error) {
             std::cout << "parse error" << std::endl;
         }
         std::cout << drukknop << std::endl;
 
-        if (drukknop == 1){
-            memset(buffer, 0, sizeof(buffer));
-            strcpy(buffer, "ledAan\r");
-            sendMsg(buffer);
-            ledStatus = 1;
-        }/*
-            else if ((drukknop == 1) & (ledStatus == 1)){
-            sendMsg("ledUit\r");
+        if ((drukknop == 1) && (drukknopPrev != drukknop) && (ledStatus == 0)){
+        	ledAan();
+        	ledStatus = 1;
+        }
+        else if ((drukknop == 1) && (drukknopPrev != drukknop) && (ledStatus == 1)){
+            ledUit();
             ledStatus = 0;
-            }*/
+        }
 
-        if ((drukknop == 1) && (trilStatus == 1)){
-            memset(buffer, 0, sizeof(buffer));
-            strcpy(buffer, "trilAan\r");
-            sendMsg(buffer);
+        if ((drukknop == 1) && (drukSensor == 1) && (trilStatus == 0) && ((drukknopPrev != drukknop) || (drukSensorPrev != drukSensor))){
+            trilAan();
             trilStatus = 1;
-        }/*
-            else if ((drukknop == 1) & (druksensor == 1) & (trilStatus == 1)){
-            sendMsg("trilUit\r");
+        }
+        else if ((drukknop == 1) && (drukSensor == 1) && (trilStatus == 1) && ((drukknopPrev != drukknop) || (drukSensorPrev != drukSensor))){
+            trilUit();
             trilStatus = 0;
-            }*/
-        /*ledAanUit();
-          trilAanUit();*/
+        }
+        drukSensorPrev = drukSensor;
+        drukknopPrev = drukknop;
     }
     close(sock);
     std::cout << "Connection closed on socket " << sock << std::endl;
@@ -81,25 +78,30 @@ json Stoel::getStatus()
     return knopValue;
 }
 
-void Stoel::ledAanUit(){
-    if ((drukknop == 1) & (ledStatus == 0)){
-        sendMsg("ledAan/r");
-        ledStatus = 1;
-    }
-    else if ((drukknop == 1) & (ledStatus == 1)){
-        sendMsg("ledUit/r");
-        ledStatus = 0;
-    }
+void Stoel::ledAan(){
+	char buffer[256];
+	memset(buffer, 0, sizeof(buffer));
+	strcpy(buffer, "ledAan\r");
+	sendMsg(buffer);
 }
 
-void Stoel::trilAanUit(){
-    if ((drukknop == 1) & (druksensor == 1) & (trilStatus == 0)){
-        sendMsg("trilAan/r");
-        trilStatus = 1;
-    }
-    else if ((drukknop == 1) & (druksensor == 1) & (trilStatus == 1)){
-        sendMsg("trilUit/r");
-        trilStatus = 0;
-    }
+void Stoel::ledUit(){
+	char buffer[256];
+	memset(buffer, 0, sizeof(buffer));
+	strcpy(buffer, "ledUit\r");
+	sendMsg(buffer);
 }
 
+void Stoel::trilAan(){
+	char buffer[256];
+	memset(buffer, 0, sizeof(buffer));
+	strcpy(buffer, "trilAan\r");
+	sendMsg(buffer);
+}
+
+void Stoel::trilUit(){
+	char buffer[256];
+	memset(buffer, 0, sizeof(buffer));
+	strcpy(buffer, "trilUit\r");
+	sendMsg(buffer);
+}
