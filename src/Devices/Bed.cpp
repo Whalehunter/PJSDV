@@ -2,7 +2,7 @@
 
 using json = nlohmann::json;
 
-Bed::Bed(int n, Appartement* ap): Device(n, ap), state(DONKER), druksensor(0), knop(0)
+Bed::Bed(int n, Appartement* ap): Device(n, ap), state(UIT), druksensor(0), knop(0)
 {
     std::cout << "Bed aangemaakt" << std::endl;
 }
@@ -78,12 +78,12 @@ void Bed::ToggleLed(int i){
         memset(buff, 0, sizeof(buff));
         strcpy(buff, "lampAan\r");
         sendMsg(buff);
-        state = LICHT;
+        state = AAN;
     }else if (i == 0){
         char buff[256];
         memset(buff, 0, sizeof(buff));
         strcpy(buff, "lampUit\r");
         sendMsg(buff);
-        state = DONKER;
+        state = UIT;
     }
 }
