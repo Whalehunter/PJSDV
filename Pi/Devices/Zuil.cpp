@@ -43,7 +43,7 @@ void Zuil::operator()()
             noodAlarmAan();
         }
         if(sensorValue >= 920) {
-            brandAlarm();
+            brandAlarmAan();
         }
 
         if(zoemer == 1 && (((std::clock() - timer) / (double) CLOCKS_PER_SEC) >= 1.5) && nood == 0) {
