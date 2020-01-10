@@ -87,30 +87,24 @@ $(document).ready(()=>{
             let z = data.Zuil, c = 'set checked';
             if (!z.Zoemer) c = 'set unchecked';
             $('.zuil .zoemer .checkbox').checkbox(c);
-            c = 'set checked';
-            if (!z.Lamp) c = 'set unchecked';
+            if (!z.Lamp) c = 'set unchecked'; else c = 'set checked';
             $('.zuil .lamp .checkbox').checkbox(c);
+            if (!z.Brandalarm) c = 'set unchecked'; else c = 'set checked';
+            $('.zuil .brandalarm .checkbox').checkbox(c);
+            if (!z.Noodalarm) c = 'set unchecked'; else c = 'set checked';
+            $('.zuil .noodalarm .checkbox').checkbox(c);
 
             /* BRANDALARM */
             if (z.Brandalarm) {
-                $('.zuil .warning.message .header').text('BRAND!');
-                $('.zuil .warning.message span').text('Let op: er is kans op brand!');
-                $('.zuil .warning.message').show();
+                $('.zuil .brand.message').show();
             } else {
-                $('.zuil .warning.message .header').text();
-                $('.zuil .warning.message span').text();
-                $('.zuil .warning.message').hide();
+                $('.zuil .brand.message').hide();
             }
 
-            /* NOODALARM */
             if (z.Noodalarm) {
-                $('.zuil .warning.message .header').text('NOOD!');
-                $('.zuil .warning.message span').text('Mary heeft de noodalarm gedrukt!');
-                $('.zuil .warning.message').show();
+                $('.zuil .nood.message').show();
             } else {
-                $('.zuil .warning.message .header').text();
-                $('.zuil .warning.message span').text();
-                $('.zuil .warning.message').hide();
+                $('.zuil .nood.message').hide();
             }
             $('.zuil .gasmelder-waarde').text(z.Gasmeter);
         }
