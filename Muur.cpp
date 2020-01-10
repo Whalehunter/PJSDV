@@ -49,6 +49,7 @@ void Muur::operator ()()
             if (ldr < 200){
                 LCDdimmen();
             }
+            break;
 
         }
         RGBdimmen();
@@ -92,7 +93,7 @@ void Muur::RGBdimmen(){
     char* tempc = (char*) str.c_str();
     char buff[256];
     memset(buff, 0, sizeof(buff));
-    strcpy(buff, "RGBdimmen\r");
+    strcpy(buff, "hoi");
     sendMsg(buff);
 }
 
