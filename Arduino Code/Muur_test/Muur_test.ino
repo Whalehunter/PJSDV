@@ -1,6 +1,8 @@
 #include <Wire.h>
 #include <Adafruit_NeoPixel.h>
 #include <ESP8266WiFi.h>
+#include <ArduinoJson.h>
+#include <ctype.h>
 
 #define I2C_SDL   D1
 #define I2C_SDA   D2
@@ -14,8 +16,10 @@ const char* host = "192.168.4.1";
 
 void RGBstrip(int i); //0 is uit, 1 is aan, 2 is disco mode
 void RGBbrightness(int i);
-void AanUitLCD(int i);
+void AanUitLCD(int i); //1 is dimmn, 0 is doorlaten
 int leesinput(int i); //1 is LDR waarde, 2 is POTmeter
+boolean isValidNumber(String str); // checkt of een string uit getallen bestaat
+/*van hbx2013 op Arduino Forum, geraadpleegd op 10-1-2020*/
 
 String line = "";
 int hex = 0x00;
@@ -45,13 +49,15 @@ void setup(void) {
 }
 
 void loop(void) {
-WiFiClient client;
+  WiFiClient client;
+  RGBstrip(0);
+  AanUitLCD(0);
   Serial.printf("\n[Connecting to %s ... ", host);
   if (client.connect(host, port))
   {
     line = client.readStringUntil('\r');
     if (line=="ID?"){
-      client.println(String("y")); //eigenlijk Muur
+      client.print(String("y")); //eigenlijk Muur
     }
     line = client.readStringUntil('\r');
     if (line=="OK"){
@@ -62,8 +68,16 @@ WiFiClient client;
         if (line == "getStatus"){
           int LDR = leesinput(1);
           int POT = leesinput(2);
-          //client.print(String(LDR));
-          client.print(String(POT));          
+          StaticJsonDocument<100> data;
+          data["LDR"] = LDR;
+          data["POT"] = POT;
+          
+          char buffer[100];
+
+          serializeJson(data, buffer);
+          Serial.println(buffer);
+          
+          client.print(String(buffer));          
           line = "";
         }
         else if (line == "LCDAan"){
@@ -77,10 +91,19 @@ WiFiClient client;
         else if (line == "disco"){
           RGBstrip(2);
         }
+        else if (line == "RGBaan"){
+          RGBstrip(1);
+        }
         else if (line == "RGBuit"){
           RGBstrip(0);
         }
-        else if ((line >= "A" & line <= "Z" )|(line >= "a" & line <= "z")){
+        else if (line == "dimmen"){
+          AanUitLCD(1);
+        }
+        else if (line == "doorlaten"){
+          AanUitLCD(0);
+        }
+        else if (isValidNumber(line)){
           int temp = line.toInt();
           if (temp >= 0 & temp <=1024){
             RGBbrightness(temp);
@@ -97,13 +120,13 @@ WiFiClient client;
 }
 
 void RGBstrip(int i){
-  if (i==0){		//aan
+  if (i==0){		//uit
     pixels.clear();
     pixels.show();
   }
-  else if (i==1){	//uit
+  else if (i==1){	//aan
     for(int a=0; a<NUMPIXELS; a++) { //Elke pixel aanzetten
-      pixels.setPixelColor(i,255,0,0);
+      pixels.setPixelColor(a,255,255,255);
       pixels.show();   // Send the updated pixel colors to the hardware
     }
   }
@@ -175,3 +198,11 @@ int leesinput(int i){
     return 0;
   }
 }
+
+boolean isValidNumber(String str){
+   for(byte i=0;i<str.length();i++)
+   {
+      if(isDigit(str.charAt(i))) return true;
+        }
+   return false;
+} 
