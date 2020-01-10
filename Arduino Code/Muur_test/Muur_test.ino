@@ -10,9 +10,9 @@
 #define NUMPIXELS 3
 
 int port = 8883;
-const char *ssid = "piiWAP";
+const char *ssid = "KAAS"; //voor Jeffrey piiWAP
 const char *password = "aanwezig2";
-const char* host = "192.168.4.1";
+const char* host = "192.168.5.1"; //voor Jeffrey 4.1
 
 void RGBstrip(int i); //0 is uit, 1 is aan, 2 is disco mode
 void RGBbrightness(int i);
@@ -66,11 +66,9 @@ void loop(void) {
         line = client.readStringUntil('\r');
         Serial.println(line);
         if (line == "getStatus"){
-          int LDR = leesinput(1);
-          int POT = leesinput(2);
           StaticJsonDocument<100> data;
-          data["LDR"] = LDR;
-          data["POT"] = POT;
+          data["ldr"] = leesinput(1);
+          data["pot"] = leesinput(2);
           
           char buffer[100];
 
@@ -90,24 +88,30 @@ void loop(void) {
         }
         else if (line == "Disco"){
           RGBstrip(2);
+          line = "";
         }
         else if (line == "RGBaan"){
           RGBstrip(1);
+          line = "";
         }
         else if (line == "RGBuit"){
           RGBstrip(0);
+          line = "";
         }
         else if (line == "dimmen"){
           AanUitLCD(1);
+          line = "";
         }
         else if (line == "doorlaten"){
           AanUitLCD(0);
+          line = "";
         }
         else if (isValidNumber(line)){
           int temp = line.toInt();
           if (temp >= 0 & temp <=1024){
             RGBbrightness(temp);
           }
+          line = "";
         }
       }
     }
