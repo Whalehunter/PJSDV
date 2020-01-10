@@ -47,11 +47,11 @@ void Muur::operator ()()
             break;
         case LCDDOORLATEN:
             if (ldr < 200){
-                LCDdimmen();
+               LCDdimmen();
             }
 
         }
-        RGBdimmen();
+       // RGBdimmen();
     }
 }
 
@@ -92,7 +92,7 @@ void Muur::RGBdimmen(){
     char* tempc = (char*) str.c_str();
     char buff[256];
     memset(buff, 0, sizeof(buff));
-    strcpy(buff, tempc);
+    strcpy(buff, "hoi\r");
     sendMsg(buff);
 }
 
