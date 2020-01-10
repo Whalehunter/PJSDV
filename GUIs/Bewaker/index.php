@@ -4,156 +4,9 @@
     <title>Control panel</title>
     <meta charset="UTF-8"/>
     <link rel="stylesheet" type="text/css" href="semantic/dist/semantic.min.css">
-    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script src="jquery-3.4.1.min.js"></script>
     <script src="semantic/dist/semantic.min.js"></script>
-    <script>
-     function msg(txt, hook) {
-         $.ajax('command.php', {
-             dataType: 'json',
-             data: {
-                 id: 'x',
-                 msg:txt,
-             },
-             error: (data) => {
-                 console.log(data);
-             }
-         }).done((data)=>{hook(data)});
-     }
-
-     $(document).ready(()=>{
-
-         $('.schemerlamp .lamp .checkbox').checkbox();
-
-         $('.stoel .trillen .checkbox').checkbox();
-
-         $('.zuil .licht .checkbox').checkbox();
-         $('.zuil .rookmelder .checkbox').checkbox();
-         $('.zuil .zoemer .checkbox').checkbox();
-
-         $('.koelkast .deur .checkbox').checkbox();
-         $('.koelkast .koeler .checkbox').checkbox();
-
-         $('.deur .inside.switch .checkbox').checkbox();
-
-         $('.deur .outside.switch .checkbox').checkbox();
-         $('.deur .inside.lamp .checkbox').checkbox();
-         $('.deur .outside.lamp .checkbox').checkbox();
-         $('.deur .deur .checkbox').checkbox({
-             onChecked:()=>{msg('xo',(data)=>{console.log(data)})},
-             onUnchecked:()=>{msg('xx',(data)=>{console.log(data)})}
-         });
-
-         $('.bed .alarm .checkbox').checkbox();
-         $('.bed .lamp .checkbox').checkbox({
-             onChange:()=>{
-                 msg('d', (data) => {
-                     if (data) {
-                         let toggler = 'uncheck';
-                         if (data.lamp === '1') toggler = 'check';
-                         setTimeout(()=>{$('.bed .lamp .checkbox').checkbox(toggler)}, 100);
-                     }
-                 });
-             }
-         });
-
-         $('.muur .lamp .checkbox').checkbox();
-
-         /* Update interval */
-         setInterval(function() {
-             msg('d', updateElements);
-         }, 100);
-
-         function updateElements(data) {
-             /* Deur */
-             if (data.Deur) {
-                 let buitenKnop = '.outside.switch', binnenKnop = '.inside.switch', buitenLed = '.outside.lamp', binnenLed = '.inside.lamp', deur = '.deur';
-                 let d = data.Deur, c = 'set checked';
-
-                 if (!d.Binnenknop) c = 'set unchecked';
-                 setCheckbox('.deur '+binnenKnop, c);
-
-                 if(d.Buitenknop) c = 'set checked';
-                 else c = 'set unchecked';
-                 setCheckbox('.deur '+buitenKnop, c);
-
-                 if (d.Binnenled) c = 'set checked';
-                 else c = 'set unchecked';
-                 setCheckbox('.deur '+binnenLed, c);
-
-                 if (d.Buitenled) c = 'set checked';
-                 else c = 'set unchecked';
-                 setCheckbox('.deur '+buitenLed, c);
-
-                 if (d.Deur == 'open') c = 'set checked';
-                 else c = 'set unchecked';
-                 setCheckbox('.deur '+deur, c);
-             }
-         }
-
-         function setCheckbox(where, action) {
-             $(where+" .checkbox").checkbox(action);
-         }
-
-
-         // function request(name, value, button) {
-         //     button.checkbox('set disabled');
-         //     $.ajax('command.php', {
-         //         dataType: 'json',	/* Moet text zijn indien text */
-         //         data: {
-         //             name: name,
-         //             val: value,
-         //         },
-         //         success: function() {
-         //             button.checkbox('set enabled');
-         //         },
-         //         error: function(obj, reason, err) {
-         //             console.log(reason);
-         //             console.log(err);
-         //             if (button.checkbox('is checked'))
-         //                 button.checkbox('set unchecked');
-         //             else
-         //                 button.checkbox('set checked');
-         //             button.checkbox('set enabled');
-         //         }
-         //     });
-         // }
-
-         // $('.koelkast .deur .ui.checkbox').checkbox();
-
-         // let items = {
-         //     koelkast: [
-         //         'koeler'
-         //     ],
-         //     bed: [
-         //         'lamp',
-         //         'alarm'
-         //     ],
-         //     deur: [
-         //         'outside.lamp',
-         //         'inside.lamp',
-         //         'outside.switch',
-         //         'inside.switch'
-         //     ],
-         //     muur: [
-         //         'lamp',
-         //     ]
-         // };
-
-         // Object.keys(items).forEach(function(meubel) {
-         //     items[meubel].forEach(function(apparaat)) {
-         //         $('.'+meubel+' .'+ apparaat +' .ui.checkbox').checkbox({
-         //             onChecked: function() {
-         //                 request(meubel, apparaat+'=true', $(this));
-         //             },
-         //             onUnchecked: function() {
-         //                 request(meubel, apparaat+'=false', $(this));
-         //             }
-         //         });
-         //     }
-         // });
-
-      });
-    </script>
+    <script src="script.js"></script>
   </head>
   <body>
 
@@ -220,27 +73,25 @@
             <h2 class="header">Zuil</h2>
             <div class="ui divider"></div>
             <div class="description">
-              <div class="ui divided three column grid">
+              <div class="ui divided two column grid">
                 <div class="column licht">
                   <p><b>Licht</b></p>
                   <div class="ui fitted toggle checkbox">
                     <input name="" type="checkbox" value=""/>
                   </div>
                 </div>
-                <div class="column rookmelder">
-                  <p><b>Rookmelder</b></p>
-                  <div class="ui fitted slider disabled checkbox">
-                    <input name="" type="checkbox" value=""/>
-                  </div>
-                </div>
-                <div class="column zoemer">
-                  <p><b>Zoemer</b></p>
-                  <div class="ui fitted toggle checkbox">
-                    <input name="" type="checkbox" value=""/>
-                  </div>
+                <!-- Modals toevoegen van NOOD ALARM & BRAND ALARM -->
+                <div class="column gasmelder">
+                  <p><b>Gasmelder</b></p>
+                  <p><span class="gasmelder-waarde">0</span></p>
                 </div>
               </div>
             </div>
+          </div>
+          <div class="ui hidden warning message">
+              <i class="close icon"></i>
+              <div class="header"></div>
+              <span></span>
           </div>
         </div>
 

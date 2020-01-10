@@ -12,7 +12,9 @@ function connect() {
     if (!$socket) {
         exit;
     }
+    socket_set_option($socket, getprotobyname('tcp'), SO_RCVTIMEO, ['sec' => 0, 'usec' => 500]);
     $connection = socket_connect($socket, ADDRESS, PORT);
+
     if (!$connection) {
         exit;
     }
