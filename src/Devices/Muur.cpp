@@ -47,11 +47,12 @@ void Muur::operator ()()
             break;
         case LCDDOORLATEN:
             if (ldr < 200){
-               LCDdimmen();
+                LCDdimmen();
             }
+            break;
 
         }
-       // RGBdimmen();
+        RGBdimmen();
     }
 }
 
@@ -62,7 +63,8 @@ nlohmann::json Muur::getStatus()
     return muurData;
 }
 
-void Muur::LCDdimmen(){
+void Muur::LCDdimmen()
+{
     char buff[256];
     memset(buff, 0, sizeof(buff));
     strcpy(buff, "dimmen\r");
@@ -70,7 +72,8 @@ void Muur::LCDdimmen(){
     state = LCDDIMMEN;
 }
 
-void Muur::LCDdoorlaten(){
+void Muur::LCDdoorlaten()
+{
     char buff[256];
     memset(buff, 0, sizeof(buff));
     strcpy(buff, "doorlaten\r");
@@ -78,7 +81,13 @@ void Muur::LCDdoorlaten(){
     state = LCDDOORLATEN;
 }
 
-void Muur::RGBdimmen(){
+void Muur::RGBdimmen()
+{
+    char buff[256];
+    memset(buff, 0, sizeof(buff));
+    strcpy(buff, "hoi\r");
+    sendMsg(buff);
+    /*
     if (pot == 0){
         RGBuit();
     }
@@ -94,23 +103,27 @@ void Muur::RGBdimmen(){
     memset(buff, 0, sizeof(buff));
     strcpy(buff, "hoi\r");
     sendMsg(buff);
+    */
 }
 
-void Muur::RGBaan(){
+void Muur::RGBaan()
+{
     char buff[256];
     memset(buff, 0, sizeof(buff));
     strcpy(buff, "RGBaan\r");
     sendMsg(buff);
 }
 
-void Muur::RGBuit(){
+void Muur::RGBuit()
+{
     char buff[256];
     memset(buff, 0, sizeof(buff));
     strcpy(buff, "RGBuit\r");
     sendMsg(buff);
 }
 
-void Muur::RGBdisco(){
+void Muur::RGBdisco()
+{
     char buff[256];
     memset(buff, 0, sizeof(buff));
     strcpy(buff, "Disco\r");
