@@ -64,7 +64,7 @@ $(document).ready(()=>{
 
     /* Update interval */
     interval = setInterval(function() {
-        msg('dsf', updateElements);
+        msg('-dsf', updateElements);
     }, 100);
 
     function updateElements(data) {
