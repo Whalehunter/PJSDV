@@ -101,13 +101,17 @@
           </div>
           <div class="ui icon nood hidden warning message">
               <i class="exclamation triangle icon"></i>
-              <div class="header">NOOD!</div>
-              <span>Mary heeft de noodalarm gedrukt!</span>
+              <div class="content">
+                  <div class="header">NOOD!</div>
+                  <span>Mary heeft de noodalarm gedrukt!</span>
+              </div>
           </div>
-          <div class="ui brand hidden warning message">
+          <div class="ui icon brand hidden warning message">
               <i class="exclamation triangle icon"></i>
-              <div class="header">BRAND!</div>
-              <span>Let op: er is kans op brand!</span>
+              <div class="content">
+                  <div class="header">BRAND!</div>
+                  <span>Let op: er is kans op brand!</span>
+              </div>
           </div>
         </div>
 
