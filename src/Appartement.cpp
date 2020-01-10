@@ -5,10 +5,11 @@
 #include "Devices/Bed.hpp"
 #include "Devices/Stoel.hpp"
 #include "Devices/Zuil.hpp"
+#include "Devices/Muur.hpp"
 
 #include <map>
 
-Appartement::Appartement(): deur(0), gui(0), bed(0), stoel(0), zuil(0)
+Appartement::Appartement():muur(0), deur(0), gui(0), bed(0), stoel(0), zuil(0)
 {
 }
 
@@ -19,6 +20,7 @@ Appartement::~Appartement()
     delete stoel;
     delete bed;
     delete zuil;
+    delete muur;
 }
 
 void Appartement::createDevice(int sock, char id)
@@ -58,5 +60,12 @@ void Appartement::createDevice(int sock, char id)
         stoel = new Stoel(sock, this);
         std::thread stoelThread(&Device::operator(), stoel);
         stoelThread.detach();
+    }
+    else if (id == 'm') {
+        if(muur != 0) delete muur;
+
+        muur = new Muur(sock, this);
+        std::thread muurThread(&Device::operator(), muur);
+        muurThread.detach();
     }
 }

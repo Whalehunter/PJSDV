@@ -80,6 +80,9 @@ void SocketServer::handshake(int sock)
         case 'z': a.createDevice(sock, response[0]);
                   strcpy(response, "OK\r");
                   send(sock, response, strlen(response), 0); break;
+        case 'm': a.createDevice(sock, response[0]);
+                  strcpy(response, "OK\r");
+                  send(sock, response, strlen(response), 0); break;
         default: cout << "Wrong ID on socket " << sock << endl; close(sock); break;
     }
 }
