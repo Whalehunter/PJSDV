@@ -10,9 +10,9 @@
 #define NUMPIXELS 3
 
 int port = 8883;
-const char *ssid = "KAAS";
+const char *ssid = "KAAS"; //voor Jeffrey piiWAP
 const char *password = "aanwezig2";
-const char* host = "192.168.5.1";
+const char* host = "192.168.5.1"; //voor Jeffrey 4.1
 
 void RGBstrip(int i); //0 is uit, 1 is aan, 2 is disco mode
 void RGBbrightness(int i);
