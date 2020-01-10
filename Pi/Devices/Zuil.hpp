@@ -18,9 +18,12 @@ class Zuil: public Device
         void operator()();
         void noodAlarmAan();
         void noodAlarmUit();
-        void brandAlarm();
+        void brandAlarmAan();
+        void brandAlarmUit();
         void deurBelAan();
         void deurBelUit();
+        void zoemerAan();
+        void zoemerUit();
 
         nlohmann::json getStatus();
 };

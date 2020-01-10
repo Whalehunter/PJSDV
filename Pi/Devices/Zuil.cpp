@@ -56,36 +56,53 @@ void Zuil::operator()()
 
 void Zuil::noodAlarmAan()
 {
-    sendMsg("noodAlarm\r");
+    zoemerAan();
 
     nood = 1;
-    zoemer = 1;
 }
 
 void Zuil::noodAlarmUit()
 {
-    sendMsg("noodAlarmUit\r");
-
-    zoemer = 0;
+    if (!brand && !timer)
+        zoemerUit();
     nood = 0;
 }
 
-void Zuil::brandAlarm()
+void Zuil::brandAlarmAan()
 {
+    if (!nood && !timer)
+        zoemerAan();
+    brand = 1;
+}
+
+void Zuil::brandAlarmUit()
+{
+    if (!nood && !timer)
+        zoemerUit();
+    brand = 0;
 }
 
 void Zuil::deurBelAan()
 {
-    sendMsg("deurBelAan\r");
-
-    zoemer = 1;
+    if (!nood && !brand)
+        zoemerAan();
     timer = clock();
 }
 
 void Zuil::deurBelUit()
 {
-    sendMsg("deurBelUit\r");
+    if (!nood && !brand)
+        zoemerUit();
+    timer = 0;
+}
 
+void Zuil::zoemerAan() {
+    sendMsg("zoemerAan");
+    zoemer = 1;
+}
+
+void Zuil::zoemerUit() {
+    sendMsg("zoemerUit");
     zoemer = 0;
 }
 
