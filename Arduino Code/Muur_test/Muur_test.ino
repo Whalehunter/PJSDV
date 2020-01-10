@@ -57,7 +57,7 @@ void loop(void) {
   {
     line = client.readStringUntil('\r');
     if (line=="ID?"){
-      client.print(String("y")); //eigenlijk Muur
+      client.print(String("m")); //eigenlijk Muur
     }
     line = client.readStringUntil('\r');
     if (line=="OK"){
@@ -88,7 +88,7 @@ void loop(void) {
           AanUitLCD(0);
           line = "";
         }
-        else if (line == "disco"){
+        else if (line == "Disco"){
           RGBstrip(2);
         }
         else if (line == "RGBaan"){
