@@ -19,17 +19,20 @@ void Gui::operator()()
 
     while(recvMsg(buffer)) {
         std::cout << buffer << std::endl;
-        if(*buffer == 'b' && a->bed != 0) {
-            strcpy(buffer, "teringjong");
-            a->bed->sendMsg(buffer);
-        } else if(*buffer == 'd' || *buffer == 's' || *buffer == 'f') {
+       /*if(*buffer == 'd' || *buffer == 's' || *buffer == 'f') {
             sendMsg(a->devices.find(*buffer)->second->getStatus().dump().c_str());
-        } else if(*buffer == 'x') {
+        }*/
+        char *p = buffer;
+
+        if(*p++ == '-')
+            for(;*p;p++)
+                if(a->devices.count(*p))
+                    sendMsg(a->devices.find(*p)->second->getStatus().dump().c_str());
+
+        else if(*buffer == 'x') {
             Deur * deur = dynamic_cast<Deur *>(a->devices.find('d')->second);
-            std::cout << "1" << std::endl;
-            char *p = buffer;
+        //    char *p = buffer;
             if (*(++p) == 'o') {
-                std::cout << "2" << std::endl;
                 sendMsg(buffer);
                 deur->openDeur();
 
