@@ -49,7 +49,9 @@ void Muur::operator ()()
             if (ldr < 200){
                 LCDdimmen();
             }
+
         }
+        RGBdimmen();
     }
 }
 
@@ -77,6 +79,12 @@ void Muur::LCDdoorlaten(){
 }
 
 void Muur::RGBdimmen(){
+    if (pot == 0){
+        RGBuit();
+    }
+    else {
+        RGBaan();
+    }
     int temp = pot;
     stringstream ss;
     ss << temp;
