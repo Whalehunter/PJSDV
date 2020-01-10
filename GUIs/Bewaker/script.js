@@ -31,6 +31,16 @@ $(document).ready(()=>{
     $('.stoel .trillen .checkbox').checkbox();
 
     $('.zuil .zoemer .checkbox').checkbox({
+        onChecked:()=>{msg('fza',(data)=>{console.log(data)})},
+        onUnchecked:()=>{msg('fzu',(data)=>{console.log(data)})}
+    });
+
+    $('.zuil .brandalarm .checkbox').checkbox({
+        onChecked:()=>{msg('fba',(data)=>{console.log(data)})},
+        onUnchecked:()=>{msg('fbu',(data)=>{console.log(data)})}
+    });
+
+    $('.zuil .noodalarm .checkbox').checkbox({
         onChecked:()=>{msg('fna',(data)=>{console.log(data)})},
         onUnchecked:()=>{msg('fnu',(data)=>{console.log(data)})}
     });
@@ -44,8 +54,8 @@ $(document).ready(()=>{
     $('.deur .inside.lamp .checkbox').checkbox();
     $('.deur .outside.lamp .checkbox').checkbox();
     $('.deur .deur .checkbox').checkbox({
-        onChecked:()=>{msg('xo',(data)=>{console.log(data)})},
-        onUnchecked:()=>{msg('xx',(data)=>{console.log(data)})}
+        onChecked:()=>{msg('do',(data)=>{console.log(data)})},
+        onUnchecked:()=>{msg('ds',(data)=>{console.log(data)})}
     });
 
     $('.bed .alarm .checkbox').checkbox();

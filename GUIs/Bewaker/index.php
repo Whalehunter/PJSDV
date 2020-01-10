@@ -84,10 +84,21 @@
                         <input name="" type="checkbox" value=""/>
                     </div>
                 </div>
+                <div class="column noodalarm">
+                    <p><b>Noodalarm</b></p>
+                    <div class="ui fitted slider checkbox">
+                        <input name="" type="checkbox" value=""/>
+                    </div>
+                </div>
+                <div class="column brandalarm">
+                    <p><b>Brandalarm</b></p>
+                    <div class="ui fitted slider checkbox">
+                        <input name="" type="checkbox" value=""/>
+                    </div>
+                </div>
               </div>
             </div>
           </div>
-          <!-- Alarmen worden hieronder weergegeven -->
           <div class="ui hidden warning message">
               <i class="close icon"></i>
               <div class="header"></div>
