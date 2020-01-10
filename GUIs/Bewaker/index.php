@@ -74,20 +74,20 @@
             <div class="ui divider"></div>
             <div class="description">
               <div class="ui divided two column grid">
-                <div class="column licht">
-                  <p><b>Licht</b></p>
-                  <div class="ui fitted toggle checkbox">
-                    <input name="" type="checkbox" value=""/>
-                  </div>
-                </div>
-                <!-- Modals toevoegen van NOOD ALARM & BRAND ALARM -->
                 <div class="column gasmelder">
                   <p><b>Gasmelder</b></p>
                   <p><span class="gasmelder-waarde">0</span></p>
                 </div>
+                <div class="column zoemer">
+                    <p><b>Zoemer</b></p>
+                    <div class="ui fitted slider checkbox">
+                        <input name="" type="checkbox" value=""/>
+                    </div>
+                </div>
               </div>
             </div>
           </div>
+          <!-- Alarmen worden hieronder weergegeven -->
           <div class="ui hidden warning message">
               <i class="close icon"></i>
               <div class="header"></div>

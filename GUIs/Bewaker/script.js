@@ -11,7 +11,7 @@ function msg(txt, hook) {
     msgs.push($.ajax('command.php', {
         dataType: 'json',
         data: {
-            id: 'x',
+            id: 'x',            // Bewaker GUI ID
             msg:txt,
         },
         error: (data) => {
@@ -30,9 +30,10 @@ $(document).ready(()=>{
 
     $('.stoel .trillen .checkbox').checkbox();
 
-    $('.zuil .licht .checkbox').checkbox();
-    $('.zuil .rookmelder .checkbox').checkbox();
-    $('.zuil .zoemer .checkbox').checkbox();
+    $('.zuil .zoemer .checkbox').checkbox({
+        onChecked:()=>{msg('fna',(data)=>{console.log(data)})},
+        onUnchecked:()=>{msg('fnu',(data)=>{console.log(data)})}
+    });
 
     $('.koelkast .deur .checkbox').checkbox();
     $('.koelkast .koeler .checkbox').checkbox();
@@ -49,15 +50,7 @@ $(document).ready(()=>{
 
     $('.bed .alarm .checkbox').checkbox();
     $('.bed .lamp .checkbox').checkbox({
-        onChange:()=>{
-            msg('d', (data) => {
-                if (data) {
-                    let toggler = 'uncheck';
-                    if (data.lamp === '1') toggler = 'check';
-                    setTimeout(()=>{$('.bed .lamp .checkbox').checkbox(toggler)}, 100);
-                }
-            });
-        }
+        onChange:()=>{}
     });
 
     $('.muur .lamp .checkbox').checkbox();
