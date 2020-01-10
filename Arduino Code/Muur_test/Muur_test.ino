@@ -69,8 +69,8 @@ void loop(void) {
           int LDR = leesinput(1);
           int POT = leesinput(2);
           StaticJsonDocument<100> data;
-          data["LDR"] = LDR;
-          data["POT"] = POT;
+          data["ldr"] = LDR;
+          data["pot"] = POT;
           
           char buffer[100];
 
