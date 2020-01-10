@@ -91,8 +91,9 @@ void Deur::sluitDeur()
 
 void Deur::deurBel()
 {
-    Zuil * zuil = dynamic_cast<Zuil *>(a->devices.find('f')->second);
-    zuil->deurBelAan();
+    char cZuil = 'f';
+    if (a->devices.count(cZuil))
+        dynamic_cast<Zuil *>(a->devices.find(cZuil)->second)->deurBelAan();
 }
 
 void Deur::buitenLampAan()
