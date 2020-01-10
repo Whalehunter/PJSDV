@@ -97,12 +97,12 @@ void Zuil::deurBelUit()
 }
 
 void Zuil::zoemerAan() {
-    sendMsg("zoemerAan");
+    sendMsg("zoemerAan\r");
     zoemer = 1;
 }
 
 void Zuil::zoemerUit() {
-    sendMsg("zoemerUit");
+    sendMsg("zoemerUit\r");
     zoemer = 0;
 }
 

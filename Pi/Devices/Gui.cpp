@@ -28,17 +28,16 @@ void Gui::operator()()
                     sendMsg(a->devices.find(*p)->second->getStatus().dump().c_str());
         }
 
-        else if(*buffer == 'x') {
-            Deur * deur = dynamic_cast<Deur *>(a->devices.find('d')->second);
-            //    char *p = buffer;
-            if (*(++p) == 'o') {
-                sendMsg(buffer);
-                deur->openDeur();
+        else if(*p == 'd') {
+            Deur * deur = dynamic_cast<Deur *>(a->devices.find(*p++)->second);
 
-            } else {
-                deur->sluitDeur();
-                sendMsg(buffer);
+            if (*p == 'o') {
+                deur->openDeur();
             }
+            else {
+                deur->sluitDeur();
+            }
+            sendMsg("{\"success\":true}");
         }
 
         else if(*p == 'f') {
@@ -47,15 +46,19 @@ void Gui::operator()()
             if(*p == 'n') {
                 if (*(++p) == 'a') zuil->noodAlarmAan();
                 else zuil->noodAlarmUit();
-
-                sendMsg(buffer);
             }
-            /* else if(*p == 'b') {
-               if (*(++p) == 'a') zuil->brandAlarmAan();
-               else zuil->brandAlarmUit();
-               }*/
+            else if(*p == 'b') {
+                if (*(++p) == 'a') zuil->brandAlarmAan();
+                else zuil->brandAlarmUit();
+            }
+            else if(*p == 'z') {
+                if (*(++p) == 'a') zuil->zoemerAan();
+                else zuil->zoemerUit();
+            }
+            sendMsg("{\"success\":true}");
         }
 
+        // sendMsg(buffer);
         memset(buffer, 0, sizeof(buffer));
     }
     close(sock);
