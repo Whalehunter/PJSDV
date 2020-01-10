@@ -1,6 +1,8 @@
 #include "Bed.hpp"
 
-Bed::Bed(int n, Appartement* ap): Device(n, ap)
+using json = nlohmann::json;
+
+Bed::Bed(int n, Appartement* ap): Device(n, ap), state(UIT), druksensor(0), knop(0)
 {
     std::cout << "Bed aangemaakt" << std::endl;
 }
@@ -12,66 +14,64 @@ Bed::~Bed()
 void Bed::operator()()
 {
     char buffer[256];
+    int knopPrev = 0;
 
-    strcpy(buffer, "getStatus\r");
+    while(1){
+    	memset(buffer, 0 , sizeof(buffer));
+    	strcpy(buffer, "getStatus\r");
+    	sendMsg(buffer);
 
-    sendMsg(buffer);
+    	memset(buffer, 0, sizeof(buffer));
+    	if(recv(sock, buffer, 255, 0) < 1){
+    		std::cout << "Bed disconnected from socket: " << sock << std::endl;
+    		close(sock);
+    		return;
+    	}
 
-    memset(buffer, 0, sizeof(buffer));
+        try {
+            auto j_bed = json::parse(buffer); // hier moeten ook exceptions afgehandeld worden
 
-    while(recvMsg(buffer)) {
-        std::stringstream s(buffer);
-        s >> knopValue;
-
-        std::cout << "Bed: " << knopValue << std::endl;
-
-        strcpy(buffer, "getStatus\r");
-        sendMsg(buffer);
-        memset(buffer, 0, sizeof(buffer));
+            knop = j_bed.at("knop");
+            druksensor = j_bed.at("druksensor");
+        }
+        catch(json::parse_error) {
+            std::cout << "Parsing error at Bed on socket " << sock << std::endl;
+        }
+        switch(state){
+            case AAN:
+                if (knop == 1 && knopPrev != knop){
+                    ToggleLed(1);
+                }
+                break;
+            case UIT:
+                if (knop == 1 && knopPrev != knop){
+                    ToggleLed(0);
+                }
+        }
+        knopPrev = knop;
     }
-    close(sock);
-    std::cout << "Connection closed on socket " << sock << std::endl;
 }
 
-int Bed::getStatus()
+nlohmann::json Bed::getStatus()
 {
-    return knopValue;
+    json bedData = {{"Bed", state ? "aan" : "uit"}, {"knop", knop}, {"drukSensor", druksensor}};
+
+    return bedData;
+
 }
 
-void Bed::updateWaardes()
-{
-	//ontvang waardes van de WEMOS en sla die op in eigen variabelen
-}
-
-void Bed::activeerBewegingssensor()
-{
-	if(druksensor > 100)
-	{
-		//bewegingssensor van zuil activeren
-	}
-/* 	kan ook zoals hieronder, maar dan functienaam veranderen naar alarm geven, en deactiveerBewegingssensor verwijderen
-	if (druksensor > 100 & bewegingssensor){
-		alarm geven
-	} */
-}
-
-void Bed::deactiveerBewegingssensor()
-{
-	
-}
-
-void Bed::toggleLed()
-{
-	if(ledStatus == 0 & drukknop == 0){
-		//led blijft uit
-	}
-	else if (ledStatus == 0 & drukknop == 1){
-		//led gaat aan
-	}
-	else if (ledStatus == 1 & drukknop == 0){
-		//led blijft aan
-	}
-	else if (ledStatus == 1 & drukknop == 1){
-		//led gaat uit
-	}
+void Bed::ToggleLed(int i){
+    if(i==1){
+        char buff[256];
+        memset(buff, 0, sizeof(buff));
+        strcpy(buff, "lampAan\r");
+        sendMsg(buff);
+        state = AAN;
+    }else if (i == 0){
+        char buff[256];
+        memset(buff, 0, sizeof(buff));
+        strcpy(buff, "lampUit\r");
+        sendMsg(buff);
+        state = UIT;
+    }
 }
