@@ -19,14 +19,11 @@ void Gui::operator()()
 
     while(recvMsg(buffer)) {
         std::cout << buffer << std::endl;
-       /*if(*buffer == 'd' || *buffer == 's' || *buffer == 'f') {
-            sendMsg(a->devices.find(*buffer)->second->getStatus().dump().c_str());
-        }*/
         char *p = buffer;
 
-        if(*p++ == '-')
-            for(;*p;p++)
-                if(a->devices.count(*p))
+        if(*p == '-')
+            while(*p)
+                if(a->devices.count(*(++p)))
                     sendMsg(a->devices.find(*p)->second->getStatus().dump().c_str());
 
         else if(*buffer == 'x') {
