@@ -48,7 +48,7 @@ void Stoel::operator()()//Overloaded functies moeten met 2 haakjes zodat je er z
             std::cout << "parse error" << std::endl;
         }
         std::cout << drukknop << std::endl;
-
+/*
         if ((drukknop == 1) && (drukknopPrev != drukknop) && (ledStatus == 0)){
         	ledAan();
         	ledStatus = 1;
@@ -57,14 +57,54 @@ void Stoel::operator()()//Overloaded functies moeten met 2 haakjes zodat je er z
             ledUit();
             ledStatus = 0;
         }
-
+*/
         if ((drukknop == 1) && (drukSensor == 1) && (trilStatus == 0) && ((drukknopPrev != drukknop) || (drukSensorPrev != drukSensor))){
-            trilAan();
-            trilStatus = 1;
+        	if ((drukknop == 1) && (drukknopPrev != drukknop) && (ledStatus == 0)){
+				ledAan();
+				ledStatus = 1;
+			}
+			else if ((drukknop == 1) && (drukknopPrev != drukknop) && (ledStatus == 1)){
+				ledUit();
+				ledStatus = 0;
+			}
+        	trilAan();
+        	trilStatus = 1;
         }
-        else if ((drukknop == 1) && (drukSensor == 0) && (trilStatus == 1) && ((drukknopPrev != drukknop) || (drukSensorPrev != drukSensor))){
-            trilUit();
+        else if ((drukknop == 1) && (drukSensor == 1) && (trilStatus == 1) && ((drukknopPrev != drukknop) || (drukSensorPrev != drukSensor))){
+        	if ((drukknop == 1) && (drukknopPrev != drukknop) && (ledStatus == 0)){
+				ledAan();
+				ledStatus = 1;
+			}
+			else if ((drukknop == 1) && (drukknopPrev != drukknop) && (ledStatus == 1)){
+				ledUit();
+				ledStatus = 0;
+			}
+        	trilUit();
             trilStatus = 0;
+        }
+        else if ((drukSensor == 0) && (trilStatus == 1) && (drukSensorPrev != drukSensor)){
+        	if ((drukknop == 1) && (drukknopPrev != drukknop) && (ledStatus == 0)){
+				ledAan();
+				ledStatus = 1;
+			}
+			else if ((drukknop == 1) && (drukknopPrev != drukknop) && (ledStatus == 1)){
+				ledUit();
+				ledStatus = 0;
+			}
+        	trilUit();
+			trilStatus = 0;
+			ledUit();
+			ledStatus = 0;
+		}
+        else{
+        	if ((drukknop == 1) && (drukknopPrev != drukknop) && (ledStatus == 0)){
+				ledAan();
+				ledStatus = 1;
+			}
+			else if ((drukknop == 1) && (drukknopPrev != drukknop) && (ledStatus == 1)){
+				ledUit();
+				ledStatus = 0;
+			}
         }
         drukSensorPrev = drukSensor;
         drukknopPrev = drukknop;
