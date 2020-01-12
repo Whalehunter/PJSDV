@@ -69,8 +69,13 @@ void loop(void) {
           int LDR = leesinput(1);
           int POT = leesinput(2);
           StaticJsonDocument<100> data;
+<<<<<<< Updated upstream
           data["ldr"] = LDR;
           data["pot"] = POT;
+=======
+          data["ldr"] = leesinput(2);
+          data["pot"] = leesinput(1);
+>>>>>>> Stashed changes
           
           char buffer[100];
 
