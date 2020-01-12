@@ -23,9 +23,12 @@ void Gui::operator()()
         char *p = buffer;
 
         if(*p == '-') {
+            json deviceStatus;
             while(*p)
-                if(a->devices.count(*(++p)))
-                    sendMsg(a->devices.find(*p)->second->getStatus().dump().c_str());
+                if(a->devices.count(*(++p))) {
+                    deviceStatus.push_back(a->devices.find(*p)->second->getStatus());
+                }
+            sendMsg(deviceStatus.dump().c_str());
         }
 
         else if(*p == 'd') {
