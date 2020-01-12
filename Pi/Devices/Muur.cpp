@@ -1,69 +1,121 @@
 #include "Muur.hpp"
 
-Muur::Muur(int n, Appartement* ap): Device(n, ap)
+using json = nlohmann::json;
+using namespace std;
+
+Muur::Muur(int n, Appartement* ap): Device(n, ap), /*state(LCDDOORLATEN),*/ ldr(0), pot(0)
 {
-	std::cout << "Muur aangemaakt" << std::endl;
+    std::cout << "Muur aangemaakt" << std::endl;
 }
 
 Muur::~Muur()
 {
 }
 
-void Muur::operator()()
+void Muur::operator ()()
 {
     char buffer[256];
 
-    strcpy(buffer, "getStatus\r");
-
-    sendMsg(buffer);
-
-    memset(buffer, 0, sizeof(buffer));
-
-    while(recvMsg(buffer)) {
-        std::stringstream s(buffer);
-        s >> knopValue;
-
-        std::cout << "Muur: " << knopValue << std::endl;
-
-        strcpy(buffer, "getStatus\r");
+    while(1){
+        sendMsg("getStatus\r");
+        /*memset(buffer, 0, sizeof(buffer));
+        strcpy(buffer, "getSatus\r");
         sendMsg(buffer);
+        */
+
         memset(buffer, 0, sizeof(buffer));
+        if(recv(sock, buffer, 255, 0) < 1){
+            std::cout << "Muur disconnected from socket: " << sock << std::endl;
+            close(sock);
+            return;
+        }
+
+        try {
+            auto j_muur = json::parse(buffer);
+
+            ldr = j_muur.at("ldr");
+            pot = j_muur.at("pot");
+        }
+        catch(json::parse_error){
+            std::cout << "Parsing error at Muur on socket " << sock << std::endl;
+        }
+
+        if (ldr >= 7){//deze waardes later fine tunen
+            LCDdoorlaten();
+        }
+        else if (ldr < 7){
+            LCDdimmen();
+        }
+        RGBdimmen();
     }
-    close(sock);
-    std::cout << "Connection closed on socket " << sock << std::endl;
 }
 
-int Muur::getStatus()
+nlohmann::json Muur::getStatus()
 {
-    return knopValue;
-}
+    json muurData = {/*{"Muur", state ? "LcdDimmen" : "LcdDoorlaten"},*/ {"LDR", ldr}, {"POT", pot}};
 
-void Muur::updateWaardes()
-{
-	//ontvang waardes van de WEMOS en sla die op in eigen variabelen
-}
-
-void Muur::RGBsterkte(potmeter p)
-{
-	//stuur RGB lichtsterkte naar de WEMOS
+    return muurData;
 }
 
 void Muur::LCDdimmen()
 {
-	//LCD display aan zetten op de WEMOS
+    char buff[256];
+    memset(buff, 0, sizeof(buff));
+    strcpy(buff, "dimmen\r");
+    sendMsg(buff);
 }
 
 void Muur::LCDdoorlaten()
 {
-	//LCD display uit zetten op de WEMOS
+    char buff[256];
+    memset(buff, 0, sizeof(buff));
+    strcpy(buff, "doorlaten\r");
+    sendMsg(buff);
 }
 
-void Muur::ledBinnenAan()
+
+void Muur::RGBdimmen()
 {
-	//binnenled van Deur aan doen
+    stringstream p;
+    p << pot;
+    p << "\r";
+    string str = p.str();
+    char* tempc = (char*) str.c_str();
+
+    char buff[256];
+    memset(buff, 0, sizeof(buff));
+    strcpy(buff, tempc);
+    sendMsg(buff);
+
+    if (pot == 0){
+        RGBuit();
+    }
+    else {
+        RGBaan();
+    }
 }
 
-void Muur::ledBinnenUit()
+void Muur::RGBaan()
 {
-	//binnenled van Deur uit doen
+    char buff[256];
+    memset(buff, 0, sizeof(buff));
+    strcpy(buff, "RGBaan\r");
+    sendMsg(buff);
 }
+
+void Muur::RGBuit()
+{
+    char buff[256];
+    memset(buff, 0, sizeof(buff));
+    strcpy(buff, "RGBuit\r");
+    sendMsg(buff);
+}
+
+void Muur::RGBdisco()
+{
+    char buff[256];
+    memset(buff, 0, sizeof(buff));
+    strcpy(buff, "Disco\r");
+    sendMsg(buff);
+}
+
