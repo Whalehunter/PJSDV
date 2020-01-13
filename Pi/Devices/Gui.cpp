@@ -77,8 +77,8 @@ void Gui::operator()()
                 else schemerlamp->uit();
             }
             else if (*p == 'd') {
-                if (*(++p) == 'a') schemerlamp->discoAan();
-                else schemerlamp->discoUit();
+                if (*(++p) == 'a') schemerlamp->setDisco(true);
+                else schemerlamp->setDisco(false);
             }
             sendMsg("{\"success\":true}");
 
