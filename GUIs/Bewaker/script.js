@@ -154,7 +154,7 @@ $(document).ready(()=>{
 
         });
 
-        setTimeout(()=>{msg('-dsf', updateElements)}, 50);
+        setTimeout(()=>{msg('-dsf', updateElements)}, 100);
     }
 
     function setCheckbox(where, action) {
