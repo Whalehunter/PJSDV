@@ -66,16 +66,9 @@ void loop(void) {
         line = client.readStringUntil('\r');
         Serial.println(line);
         if (line == "getStatus"){
-          int LDR = leesinput(1);
-          int POT = leesinput(2);
           StaticJsonDocument<100> data;
-<<<<<<< Updated upstream
-          data["ldr"] = LDR;
-          data["pot"] = POT;
-=======
-          data["ldr"] = leesinput(2);
-          data["pot"] = leesinput(1);
->>>>>>> Stashed changes
+          data["ldr"] = leesinput(1);
+          data["pot"] = leesinput(2);
           
           char buffer[100];
 
