@@ -18,7 +18,7 @@ void Zuil::operator()()
     while(1) {
         /* get and store JSON values */
 
-        sendMsg("getStatus\r");
+        sendMsg("getStatus");
 
         memset(buffer, 0, sizeof(buffer));
         if(recv(sock, buffer, 255, 0) < 1) {
@@ -97,12 +97,12 @@ void Zuil::deurBelUit()
 }
 
 void Zuil::zoemerAan() {
-    sendMsg("zoemerAan\r");
+    sendMsg("zoemerAan");
     zoemer = 1;
 }
 
 void Zuil::zoemerUit() {
-    sendMsg("zoemerUit\r");
+    sendMsg("zoemerUit");
     zoemer = 0;
 }
 

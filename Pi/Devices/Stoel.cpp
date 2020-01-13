@@ -13,7 +13,7 @@ void Stoel::operator()()
 {
     char buffer[256];
 
-    strcpy(buffer, "getStatus\r");
+    strcpy(buffer, "getStatus");
 
     sendMsg(buffer);
 
@@ -25,7 +25,7 @@ void Stoel::operator()()
 
         std::cout << "Stoel: " << knopValue << std::endl;
 
-        strcpy(buffer, "getStatus\r");
+        strcpy(buffer, "getStatus");
         sendMsg(buffer);
         memset(buffer, 0, sizeof(buffer));
     }
@@ -39,4 +39,3 @@ nlohmann::json Stoel::getStatus()
    return data;
    // return knopValue;
 }
-
