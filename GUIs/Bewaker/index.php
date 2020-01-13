@@ -45,6 +45,13 @@
                         <input name="" type="checkbox" value=""/>
                     </div>
                 </div>
+                <div class="column brightness">
+                    <p><b>Lamp Helderheid</b></p>
+                    <div class="ui mini buttons">
+                        <div class="ui icon basic button"><i class="minus icon"></i></div>
+                        <div class="ui icon basic button"><i class="plus icon"></i></div>
+                    </div>
+                </div>
               </div>
             </div>
           </div>
