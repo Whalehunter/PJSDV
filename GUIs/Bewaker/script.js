@@ -96,7 +96,11 @@ $(document).ready(()=>{
                     c = 'set unchecked';
                 }
                 $('.schemerlamp .lamp .checkbox').checkbox(c);
-                $('.schemerlamp .movement #bewegingssensor').text(s.Beweging);
+                if (!s.Beweging && $('#bewegingssensor').hasClass('check')) {
+                    $('#bewegingssensor').removeClass('green check icon').addClass('red close icon');
+                } else if (s.Beweging && $('#bewegingssensor').hasClass('close')){
+                    $('#bewegingssensor').removeClass('red close icon').addClass('green check icon');
+                }
                 $('.schemerlamp .disco .checkbox').checkbox(s.Disco ? 'set checked' : 'set unchecked');
             }
 

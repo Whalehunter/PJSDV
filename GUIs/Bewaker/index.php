@@ -34,7 +34,10 @@
                 </div>
                 <div class="column movement">
                   <p><b>Bewegingdetector</b></p>
-                  <p><span id="bewegingssensor">Aan</span></p>
+                  <i class="large icons">
+                      <i class="street view icon"></i>
+                      <i id="bewegingssensor" class="top right corner green check icon"></i>
+                  </i>
                 </div>
                 <div class="column disco">
                     <p><b>Discostand</b></p>
