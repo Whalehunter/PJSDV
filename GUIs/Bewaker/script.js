@@ -1,7 +1,6 @@
 // Bij page reload alle ajax requests cancellen, zodat de pagina een beetje snel verversen kan.
 var msgs = [];
 window.addEventListener('beforeunload', ()=>{
-    clearInterval(interval);
     msgs.forEach((req)=>{
         req.abort();
     });
@@ -65,74 +64,78 @@ $(document).ready(()=>{
 
     $('.muur .lamp .checkbox').checkbox();
 
+
     /* Update interval */
-    interval = setInterval(function() {
-        msg('-dsf', updateElements);
-    }, 100);
+    msg('-dsf', updateElements);
 
     function updateElements(data) {
 
-        /* SCHEMERLAMP */
-        if (data.Schemerlamp) {
-            let s = data.Schemerlamp, c = 'set checked';
-            if (!s.Lamp) {
-                c = 'set unchecked';
-            }
-            $('.schemerlamp .lamp .checkbox').checkbox(c);
-            $('.schemerlamp .movement #bewegingssensor').text(s.Beweging);
-        }
-
-        /* ZUIL */
-        if (data.Zuil) {
-            let z = data.Zuil, c = 'set checked';
-            if (!z.Zoemer) c = 'set unchecked';
-            $('.zuil .zoemer .checkbox').checkbox(c);
-            if (!z.Lamp) c = 'set unchecked'; else c = 'set checked';
-            $('.zuil .lamp .checkbox').checkbox(c);
-            if (!z.Brandalarm) c = 'set unchecked'; else c = 'set checked';
-            $('.zuil .brandalarm .checkbox').checkbox(c);
-            if (!z.Noodalarm) c = 'set unchecked'; else c = 'set checked';
-            $('.zuil .noodalarm .checkbox').checkbox(c);
-
-            /* BRANDALARM */
-            if (z.Brandalarm) {
-                $('.zuil .brand.message').show();
-            } else {
-                $('.zuil .brand.message').hide();
+        data.forEach((key)=>{
+            /* SCHEMERLAMP */
+            if (key.Schemerlamp) {
+                let s = key.Schemerlamp, c = 'set checked';
+                if (!key.Lamp) {
+                    c = 'set unchecked';
+                }
+                $('.schemerlamp .lamp .checkbox').checkbox(c);
+                $('.schemerlamp .movement #bewegingssensor').text(s.Beweging);
             }
 
-            if (z.Noodalarm) {
-                $('.zuil .nood.message').show();
-            } else {
-                $('.zuil .nood.message').hide();
+            /* ZUIL */
+            if (key.Zuil) {
+                let z = key.Zuil, c = 'set checked';
+                if (!z.Zoemer) c = 'set unchecked';
+                $('.zuil .zoemer .checkbox').checkbox(c);
+                if (!z.Lamp) c = 'set unchecked'; else c = 'set checked';
+                $('.zuil .lamp .checkbox').checkbox(c);
+                if (!z.Brandalarm) c = 'set unchecked'; else c = 'set checked';
+                $('.zuil .brandalarm .checkbox').checkbox(c);
+                if (!z.Noodalarm) c = 'set unchecked'; else c = 'set checked';
+                $('.zuil .noodalarm .checkbox').checkbox(c);
+
+                /* BRANDALARM */
+                if (z.Brandalarm) {
+                    $('.zuil .brand.message').show();
+                } else {
+                    $('.zuil .brand.message').hide();
+                }
+
+                if (z.Noodalarm) {
+                    $('.zuil .nood.message').show();
+                } else {
+                    $('.zuil .nood.message').hide();
+                }
+                $('.zuil .gasmelder-waarde').text(z.Gasmeter);
             }
-            $('.zuil .gasmelder-waarde').text(z.Gasmeter);
-        }
 
-        /* DEUR */
-        if (data.Deur) {
-            let buitenKnop = '.outside.switch', binnenKnop = '.inside.switch', buitenLed = '.outside.lamp', binnenLed = '.inside.lamp', deur = '.deur';
-            let d = data.Deur, c = 'set checked';
+            /* DEUR */
+            if (key.Deur) {
+                let buitenKnop = '.outside.switch', binnenKnop = '.inside.switch', buitenLed = '.outside.lamp', binnenLed = '.inside.lamp', deur = '.deur';
+                let d = key.Deur, c = 'set checked';
 
-            if (!d.Binnenknop) c = 'set unchecked';
-            setCheckbox('.deur '+binnenKnop, c);
+                if (!d.Binnenknop) c = 'set unchecked';
+                setCheckbox('.deur '+binnenKnop, c);
 
-            if(d.Buitenknop) c = 'set checked';
-            else c = 'set unchecked';
-            setCheckbox('.deur '+buitenKnop, c);
+                if(d.Buitenknop) c = 'set checked';
+                else c = 'set unchecked';
+                setCheckbox('.deur '+buitenKnop, c);
 
-            if (d.Binnenled) c = 'set checked';
-            else c = 'set unchecked';
-            setCheckbox('.deur '+binnenLed, c);
+                if (d.Binnenled) c = 'set checked';
+                else c = 'set unchecked';
+                setCheckbox('.deur '+binnenLed, c);
 
-            if (d.Buitenled) c = 'set checked';
-            else c = 'set unchecked';
-            setCheckbox('.deur '+buitenLed, c);
+                if (d.Buitenled) c = 'set checked';
+                else c = 'set unchecked';
+                setCheckbox('.deur '+buitenLed, c);
 
-            if (d.Deur == 'open') c = 'set checked';
-            else c = 'set unchecked';
-            setCheckbox('.deur '+deur, c);
-        }
+                if (d.Deur == 'open') c = 'set checked';
+                else c = 'set unchecked';
+                setCheckbox('.deur '+deur, c);
+            }
+
+        });
+
+        setTimeout(()=>{msg('-dsf', updateElements)}, 100);
     }
 
     function setCheckbox(where, action) {

@@ -7,11 +7,14 @@ define('PORT', 8883);
 define('ADDRESS', '192.168.4.1');
 define('SOCKSIZE', 256);
 
-function connect() {
+
+function connect()
+{
     $socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
     if (!$socket) {
         exit;
     }
+
     socket_set_option($socket, getprotobyname('tcp'), SO_RCVTIMEO, ['sec' => 0, 'usec' => 500]);
     $connection = socket_connect($socket, ADDRESS, PORT);
 
@@ -20,25 +23,33 @@ function connect() {
     }
 
     return $socket;
-}
+
+}//end connect()
+
 
 $s = connect();
 
-while($out = socket_read($s, SOCKSIZE)) {
+while ($out = socket_read($s, SOCKSIZE)) {
     $msg = '';
-    switch($out) {
-    case "ID?\r":
-        $msg = $_REQUEST['id'];
+    switch ($out) {
+        case "ID?\r":
+            $msg = $_REQUEST['id'];
         break;
-    case "OK\r":
-        $msg = $_REQUEST['msg'];
+
+        case "OK\r":
+            $msg = $_REQUEST['msg'];
         break;
-    default:
-        socket_close($s);
+
+        default:
+            socket_close($s);
         break 2;
     }
 
     socket_write($s, $msg, strlen($msg));
 }
 
-echo $out;
+if ($out !== 'null') {
+    echo $out;
+} else {
+    echo json_encode(['success' => false]);
+}
