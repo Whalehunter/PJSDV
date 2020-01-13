@@ -76,6 +76,12 @@ void Gui::operator()()
                 if (*(++p) == 'a') schemerlamp->aan();
                 else schemerlamp->uit();
             }
+            else if (*p == 'd') {
+                if (*(++p) == 'a') schemerlamp->discoAan();
+                else schemerlamp->discoUit();
+            }
+            sendMsg("{\"success\":true}");
+
         }
 
         // sendMsg(buffer);
