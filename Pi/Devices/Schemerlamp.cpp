@@ -1,8 +1,10 @@
 #include "Schemerlamp.hpp"
+#include <ctime>
+#define COCKS_PER_SEC CLOCKS_PER_SEC
 
 using json = nlohmann::json;
 
-Schemerlamp::Schemerlamp(int n, Appartement* a): Device(n, a)
+Schemerlamp::Schemerlamp(int n, Appartement* a): Device(n, a), disco(false), discoTimer(0)
 {
     std::cout << "Schemerlamp aangemaakt" << std::endl;
     lamp = (*new RGBLed());
@@ -34,9 +36,50 @@ void Schemerlamp::operator()()
         catch(json::exception& e) {
             std::cout << "Exception error at Deur: " << e.what() << std::endl;
         }
+
+        if (isDisco() && ((std::clock() - discoTimer) / (double) COCKS_PER_SEC) >= 0.5) {
+            json msg = {{"R", getDiscoKleur("rood")},{"G", getDiscoKleur("groen")},{"B", getDiscoKleur("blauw")},};
+            sendMsg((msg.dump()+"\r").c_str());
+            updateDiscoColor();
+        }
     }
     close(sock);
     std::cout << "Schemerlamp connection closed" << std::endl;
+}
+
+void Schemerlamp::updateDiscoColor() {
+    if (currentDiscoColor == "rood") {
+        currentDiscoColor = "groen";
+    } else if (currentDiscoColor == "groen") {
+        currentDiscoColor = "blauw";
+    } else {
+        currentDiscoColor = "rood";
+    }
+}
+
+bool Schemerlamp::isDisco() {
+    return disco;
+}
+
+void Schemerlamp::setDisco(bool d) {
+    if (disco && !d) {
+        json msg = {{"R", 255},{"G", 255},{"B", 255}};
+        sendMsg((msg.dump()+"\r").c_str());
+    } else if (!disco && d) {
+        json msg = {{"R", 0},{"G", 0},{"B", 0}};
+        sendMsg((msg.dump()+"\r").c_str());
+        discoTimer = std::clock();
+    }
+    disco = d;
+}
+
+int Schemerlamp::getDiscoKleur(std::string kleur) {
+    if (this->currentDiscoColor == kleur) {
+        discoTimer = std::clock();
+        return 255;
+    }
+
+    return 0;
 }
 
 void Schemerlamp::setKleur(int r, int g, int b) {
