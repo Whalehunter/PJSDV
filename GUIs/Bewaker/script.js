@@ -19,12 +19,19 @@ function msg(txt, hook) {
     }).done((data)=>{hook(data)}));
 }
 
+function afhandel(data){if(!data.success)console.log(data)}
+
 $(document).ready(()=>{
 
     /* SCHEMERLAMP */
     $('.schemerlamp .lamp .checkbox').checkbox({
-        onChecked:()=>{msg('sla',(data)=>{console.log(data)})},
-        onUnchecked:()=>{msg('slu',(data)=>{console.log(data)})}
+        onChecked:()=>{msg('sla',afhandel)},
+        onUnchecked:()=>{msg('slu',afhandel)}
+    });
+
+    $('.schemerlamp .disco .checkbox').checkbox({
+        onChecked:()=>{msg('sda',afhandel)},
+        onUnchecked:()=>{msg('sdu',afhandel)}
     });
 
     /* STOEL */
@@ -32,7 +39,7 @@ $(document).ready(()=>{
 
     /* ZUIL */
     $('.zuil .zoemer .checkbox').checkbox({
-        onChecked:()=>{msg('fza',(data)=>{console.log(data)})},
+        onChecked:()=>{msg('fza',(data)=>{if(!data.success)console.log(data)})},
         onUnchecked:()=>{msg('fzu',(data)=>{console.log(data)})}
     });
 
@@ -90,6 +97,7 @@ $(document).ready(()=>{
                 }
                 $('.schemerlamp .lamp .checkbox').checkbox(c);
                 $('.schemerlamp .movement #bewegingssensor').text(s.Beweging);
+                $('.schemerlamp .disco .checkbox').checkbox(s.Disco ? 'set checked' : 'set unchecked');
             }
 
             /* ZUIL */
@@ -146,7 +154,7 @@ $(document).ready(()=>{
 
         });
 
-        setTimeout(()=>{msg('-dsf', updateElements)}, 100);
+        setTimeout(()=>{msg('-dsf', updateElements)}, 50);
     }
 
     function setCheckbox(where, action) {
