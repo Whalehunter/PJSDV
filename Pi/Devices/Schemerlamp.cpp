@@ -47,16 +47,12 @@ void Schemerlamp::setKleur(int r, int g, int b) {
 }
 
 void Schemerlamp::uit() {
-    if (lamp.isOn()) {
-        lamp.toggle();
-    }
+    lamp.uit();
     sendMsg((lamp.getKleur().dump()+"\r").c_str());
 }
 
 void Schemerlamp::aan() {
-    if (lamp.isOff()) {
-        lamp.toggle();
-    }
+    lamp.aan();
     sendMsg((lamp.getKleur().dump()+"\r").c_str());
 }
 

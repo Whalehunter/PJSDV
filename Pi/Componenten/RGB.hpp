@@ -16,12 +16,18 @@ public:
 };
 
 class RGBLed {
+
+public:
     void setOld() {
         old->red   = rgb->red;
         old->green = rgb->green;
         old->blue  = rgb->blue;
     }
-public:
+    void getOld() {
+        rgb->red   = old->red;
+        rgb->green = old->green;
+        rgb->blue  = old->blue;
+    }
     RGB* rgb;
     RGB* old;
     RGBLed():rgb(new RGB(0,0,0)),old(new RGB(0,0,0)){}
@@ -32,18 +38,17 @@ public:
         rgb->blue  = b;
     }
 
-    void toggle() {
-        int r = old->red;
-        int g = old->green;
-        int b = old->blue;
+    void uit() {
+        if (isOn() && !isOff()) {
+            setOld();
+            setKleur(0,0,0);
+        }
+    }
 
-        old->red = rgb->red;
-        old->green = rgb->green;
-        old->blue = rgb->blue;
-
-        rgb->red = r;
-        rgb->green = g;
-        rgb->blue = b;
+    void aan() {
+        if (isOff() && !isOn()) {
+            getOld();
+        }
     }
 
     nlohmann::json getKleur() {
