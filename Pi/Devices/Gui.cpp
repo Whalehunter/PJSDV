@@ -1,6 +1,7 @@
 #include "Gui.hpp"
 #include "Deur.hpp"
 #include "Zuil.hpp"
+#include "Schemerlamp.hpp"
 #include <string>
 
 using json = nlohmann::json;
@@ -67,6 +68,14 @@ void Gui::operator()()
                 else zuil->zoemerUit();
             }
             sendMsg("{\"success\":true}");
+        }
+        else if(*p == 's') {
+
+            Schemerlamp * schemerlamp = dynamic_cast<Schemerlamp *>(a->devices.find(*p++)->second);
+            if (*p == 'l') {
+                if (*(++p) == 'a') schemerlamp->aan();
+                else schemerlamp->uit();
+            }
         }
 
         // sendMsg(buffer);
