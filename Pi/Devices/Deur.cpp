@@ -21,7 +21,7 @@ void Deur::operator()()
     while(1) {
         /* get and store JSON values */
 
-        sendMsg("getStatus");
+        sendMsg("getStatus\r");
 
         memset(buffer, 0, sizeof(buffer));
         if(recv(sock, buffer, 255, 0) < 1) { // dit wordt een functie
@@ -80,14 +80,14 @@ void Deur::operator()()
 
 void Deur::openDeur()
 {
-    sendMsg("deurOpen");
+    sendMsg("deurOpen\r");
 
     state = OPEN;
 }
 
 void Deur::sluitDeur()
 {
-    sendMsg("deurDicht");
+    sendMsg("deurDicht\r");
 
     state = DICHT;
 }
@@ -108,7 +108,7 @@ void Deur::deurBelUit()
 
 void Deur::buitenLampAan()
 {
-    sendMsg("buitenLampAan");
+    sendMsg("buitenLampAan\r");
 
     ledBuiten = 1;
     timer = std::clock();
@@ -116,7 +116,7 @@ void Deur::buitenLampAan()
 
 void Deur::buitenLampUit()
 {
-    sendMsg("buitenLampUit");
+    sendMsg("buitenLampUit\r");
 
     ledBuiten = 0;
     timer = 0;
@@ -124,14 +124,14 @@ void Deur::buitenLampUit()
 
 void Deur::binnenLampAan()
 {
-    sendMsg("binnenLampAan");
+    sendMsg("binnenLampAan\r");
 
     ledBinnen = 1;
 }
 
 void Deur::binnenLampUit()
 {
-    sendMsg("binnenLampUit");
+    sendMsg("binnenLampUit\r");
 
     ledBinnen = 0;
 }

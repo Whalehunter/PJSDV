@@ -1,5 +1,4 @@
 #include "Device.hpp"
-#include <cstring>
 //#include "nlohmann/json.hpp"
 
 //using json = nlohmann::json;
@@ -14,9 +13,7 @@ Device::~Device()
 
 void Device::sendMsg(const char* data)
 {
-    const char* ss = strcat((char*)data,"\r");
-
-    if (send(sock, ss, strlen(ss), 0) < 0) {
+    if (send(sock, data, strlen(data), 0) < 0) {
         std::cout << "Error sending on socket: " << sock << std::endl;
     }
 }

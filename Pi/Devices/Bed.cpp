@@ -13,7 +13,7 @@ void Bed::operator()()
 {
     char buffer[256];
 
-    strcpy(buffer, "getStatus");
+    strcpy(buffer, "getStatus\r");
 
     sendMsg(buffer);
 
@@ -25,7 +25,7 @@ void Bed::operator()()
 
       //  std::cout << "Bed: " << knopValue << std::endl;
 
-        strcpy(buffer, "getStatus");
+        strcpy(buffer, "getStatus\r");
         sendMsg(buffer);
         memset(buffer, 0, sizeof(buffer));
     }
@@ -38,3 +38,4 @@ nlohmann::json Bed::getStatus()
     nlohmann::json data = {"Placeholder", 0};
     return data;
 }
+

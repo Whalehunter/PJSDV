@@ -16,7 +16,7 @@ void Schemerlamp::operator()()
 
     while(1) {
         char buf[256];
-        strcpy(buf, "getStatus");
+        strcpy(buf, "getStatus\r");
         sendMsg(buf);
         memset(buf, 0, sizeof(buf));
 
