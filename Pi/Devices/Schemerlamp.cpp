@@ -102,6 +102,6 @@ void Schemerlamp::aan() {
 json Schemerlamp::getStatus()
 {
     json schemerlampie;
-    schemerlampie["Schemerlamp"] = {{"Rood", lamp.rgb->red}, {"Groen", lamp.rgb->green}, {"Blauw", lamp.rgb->blue}, {"Beweging", beweging}, {"Disco", disco};
+    schemerlampie["Schemerlamp"] = {{"Rood", lamp.rgb->red}, {"Groen", lamp.rgb->green}, {"Blauw", lamp.rgb->blue}, {"Beweging", beweging}, {"Disco", disco}};
     return schemerlampie;
 }
