@@ -27,11 +27,9 @@ public:
     RGBLed():rgb(new RGB(0,0,0)),old(new RGB(0,0,0)){}
 
     void setKleur(int r, int g , int b) {
-        setOld();
-
-        rgb->red = r;
+        rgb->red   = r;
         rgb->green = g;
-        rgb->blue = b;
+        rgb->blue  = b;
     }
 
     void toggle() {
