@@ -58,7 +58,9 @@ void Schemerlamp::aan() {
     }
 }
 
-nlohmann::json Schemerlamp::getStatus()
+json Schemerlamp::getStatus()
 {
-    return {{"Rood", lamp.rgb->red}, {"Groen", lamp.rgb->green}, {"Blauw", lamp.rgb->blue}, {"Beweging", beweging}};
+    json schemerlampie;
+    schemerlampie["Schemerlamp"] = {{"Rood", lamp.rgb->red}, {"Groen", lamp.rgb->green}, {"Blauw", lamp.rgb->blue}, {"Beweging", beweging}};
+    return schemerlampie;
 }
