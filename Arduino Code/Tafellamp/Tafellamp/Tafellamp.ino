@@ -43,7 +43,7 @@ void loop() {
   String ID = "s";
 
   if (client.connect(HOST, PORT)) {
-    line = getLine(client);
+    line = client.readStringUntil('\r');
     if (line == "ID?") {
       client.print(ID);
     }
@@ -61,12 +61,20 @@ void loop() {
           data["beweging"] = (leesPIR()&0x01);
           serializeJson(data, buffer);
           client.print(String(buffer));
-        } else if (line == "discoAan") {
+        } else {
+          StaticJsonDocument<BUFSIZE> data;
+          deserializeJson(data, line);
+        /*  JsonObject& pdata = jsonBuffer.parseObject(data);
+          if(!pdata.success()) {
+            Serial.println("parseObject() failed");
+            return;
+          }*/
 
-        } else if (line == "discoUit") {
+        //  Serial.println(data);
 
-        } else if (line == "")
-
+          pixels.setPixelColor(0, pixels.Color(data["R"], data["G"], data["B"]));
+          pixels.show();
+        }
         line = "";
       }
     }
