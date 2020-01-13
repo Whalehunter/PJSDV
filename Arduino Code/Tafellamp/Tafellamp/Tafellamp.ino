@@ -62,9 +62,11 @@ void loop() {
           client.print(String(buffer));
         } else {
           StaticJsonDocument<BUFSIZE> data;
+          
           deserializeJson(data, line);
-        /*  JsonObject& pdata = jsonBuffer.parseObject(data);
-          if(!pdata.success()) {
+         Serial.println(line);
+         // JsonObject& pdata = data.parseObject(line);
+          /*if(!pdata.success()) {
             Serial.println("parseObject() failed");
             return;
           }*/
