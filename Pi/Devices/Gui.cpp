@@ -37,8 +37,16 @@ void Gui::operator()()
             if (*p == 'o') {
                 deur->openDeur();
             }
-            else {
+            else if (*p == 's') {
                 deur->sluitDeur();
+            }
+            else if (*p == 'l') { // dla voor binnenlamp
+                if (*(++p) == 'a') deur->binnenLampAan();
+                else deur->binnenLampUit();
+            }
+            else if (*p == 'b') { // dba voor buitenlamp
+                if (*(++p) == 'a') deur->buitenLampAan();
+                else deur->buitenLampUit();
             }
             sendMsg("{\"success\":true}");
         }
