@@ -88,6 +88,10 @@ $(document).ready(()=>{
 
     function updateElements(data) {
 
+        if (!data) {
+            return;
+        }
+
         data.forEach((key)=>{
             /* SCHEMERLAMP */
             if (key.Schemerlamp) {
