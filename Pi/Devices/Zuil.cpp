@@ -2,7 +2,7 @@
 
 using json = nlohmann::json;
 
-Zuil::Zuil(int n, Appartement* ap): Device(n, ap), nood(0), brand(0), zoemer(0)
+Zuil::Zuil(int n, Appartement* ap): Device(n, ap), nood(0), brand(0), zoemer(0), timer(0)
 {
     std::cout << "Zuil aangemaakt" << std::endl;
 }
@@ -46,9 +46,9 @@ void Zuil::operator()()
             brandAlarmAan();
         }
 
-        if(zoemer == 1 && (((std::clock() - timer) / (double) CLOCKS_PER_SEC) >= 1.5) && nood == 0) {
+        /*if(timer != 0 && zoemer == 1 && (((std::clock() - timer) / (double) CLOCKS_PER_SEC) >= 1.5) && nood == 0) {
             deurBelUit();
-        }
+        }*/
     }
 
     close(sock);

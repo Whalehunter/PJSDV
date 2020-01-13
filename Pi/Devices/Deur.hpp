@@ -22,7 +22,8 @@ class Deur: public Device
         void operator()();
         void openDeur();
         void sluitDeur();
-        void deurBel();
+        void deurBelAan();
+        void deurBelUit();
         void buitenLampAan();
         void buitenLampUit();
         void binnenLampAan();

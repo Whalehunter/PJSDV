@@ -60,8 +60,11 @@ void Deur::operator()()
         /* checks */
 
         if (knopBuiten == 1 && knopBuitenPrev != knopBuiten) {
-            deurBel();
+            deurBelAan();
             buitenLampAan();
+        }
+        else if (knopBuiten == 0 && knopBuitenPrev != knopBuiten) {
+            deurBelUit();
         }
 
         if (ledBuiten == 1 && ((std::clock() - timer) / (double) CLOCKS_PER_SEC) >= 5.0) {
@@ -89,11 +92,18 @@ void Deur::sluitDeur()
     state = DICHT;
 }
 
-void Deur::deurBel()
+void Deur::deurBelAan()
 {
     char cZuil = 'f';
     if (a->devices.count(cZuil))
         dynamic_cast<Zuil *>(a->devices.find(cZuil)->second)->deurBelAan();
+}
+
+void Deur::deurBelUit()
+{
+    char cZuil = 'f';
+    if (a->devices.count(cZuil))
+        dynamic_cast<Zuil *>(a->devices.find(cZuil)->second)->deurBelUit();
 }
 
 void Deur::buitenLampAan()
