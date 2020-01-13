@@ -12,7 +12,7 @@ public:
     void setRed(int);
     void setGreen(int);
     void setBlue(int);
-
+    RGB(int r,int g,int b):red(r),green(g),blue(b){};
 };
 
 class RGBLed {
@@ -24,11 +24,7 @@ class RGBLed {
 public:
     RGB* rgb;
     RGB* old;
-    RGBLed():rgb(new RGB()),old(new RGB()){
-        rgb->red = 0;
-        rgb->green = 0;
-        rgb->blue = 0;
-    }
+    RGBLed():rgb(new RGB(0,0,0)),old(new RGB(0,0,0)){}
 
     void setKleur(int r, int g , int b) {
         setOld();
