@@ -43,21 +43,21 @@ void Schemerlamp::setKleur(int r, int g, int b) {
     lamp.setKleur(r,g,b);
     json kleur = lamp.getKleur();
     kleur["cmd"] = "kleur";
-    sendMsg(kleur.dump().c_str());
+    sendMsg((kleur.dump()+"\r").c_str());
 }
 
 void Schemerlamp::uit() {
     if (lamp.isOn()) {
         lamp.toggle();
     }
-    sendMsg(lamp.getKleur().dump().c_str());
+    sendMsg((lamp.getKleur().dump()+"\r").c_str());
 }
 
 void Schemerlamp::aan() {
     if (lamp.isOff()) {
         lamp.toggle();
     }
-    sendMsg(lamp.getKleur().dump().c_str());
+    sendMsg((lamp.getKleur().dump()+"\r").c_str());
 }
 
 json Schemerlamp::getStatus()
