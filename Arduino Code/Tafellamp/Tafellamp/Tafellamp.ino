@@ -35,7 +35,6 @@ void setup() {
     delay(500);
   }
   Serial.printf("Connected to ", SSID);
-  pixels.setPixelColor(0, pixels.Color(255, 255, 255)); // ff een testje
 }
 
 void loop() {
