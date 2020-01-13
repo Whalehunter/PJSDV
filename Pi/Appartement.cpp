@@ -39,9 +39,9 @@ void Appartement::createDevice(int sock, char id)
         ob = schemerlamp;
     }
     else if (id == 'x') {
-        if(gui != 0) delete gui;
-        gui = new Gui(sock, this);
-        ob = gui;
+       // if(gui != 0) delete gui;
+       // gui = new Gui(sock, this);
+        ob = new Gui(sock, this);
     }
     else if (id == 'y') {
         if(bed != 0) delete bed;
