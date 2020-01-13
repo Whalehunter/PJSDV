@@ -24,7 +24,11 @@ class RGBLed {
 public:
     RGB* rgb;
     RGB* old;
-    RGBLed():rgb(new RGB()),old(new RGB()){}
+    RGBLed():rgb(new RGB()),old(new RGB()){
+        rgb->red = 0;
+        rgb->green = 0;
+        rgb->blue = 0;
+    }
 
     void setKleur(int r, int g , int b) {
         setOld();
