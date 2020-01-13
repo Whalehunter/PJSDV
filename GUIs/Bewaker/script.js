@@ -21,14 +21,16 @@ function msg(txt, hook) {
 
 $(document).ready(()=>{
 
-    $('.message .close').on('click', ()=>{
-        $(this).closest('.message').removeClass('message').addClass('hidden message');
+    /* SCHEMERLAMP */
+    $('.schemerlamp .lamp .checkbox').checkbox({
+        onChecked:()=>{msg('sla',(data)=>{console.log(data)})},
+        onUnchecked:()=>{msg('slu',(data)=>{console.log(data)})}
     });
 
-    $('.schemerlamp .lamp .checkbox').checkbox();
-
+    /* STOEL */
     $('.stoel .trillen .checkbox').checkbox();
 
+    /* ZUIL */
     $('.zuil .zoemer .checkbox').checkbox({
         onChecked:()=>{msg('fza',(data)=>{console.log(data)})},
         onUnchecked:()=>{msg('fzu',(data)=>{console.log(data)})}
@@ -44,14 +46,23 @@ $(document).ready(()=>{
         onUnchecked:()=>{msg('fnu',(data)=>{console.log(data)})}
     });
 
+    /* KOELKAST */
     $('.koelkast .deur .checkbox').checkbox();
     $('.koelkast .koeler .checkbox').checkbox();
 
+    /* DEUR */
     $('.deur .inside.switch .checkbox').checkbox();
 
     $('.deur .outside.switch .checkbox').checkbox();
-    $('.deur .inside.lamp .checkbox').checkbox();
-    $('.deur .outside.lamp .checkbox').checkbox();
+    $('.deur .inside.lamp .checkbox').checkbox({
+        onChecked:()=>{msg('dla',(data)=>{console.log(data)})},
+        onUnchecked:()=>{msg('dlu',(data)=>{console.log(data)})},
+    });
+
+    $('.deur .outside.lamp .checkbox').checkbox({
+        onChecked:()=>{msg('dba',(data)=>{console.log(data)})},
+        onUnchecked:()=>{msg('dbu',(data)=>{console.log(data)})},
+    });
     $('.deur .deur .checkbox').checkbox({
         onChecked:()=>{msg('do',(data)=>{console.log(data)})},
         onUnchecked:()=>{msg('ds',(data)=>{console.log(data)})}
@@ -74,7 +85,7 @@ $(document).ready(()=>{
             /* SCHEMERLAMP */
             if (key.Schemerlamp) {
                 let s = key.Schemerlamp, c = 'set checked';
-                if (!key.Lamp) {
+                if (!s.Rood && !s.Groen && !s.Blauw) {
                     c = 'set unchecked';
                 }
                 $('.schemerlamp .lamp .checkbox').checkbox(c);
