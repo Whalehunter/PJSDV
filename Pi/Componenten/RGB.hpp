@@ -2,6 +2,7 @@
 #define RGB_HPP
 
 #include <string>
+#include "../nlohmann/json.hpp"
 
 class RGB {
 public:
@@ -15,15 +16,56 @@ public:
 };
 
 class RGBLed {
-    bool power;
-    int brightness;
+    void setOld() {
+        old->red   = rgb->red;
+        old->green = rgb->green;
+        old->blue  = rgb->blue;
+    }
 public:
     RGB* rgb;
-    RGBLed():rgb(new RGB()){}
+    RGB* old;
+    RGBLed():rgb(new RGB()),old(new RGB()){}
+
     void setKleur(int r, int g , int b) {
+        setOld();
+
         rgb->red = r;
         rgb->green = g;
         rgb->blue = b;
+    }
+
+    void toggle() {
+        int r = old->red;
+        int g = old->green;
+        int b = old->blue;
+
+        old->red = rgb->red;
+        old->green = rgb->green;
+        old->blue = rgb->blue;
+
+        rgb->red = r;
+        rgb->green = g;
+        rgb->blue = b;
+    }
+
+    nlohmann::json getKleur() {
+        return {{"R", rgb->red},{"G", rgb->green},{"B",rgb->blue}};
+    }
+
+    bool isOn() {
+        if (rgb->red == 0 && rgb->blue == 0 && rgb->green == 0) {
+            return false;
+        }
+
+        return true;
+    }
+
+    bool isOff() {
+        if (rgb->red != 0 || rgb->blue != 0 || rgb->green != 0) {
+            return false;
+        }
+
+        return true;
     }
 };
 #endif

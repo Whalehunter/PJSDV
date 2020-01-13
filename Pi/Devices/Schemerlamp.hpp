@@ -17,8 +17,10 @@ class Schemerlamp: public Device
     void operator()();
     void setLamp(bool);         // aan of uit bool (true = aan)
     void setLamp(std::string);  // aan of uit string
-    void setLamp(int);          // Helderdheid
     bool getLamp();
+    void setKleur(int,int,int); // Kleur
+    void uit();
+    void aan();
 
     nlohmann::json getStatus();
 };

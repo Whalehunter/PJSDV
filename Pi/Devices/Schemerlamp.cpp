@@ -39,6 +39,25 @@ void Schemerlamp::operator()()
     std::cout << "Schemerlamp connection closed" << std::endl;
 }
 
+void Schemerlamp::setKleur(int r, int g, int b) {
+    lamp.setKleur(r,g,b);
+    json kleur = lamp.getKleur();
+    kleur["cmd"] = "kleur";
+    sendMsg(kleur.dump().c_str());
+}
+
+void Schemerlamp::uit() {
+    if (lamp.isOn()) {
+        lamp.toggle();
+    }
+}
+
+void Schemerlamp::aan() {
+    if (lamp.isOff()) {
+        lamp.toggle();
+    }
+}
+
 nlohmann::json Schemerlamp::getStatus()
 {
     return {{"Rood", lamp.rgb->red}, {"Groen", lamp.rgb->green}, {"Blauw", lamp.rgb->blue}, {"Beweging", beweging}};
