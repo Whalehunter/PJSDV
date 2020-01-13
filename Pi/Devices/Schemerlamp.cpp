@@ -50,12 +50,14 @@ void Schemerlamp::uit() {
     if (lamp.isOn()) {
         lamp.toggle();
     }
+    sendMsg(lamp.getKleur().dump().c_str());
 }
 
 void Schemerlamp::aan() {
     if (lamp.isOff()) {
         lamp.toggle();
     }
+    sendMsg(lamp.getKleur().dump().c_str());
 }
 
 json Schemerlamp::getStatus()
