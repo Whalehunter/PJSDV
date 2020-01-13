@@ -34,6 +34,10 @@ $(document).ready(()=>{
         onUnchecked:()=>{msg('sdu',afhandel)}
     });
 
+    $('.schemerlamp .brightness .button').click(()=>{
+        // Respond op buttons met data attribute
+    });
+
     /* STOEL */
     $('.stoel .trillen .checkbox').checkbox();
 
@@ -106,6 +110,12 @@ $(document).ready(()=>{
                     $('#bewegingssensor').removeClass('red close icon').addClass('green check icon');
                 }
                 $('.schemerlamp .disco .checkbox').checkbox(s.Disco ? 'set checked' : 'set unchecked');
+
+                let sHelderheid = '%';
+                if (s.Helderheid) {
+                    sHelderheid = s.helderheid + ' %';
+                }
+                $('.schemerlamp-helderheid').text(sHelderheid);
             }
 
             /* ZUIL */

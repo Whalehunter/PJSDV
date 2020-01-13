@@ -46,10 +46,10 @@
                     </div>
                 </div>
                 <div class="column brightness">
-                    <p><b>Lamp Helderheid</b></p>
+                    <p><b>Lamp Helderheid</b> <span class="schemerlamp-helderheid"></span></p>
                     <div class="ui mini buttons">
-                        <div class="ui icon basic button"><i class="minus icon"></i></div>
-                        <div class="ui icon basic button"><i class="plus icon"></i></div>
+                        <div data-inc="10" class="ui icon basic button"><i class="minus icon"></i></div>
+                        <div data-inc="-10" class="ui icon basic button"><i class="plus icon"></i></div>
                     </div>
                 </div>
               </div>
