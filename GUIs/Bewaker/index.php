@@ -36,6 +36,12 @@
                   <p><b>Bewegingdetector</b></p>
                   <p><span id="bewegingssensor">Aan</span></p>
                 </div>
+                <div class="column disco">
+                    <p><b>Discostand</b></p>
+                    <div class="ui fitted slider checkbox">
+                        <input name="" type="checkbox" value=""/>
+                    </div>
+                </div>
               </div>
             </div>
           </div>
