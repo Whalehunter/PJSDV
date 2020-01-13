@@ -262,10 +262,5 @@
       </div>
     </div>
 
-    <div class="ui very padded bottom attached container segment">
-      <div class="ui footer">
-        copyright motherfuckers
-      </div>
-    </div>
   </body>
 </html>
