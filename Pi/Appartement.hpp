@@ -13,21 +13,21 @@
 class Device;
 class Appartement
 {
-    public:
-        Appartement();
-        ~Appartement();
+public:
+    Appartement();
+    ~Appartement();
 
-        std::map<char, Device*> devices;
-        Device* zuil;
-        Device* deur;
-        Device* gui;
-        Device* bed;
-        Device* stoel;
-        Device* schemerlamp;
-        Device* muur;
-        Device* koelkast;
+    std::map<char, Device*> devices;
+    Device* zuil{};
+    Device* deur{};
+    Device* gui{};
+    Device* bed{};
+    Device* stoel{};
+    Device* schemerlamp{};
+    Device* muur{};
+    Device* koelkast{};
 
-        void createDevice(int, char);
+    void createDevice(int, char);
 };
 
 #endif
