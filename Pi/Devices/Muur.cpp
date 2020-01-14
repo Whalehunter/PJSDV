@@ -40,10 +40,10 @@ void Muur::operator ()()
             std::cout << "Parsing error at Muur on socket " << sock << std::endl;
         }
 
-        if (ldr >= 7){//deze waardes later fine tunen
+        if (ldr >= 500){//deze waardes later fine tunen
             LCDdoorlaten();
         }
-        else if (ldr < 7){
+        else if (ldr < 500){
             LCDdimmen();
         }
         RGBdimmen();
