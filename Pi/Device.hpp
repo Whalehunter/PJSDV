@@ -15,24 +15,24 @@
 class Device
 {
 protected:
-    std::string name;
     int sock;
     int knopValue;
     int sensorValue;
 
-    void handshake();
+    Appartement* a;
+public:
+    Device(int, Appartement*);
+    virtual ~Device();
 
-        virtual void sendMsg(const char*);
-        virtual bool recvMsg(char*);
-        virtual void operator()() = 0;
-
-    void sendMsg(char*);
-    void recvMsg(char*);
+    virtual void sendMsg(const char*);
+    virtual bool recvMsg(char*);
     virtual void operator()() = 0;
 
-        int getSensor();
-        int getKnop();
-        virtual nlohmann::json getStatus() = 0;
+    int getSock();
+    void setSock(int);
+    int getSensor();
+    int getKnop();
+    virtual nlohmann::json getStatus() = 0;
 };
 
 #endif

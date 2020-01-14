@@ -8,9 +8,7 @@
 #include "Devices/Schemerlamp.hpp"
 
 Appartement::Appartement(): deur(0), gui(0), bed(0), stoel(0), zuil(0)
-{
-    this->deviceNamePairs = {};
-}
+{}
 
 Appartement::~Appartement()
 {
@@ -21,7 +19,7 @@ Appartement::~Appartement()
     delete zuil;
 }
 
-Appartement* Appartement::getInstance()
+void Appartement::createDevice(int sock, char id)
 {
     Device * ob = NULL;
     if (id == 'd') {
@@ -60,33 +58,4 @@ Appartement* Appartement::getInstance()
         std::thread obThread(&Device::operator(), ob);
         obThread.detach();
     }
-
-    this->deviceNamePairs.insert(std::pair<std::string, Device*>(capitalized, newDevice));
-    std::thread newThread(&Device::operator(), newDevice);
-    newThread.detach();
-
-    return newDevice;
-}
-
-
-
-const Device * Appartement::deviceExists(std::string name) {
-    auto device = this->deviceNamePairs.find(name);
-    if (device == this->deviceNamePairs.end()) {
-        return NULL;
-    }
-    return device->second;
-}
-
-void Appartement::registerDevice(std::string name, int sockId)
-{
-    // x = gui
-    // d = deur
-    if (id == 'x')
-        if(gui != 0) delete gui;
-        else if (id == 'y')
-            if(bed != 0) delete bed;
-            else if (id == 'z')
-        if(stoel != 0) delete stoel;
-
 }

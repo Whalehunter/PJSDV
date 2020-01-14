@@ -4,14 +4,15 @@ using json = nlohmann::json;
 
 Bed::Bed(int n, Appartement* ap): Device(n, ap), state(UIT), druksensor(0), knop(0)
 {
-    this->name = "Bed";
     std::cout << "Bed aangemaakt" << std::endl;
 }
 
+Bed::~Bed()
+{}
+
 void Bed::operator()()
 {
-    Appartement::getInstance()->getDevice()
-    char buffer[256];
+    char buffer[255];
     int knopPrev = 0;
 
     while(1){

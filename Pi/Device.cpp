@@ -3,7 +3,10 @@
 
 //using json = nlohmann::json;
 
-Device::Device(int socketId): sock(socketId), knopValue(0), sensorValue(0)
+Device::Device(int n, Appartement* ap): sock(n), a(ap), knopValue(0), sensorValue(0)
+{}
+
+Device::~Device()
 {}
 
 void Device::sendMsg(const char* data)
@@ -13,22 +16,19 @@ void Device::sendMsg(const char* data)
     }
 }
 
-void Device::recvMsg(char* data)
+bool Device::recvMsg(char* data)
 {
-    if (recv(this->sock, data, 255, 0) < 1) {
-        std::cout << this->name << " disconnected from socket " << this->sock << std::endl;
-        close(sock);
-    }
+    return (recv(sock, data, 255, 0) > 0);
 }
 
 int Device::getSock()
 {
-    return this->sock;
+    return sock;
 }
 
 void Device::setSock(int x)
 {
-    this->sock = x;
+    sock = x;
 }
 
 int Device::getSensor()
