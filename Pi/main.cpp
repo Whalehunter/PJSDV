@@ -1,7 +1,9 @@
 #include "Appartement.hpp"
 #include "SocketServer.hpp"
+//#include "nlohmann/json.hpp"
 
-using namespace std;
+//using json = nlohmann::json;
+//using namespace std;
 
 int main()
 {
@@ -9,8 +11,5 @@ int main()
     SocketServer s(a);
 
     while(1)
-    {
-
-    }
+    {}
 }
-

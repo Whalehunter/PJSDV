@@ -4,91 +4,9 @@
     <title>Control panel</title>
     <meta charset="UTF-8"/>
     <link rel="stylesheet" type="text/css" href="semantic/dist/semantic.min.css">
-    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script src="jquery-3.4.1.min.js"></script>
     <script src="semantic/dist/semantic.min.js"></script>
-    <script>
-    $(document).ready(function(){
-        $('.bedsync').click(function() {
-            $.ajax('command.php', {
-                dataType: 'json',
-                data: {
-                    id:'x',
-                    msg:'d'
-                },
-                error: function(data) {
-                    $('.bed .lamp .checkbox').checkbox('uncheck');
-                }
-            }).done(function(data){
-                if (data.success) {
-                    let toggler = 'uncheck';
-                    if (data.lamp === '1')
-                        toggler = 'check'
-
-                    $('.bed .lamp .checkbox').checkbox(toggler);
-                }
-            });
-        });
-
-
-         // function request(name, value, button) {
-         //     button.checkbox('set disabled');
-         //     $.ajax('command.php', {
-         //         dataType: 'json',	/* Moet text zijn indien text */
-         //         data: {
-         //             name: name,
-         //             val: value,
-         //         },
-         //         success: function() {
-         //             button.checkbox('set enabled');
-         //         },
-         //         error: function(obj, reason, err) {
-         //             console.log(reason);
-         //             console.log(err);
-         //             if (button.checkbox('is checked'))
-         //                 button.checkbox('set unchecked');
-         //             else
-         //                 button.checkbox('set checked');
-         //             button.checkbox('set enabled');
-         //         }
-         //     });
-         // }
-
-         // $('.koelkast .deur .ui.checkbox').checkbox();
-
-         // let items = {
-         //     koelkast: [
-         //         'koeler'
-         //     ],
-         //     bed: [
-         //         'lamp',
-         //         'alarm'
-         //     ],
-         //     deur: [
-         //         'outside.lamp',
-         //         'inside.lamp',
-         //         'outside.switch',
-         //         'inside.switch'
-         //     ],
-         //     muur: [
-         //         'lamp',
-         //     ]
-         // };
-
-         // Object.keys(items).forEach(function(meubel) {
-         //     items[meubel].forEach(function(apparaat)) {
-         //         $('.'+meubel+' .'+ apparaat +' .ui.checkbox').checkbox({
-         //             onChecked: function() {
-         //                 request(meubel, apparaat+'=true', $(this));
-         //             },
-         //             onUnchecked: function() {
-         //                 request(meubel, apparaat+'=false', $(this));
-         //             }
-         //         });
-         //     }
-         // });
-
-      });
-    </script>
+    <script src="script.js"></script>
   </head>
   <body>
 
@@ -108,15 +26,31 @@
             <div class="ui divider"></div>
             <div class="description">
               <div class="ui divided two column grid">
-                <div class="column">
+                <div class="column lamp">
                   <p><b>Lamp</b></p>
                   <div class="ui fitted toggle checkbox">
                     <input name="" type="checkbox" value=""/>
                   </div>
                 </div>
-                <div class="column">
+                <div class="column movement">
                   <p><b>Bewegingdetector</b></p>
-                  <p><span id="bewegingssensor">Aan</span></p>
+                  <i class="large icons">
+                      <i class="street view icon"></i>
+                      <i id="bewegingssensor" class="top right corner green check icon"></i>
+                  </i>
+                </div>
+                <div class="column disco">
+                    <p><b>Discostand</b></p>
+                    <div class="ui fitted slider checkbox">
+                        <input name="" type="checkbox" value=""/>
+                    </div>
+                </div>
+                <div class="column brightness">
+                    <p><b>Lamp Helderheid</b> <span class="schemerlamp-helderheid"></span></p>
+                    <div class="ui mini buttons">
+                        <div data-inc="10" class="ui icon basic button"><i class="minus icon"></i></div>
+                        <div data-inc="-10" class="ui icon basic button"><i class="plus icon"></i></div>
+                    </div>
                 </div>
               </div>
             </div>
@@ -132,13 +66,13 @@
             <div class="ui divider"></div>
             <div class="description">
               <div class="ui divided two column grid">
-                <div class="column">
+                <div class="column trillen">
                   <p><b>Trillen</b></p>
                   <div class="ui fitted toggle checkbox">
                     <input name="" type="checkbox" value=""/>
                   </div>
                 </div>
-                <div class="column">
+                <div class="column plek">
                   <p><b>Plek</b></p>
                   <p>Beschikbaar</p>
                 </div>
@@ -155,27 +89,45 @@
             <h2 class="header">Zuil</h2>
             <div class="ui divider"></div>
             <div class="description">
-              <div class="ui divided three column grid">
-                <div class="column">
-                  <p><b>Licht</b></p>
-                  <div class="ui fitted toggle checkbox">
-                    <input name="" type="checkbox" value=""/>
-                  </div>
+              <div class="ui divided two column grid">
+                <div class="column gasmelder">
+                  <p><b>Gasmelder</b></p>
+                  <p><span class="gasmelder-waarde">0</span></p>
                 </div>
-                <div class="column">
-                  <p><b>Rookmelder</b></p>
-                  <div class="ui fitted toggle checkbox">
-                    <input name="" type="checkbox" value=""/>
-                  </div>
+                <div class="column zoemer">
+                    <p><b>Zoemer</b></p>
+                    <div class="ui fitted slider checkbox">
+                        <input name="" type="checkbox" value=""/>
+                    </div>
                 </div>
-                <div class="column">
-                  <p><b>Zoemer</b></p>
-                  <div class="ui fitted toggle checkbox">
-                    <input name="" type="checkbox" value=""/>
-                  </div>
+                <div class="column noodalarm">
+                    <p><b>Noodalarm</b></p>
+                    <div class="ui fitted slider checkbox">
+                        <input name="" type="checkbox" value=""/>
+                    </div>
+                </div>
+                <div class="column brandalarm">
+                    <p><b>Brandalarm</b></p>
+                    <div class="ui fitted slider checkbox">
+                        <input name="" type="checkbox" value=""/>
+                    </div>
                 </div>
               </div>
             </div>
+          </div>
+          <div class="ui icon nood hidden warning message">
+              <i class="exclamation triangle icon"></i>
+              <div class="content">
+                  <div class="header">NOOD!</div>
+                  <span>Mary heeft de noodalarm gedrukt!</span>
+              </div>
+          </div>
+          <div class="ui icon brand hidden warning message">
+              <i class="exclamation triangle icon"></i>
+              <div class="content">
+                  <div class="header">BRAND!</div>
+                  <span>Let op: er is kans op brand!</span>
+              </div>
           </div>
         </div>
 
@@ -190,7 +142,7 @@
               <div class="ui divided three column grid">
                 <div class="column deur">
                   <p><b>Deur</b></p>
-                  <div class="ui fitted toggle disabled checkbox">
+                  <div class="ui fitted slider disabled checkbox">
                     <input name="" type="checkbox" value=""/>
                   </div>
                 </div>
@@ -214,10 +166,17 @@
             <img alt="" src="img/deur.png"/>
           </div>
           <div class="content">
-            <h2 class="header">Deur</h2>
+              <h2 class="header">Deur</h2>
             <div class="ui divider"></div>
             <div class="description">
-              <div class="ui divided two column grid">
+                <div class="ui divided three column grid">
+                    <div class="column deur">
+                        <p><b>Deur</b></p>
+                        <div class="ui fitted toggle checkbox">
+                            <input name="" type="checkbox" value=""/>
+                        </div>
+                    </div>
+
                 <div class="column outside lamp">
                   <p><b>Buiten Lamp</b></p>
                   <div class="ui fitted toggle checkbox">
@@ -231,14 +190,14 @@
                     </div>
                 </div>
                 <div class="column outside switch">
-                  <p><b>Buiten Schakelaar</b></p>
-                  <div class="ui fitted toggle checkbox">
+                  <p><b>Buiten Knop</b></p>
+                  <div class="ui fitted slider checkbox">
                       <input name="" type="checkbox" value=""/>
                   </div>
                 </div>
                 <div class="column inside switch">
-                    <p><b>Binnen Schakelaar</b></p>
-                    <div class="ui fitted toggle checkbox">
+                    <p><b>Binnen Knop</b></p>
+                    <div class="ui fitted slider checkbox">
                         <input name="" type="checkbox" value=""/>
                     </div>
                 </div>
@@ -253,7 +212,6 @@
           </div>
           <div class="content">
             <h2 class="header">Bed</h2>
-            <button class="icon bedsync button"><i class="sync alternate icon"></i></button>
             <div class="ui divider"></div>
             <div class="description">
               <div class="ui divided three column grid">
@@ -314,10 +272,5 @@
       </div>
     </div>
 
-    <div class="ui very padded bottom attached container segment">
-      <div class="ui footer">
-        copyright motherfuckers
-      </div>
-    </div>
   </body>
 </html>

@@ -16,7 +16,7 @@ class SocketServer
     public:
         SocketServer(const Appartement&);
         ~SocketServer();
-        
+
         void startServer();
         void acceptConnection();
     private:

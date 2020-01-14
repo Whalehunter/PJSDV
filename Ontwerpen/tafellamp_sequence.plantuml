@@ -1,0 +1,4 @@
+@startuml
+Tafellamp -> Server: {beweging:true}
+Server -> Tafellamp: {success:true, lamp:aan}
+@enduml

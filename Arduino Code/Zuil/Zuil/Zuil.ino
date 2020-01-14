@@ -1,13 +1,7 @@
 #include <Wire.h>
-#include <ESP8266WiFi.h>
 
 #define I2C_SDL   D1
 #define I2C_SDA   D2
-
-int port = 8883;
-const char *ssid = "piiWAP";
-const char *password = "aanwezig2";
-const char* host = "192.168.4.1";
 
 int leesKnop(); //0: niet ingedrukt, 1: ingedrukt
 void BuzzerAanUit(int i);
@@ -16,7 +10,6 @@ void LedAanUit(int i);
 int leesinput(int i);//1 is anin0, 2 is anin1
 
 
-String line = "";
 int state = 0;      // the current state of the output pin
 int reading;           // the current reading from the input pin
 int previous = 0;    // the previous reading from the input pin
@@ -25,64 +18,19 @@ int hex = 0x00;
 void setup() {
   Wire.begin();//Start wire
   Serial.begin(115200);//Set serial Baud
-
-  Serial.printf("Connecting to %s ", ssid);
-  WiFi.begin(ssid, password);
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(500);
-    Serial.print(".");
-    delay(500);
-  }
-  Serial.print("connected to ");
-  Serial.println(ssid);
 }
 
 void loop() {
-  WiFiClient client;
-  Serial.printf("\n[Connecting to %s ... ", host);
-  if (client.connect(host, port))
-  {
-    line = client.readStringUntil('\r');
-    if (line=="ID?"){
-      client.println(String("y")); //eigenlijk "Zuil"
-    }
-    line = client.readStringUntil('\r');
-    if (line=="OK"){
-      Serial.println("Verified");
-      while (client.connected() || client.available()){
-        line = client.readStringUntil('\r');
-        Serial.println(line);
-        if (line == "getStatus"){
-          int drukknop = leesKnop();
-          int input = leesinput(1);
-          client.print(String(drukknop));
-          //client.print(String(input));
-          line = ""; 
-        }
-        else if (line == "buzzerAan"){
-          BuzzerAanUit(1);
-          line = "";
-        }
-        else if (line == "buzzerUit"){
-          BuzzerAanUit(0);
-          line = "";
-        }
-        else if (line == "ledAan"){
-          LedAanUit(1);
-          line = "";
-        }
-        else if (line == "ledUit"){
-          LedAanUit(0);
-          line = "";
-        }
-      }
-    }
-    else{
-      Serial.print("Failed verification.");
-    }
-    Serial.println("Failed connection.");
-    client.stop();
-  }
+  int knopwaarde = leesKnop();
+  //Serial.print("Knop: ");
+  //Serial.println(knopwaarde);
+  BuzzerAanUit(knopwaarde);
+  //brandalarm();
+  LedAanUit(knopwaarde);
+  int input = leesinput(1);
+  Serial.print("Gas sensor: ");
+  Serial.println(input);
+  delay(10);
 }
 
 int leesKnop(){
@@ -91,22 +39,18 @@ int leesKnop(){
   Wire.endTransmission();  
   Wire.requestFrom(0x38, 1);          
   reading = Wire.read();
-//  if ((reading&0x01 == 1) && previous == 0) {
-//    if (state == 1){
-//      state = 0;  
-//      Serial.println("state to 0");
-//    }
-//    else {
-//      state = 1;
-//      Serial.println("state to 1");
-//    }
-//  }
-//  previous = reading&0x01;
-//  return state;
-  if (reading&0x01 == 1){
-    return 1;
+  if ((reading&0x01 == 1) && previous == 0) {
+    if (state == 1){
+      state = 0;  
+      Serial.println("state to 0");
+    }
+    else {
+      state = 1;
+      Serial.println("state to 1");
+    }
   }
-  return 0;
+  previous = reading&0x01;
+  return state;
 }
 
 void BuzzerAanUit(int i) {

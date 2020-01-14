@@ -10,7 +10,7 @@ class Gui: public Device
         ~Gui();
 
         void operator()();
-        int getStatus();
+        nlohmann::json getStatus();
 };
 
 #endif
