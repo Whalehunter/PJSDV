@@ -6,8 +6,10 @@
 #include "Devices/Stoel.hpp"
 #include "Devices/Zuil.hpp"
 #include "Devices/Schemerlamp.hpp"
+#include "Devices/Muur.hpp"
+#include "Devices/Koelkast.hpp"
 
-Appartement::Appartement(): deur(0), gui(0), bed(0), stoel(0), zuil(0)
+Appartement::Appartement(): deur(0), gui(0), bed(0), stoel(0), zuil(0), muur(0), koelkast(0)
 {}
 
 Appartement::~Appartement()
@@ -17,6 +19,9 @@ Appartement::~Appartement()
     delete stoel;
     delete bed;
     delete zuil;
+    delete schemerlamp;
+    delete muur;
+    delete koelkast;
 }
 
 void Appartement::createDevice(int sock, char id)
@@ -51,6 +56,16 @@ void Appartement::createDevice(int sock, char id)
         if(stoel != 0) delete stoel;
         stoel = new Stoel(sock, this);
         ob = stoel;
+    }
+    else if (id == 'm') {
+        if(muur != 0) delete muur;
+        muur = new Muur(sock, this);
+        ob = muur;
+    }
+    else if (id == 'k') {
+        if(koelkast != 0) delete koelkast;
+        koelkast = new Koelkast(sock, this);
+        ob = koelkast;
     }
 
     if (ob != NULL) {
