@@ -50,18 +50,6 @@ void setup()
 void loop(void) {
   WiFiClient client;
 
-  buitenLampAanUit(1);
-  binnenLampAanUit(1);
-  pb = leesBuitenUit();
-  ds = leesBinnenUit();
-  if (pb == 1){
-    deurOpen();
-  }
-  if (ds == 1){
-    deurDicht();
-  }
-
-  //Serial.printf("\n[Connecting to %s ... ", host);
   if (client.connect(host, port))
   {
     line = client.readStringUntil('\r');
@@ -73,13 +61,11 @@ void loop(void) {
       Serial.println("Verified");
       while (client.connected() || client.available()){
         line = client.readStringUntil('\r');
-      //  Serial.println(line);
+
         if (line == "getStatus"){
           StaticJsonDocument<100> data;
           data["binnenKnop"] = leesBinnenUit();
           data["buitenKnop"] = leesBuitenUit();
-
-         // Serial.println(data);
 
           char buffer[100];
 
@@ -99,13 +85,20 @@ void loop(void) {
         }
         else if (line == "buitenLampAan"){
           buitenLampAanUit(1);
+          line = "";
         }
         else if (line == "buitenLampUit"){
           buitenLampAanUit(0);
+          line = "";
         }
-       /* else if (line == "deurBel"){
-          buitenLampAanUit(1);
-        }*/
+        else if (line == "binnenLampAan"){
+          binnenLampAanUit(1);
+          line = "";
+        }
+        else if (line == "binnenLampUit"){
+          binnenLampAanUit(0);
+          line = "";
+        }
       }
       //client.stop();
     }
@@ -169,16 +162,7 @@ int leesBuitenUit(){
   Wire.requestFrom(0x38, 1);  //request data from 0x38   
   unsigned int inputs = Wire.read();//Write value on address of inputs.
 
- // Serial.print("Digital in: "); 
- // Serial.println(inputs&0x01);
-//  Serial.println("w");
-  if (inputs&0x01 == 1){
-  //  Serial.println("n");
-    return 1;
-  }
-  else {
-    return 0;
-  }
+  return (inputs&0x01);
 }
 
 int leesBinnenUit(){
@@ -192,28 +176,16 @@ int leesBinnenUit(){
   Wire.endTransmission();
   Wire.requestFrom(0x38, 1);  //request data from 0x38   
   unsigned int inputs = Wire.read();//Write value on address of inputs.
-
- // Serial.print("Digital in: "); 
- // Serial.println(inputs&0x02);
   
-  if (inputs&0x02 == 2){
-    return 1;
-  }
-  else {
-    return 0;
-  }
+  return (inputs&0x02);
 }
 
 void deurOpen(){
-  //for(servoPos; servoPos<=160; servoPos+=1){  //Go through 0 / 1024.
     myservo.write(170);
-    delay(15);  //Wait for 0.1s.
- // }
+    //delay(15);  //Wait for 0.1s.
 }
 
 void deurDicht(){
-  //for(servoPos; servoPos>=82; servoPos-=1){  //Go through 1024 / 0.
     myservo.write(82);
-    delay(15);  //Wait for 0.1s.
- // }
+    //delay(15);  //Wait for 0.1s.
 }

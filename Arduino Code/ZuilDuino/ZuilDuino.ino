@@ -68,24 +68,12 @@ void loop() {
 
           line = ""; 
         }
-        else if (line == "deurBelAan" || line == "noodAlarm"){
+        else if (line == "zoemerAan"){
           BuzzerAanUit(1);
           line = "";
         }
-        else if (line == "noodAlarmAan") {
-          BuzzerAanUit(1);
-          nood = 1;
-        }
-        else if ((line == "deurBelUit" || line == "brandAlarmUit" || line == "noodAlarmUit") && !nood && !brand){
+        else if (line == "zoemerUit") {
           BuzzerAanUit(0);
-          line = "";
-        }
-        else if (line == "ledAan"){
-          LedAanUit(1);
-          line = "";
-        }
-        else if (line == "ledUit"){
-          LedAanUit(0);
           line = "";
         }
       }
@@ -141,12 +129,7 @@ void BuzzerAanUit(int i) {
     Wire.endTransmission();
   }
 }
-void deurBel(){
-  BuzzerAanUit(1);
-  delay(500);
-  BuzzerAanUit(0);
-  delay(250);
-}
+
 void LedAanUit(int i) {
   Wire.beginTransmission(0x38);
   Wire.write(byte(0x00));
