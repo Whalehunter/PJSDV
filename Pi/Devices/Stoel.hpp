@@ -2,15 +2,24 @@
 #define STOEL_HPP
 
 #include "../Device.hpp"
+#include "../nlohmann/json.hpp"
 
 class Stoel: public Device
 {
-public:
-    Stoel(int);
-    ~Stoel();
-
+    public:
+        Stoel(int, Appartement*);
+        ~Stoel();
         void operator()();
         nlohmann::json getStatus();
+        void ledAan();
+        void ledUit();
+        void trilAan();
+        void trilUit();
+    private:
+        int drukknop{};
+        int drukSensor{};
+        int ledStatus{};
+        int trilStatus{};
 };
 
 #endif
