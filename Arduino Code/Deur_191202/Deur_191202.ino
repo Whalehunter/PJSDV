@@ -64,11 +64,7 @@ void loop(void) {
     Serial.println("connected]");
     line = client.readStringUntil('\r');
     if (line == "ID?"){
-      client.print(String("a"));
-    }
-    line = client.readStringUntil('\r');
-    if (line == "OK"){
-      client.print(String("a"));
+      client.print(String("d"));
     }
     while (client.connected() || client.available()){  
       line = client.readStringUntil('\r');
@@ -165,6 +161,7 @@ int leesBinnenUit(){
   Serial.println(inputs&0x02);
   
   if (inputs&0x02 == 2){
+    Serial.print("Heey");
     return 1;
   }
   else {
