@@ -6,9 +6,9 @@
 #define I2C_SDA   D2
 
 int port = 8883;
-const char *ssid = "KAAS";
+const char *ssid = "piiWAP";
 const char *password = "aanwezig2";
-const char* host = "192.168.5.1";
+const char* host = "192.168.4.1";
 
 
 void LedAanUit(int i); //0: uit, 1: aan
