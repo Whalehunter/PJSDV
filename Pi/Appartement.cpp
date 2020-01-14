@@ -27,45 +27,55 @@ Appartement::~Appartement()
 void Appartement::createDevice(int sock, char id)
 {
     Device * ob = NULL;
-    if (id == 'd') {
+    switch(id){
+
+    case 'd':
         if(deur != 0) delete deur;
         deur = new Deur(sock, this);
         ob = deur;
-    }
-    else if (id == 'f') {
+        break;
+
+    case 'f':
         if(zuil != 0) delete zuil;
         zuil = new Zuil(sock, this);
         ob = zuil;
-    }
-    else if (id == 's') {
-        if(schemerlamp != 0) delete schemerlamp;
-        schemerlamp = new Schemerlamp(sock, this);
-        ob = schemerlamp;
-    }
-    else if (id == 'x') {
-       // if(gui != 0) delete gui;
-       // gui = new Gui(sock, this);
-        ob = new Gui(sock, this);
-    }
-    else if (id == 'y') {
-        if(bed != 0) delete bed;
-        bed = new Bed(sock, this);
-        ob = bed;
-    }
-    else if (id == 'z') {
-        if(stoel != 0) delete stoel;
-        stoel = new Stoel(sock, this);
-        ob = stoel;
-    }
-    else if (id == 'm') {
+        break;
+
+    case 'm':
         if(muur != 0) delete muur;
         muur = new Muur(sock, this);
         ob = muur;
-    }
-    else if (id == 'k') {
+        break;
+
+    case 'k':
         if(koelkast != 0) delete koelkast;
         koelkast = new Koelkast(sock, this);
         ob = koelkast;
+        break;
+
+    case 's':
+        if(schemerlamp != 0) delete schemerlamp;
+        schemerlamp = new Schemerlamp(sock, this);
+        ob = schemerlamp;
+        break;
+
+    case 'x':
+        // if(gui != 0) delete gui;
+        // gui = new Gui(sock, this);
+        ob = new Gui(sock, this);
+        break;
+
+    case 'y':
+        if(bed != 0) delete bed;
+        bed = new Bed(sock, this);
+        ob = bed;
+        break;
+
+    case 'z':
+        if(stoel != 0) delete stoel;
+        stoel = new Stoel(sock, this);
+        ob = stoel;
+        break;
     }
 
     if (ob != NULL) {
