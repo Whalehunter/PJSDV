@@ -1,4 +1,5 @@
 #include "Muur.hpp"
+#include "Deur.hpp"
 
 using json = nlohmann::json;
 using namespace std;
@@ -19,9 +20,9 @@ void Muur::operator ()()
     while(1){
         sendMsg("getStatus\r");
         /*memset(buffer, 0, sizeof(buffer));
-        strcpy(buffer, "getSatus\r");
-        sendMsg(buffer);
-        */
+          strcpy(buffer, "getSatus\r");
+          sendMsg(buffer);
+          */
 
         memset(buffer, 0, sizeof(buffer));
         if(recv(sock, buffer, 255, 0) < 1){
@@ -42,9 +43,16 @@ void Muur::operator ()()
 
         if (ldr >= 500){//deze waardes later fine tunen
             LCDdoorlaten();
+            if (a->devices.count('d')) {
+                dynamic_cast<Deur *>(a->devices.find('d')->second)->binnenLampUit();
+            }
         }
         else if (ldr < 500){
             LCDdimmen();
+            if (a->devices.count('d')) {
+                dynamic_cast<Deur *>(a->devices.find('d')->second)->binnenLampAan();
+            }
+
         }
         RGBdimmen();
     }

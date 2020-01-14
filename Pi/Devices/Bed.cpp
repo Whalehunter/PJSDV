@@ -39,12 +39,12 @@ void Bed::operator()()
         switch(state){
             case AAN:
                 if (knop == 1 && knopPrev != knop){
-                    ToggleLed(1);
+                    ToggleLed(0);
                 }
                 break;
             case UIT:
                 if (knop == 1 && knopPrev != knop){
-                    ToggleLed(0);
+                    ToggleLed(1);
                 }
         }
         knopPrev = knop;

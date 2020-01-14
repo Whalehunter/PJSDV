@@ -74,7 +74,9 @@ void SocketServer::handshake(int sock)
     switch(response[0]) {
         case 'd':
         case 'f':
+        case 'k':
         case 's':
+        case 'm':
         case 'x':
         case 'y':
         case 'z': a.createDevice(sock, response[0]);
