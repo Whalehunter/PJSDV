@@ -1,0 +1,59 @@
+@startuml
+title GUI Mary communicatie
+
+actor Mary
+control GUI
+entity Server
+
+== Reeds verbonden socket ==
+activate GUI
+        Mary -> GUI: Noodknop druk
+        GUI -> GUI: setNoodalarm()
+        GUI -> GUI: setNoodknop()
+        GUI -> Server: queue(self)
+        Mary <-- GUI: Klaar
+        ...
+        Mary -> GUI: Discoknop druk
+        GUI -> Server: discoknop(true)
+        create entity Tafellamp
+        Server -> Tafellamp++: disco(true)
+        create entity Muur
+        Server -> Muur++: disco(true)
+        Server <-- Tafellamp--
+        Server <-- Muur--
+        Server -> Server: startTimer()
+        GUI <-- Server: {success:true}
+        Mary <-- GUI: Klaar
+        ...
+        alt beweging gedetecteerd
+                Server -> Server: resetTimer()
+        else disco cancel
+                Mary -> GUI: Cancel disco
+                GUI -> Muur ++: setDisco(false)
+                GUI -> Tafellamp ++: setDisco(false)
+                GUI <-- Muur --: stopDisco()
+                GUI <-- Tafellamp --: stopDisco()
+                Mary <-- GUI: Klaar
+        else timer > 5m
+                Server -> Muur: setDisco(false)
+                Server -> Tafellamp: setDisco(false)
+                Server <-- Muur: queue(jsonSerialize(self))
+                Server <-- Tafellamp: queue(jsonSerialize(self))
+
+                alt GUI connects
+                        GUI -> Server: sync()
+                        GUI <-- Server: setDisco(false)
+                end
+        end
+        ...
+        Mary -> GUI: Helderheid verstellen tafellamp
+        GUI -> Tafellamp ++: setBrightness()
+        GUI <-- Tafellamp --: "{success:true}"
+        Mary <-- GUI: Klaar
+        ...
+        Mary -> GUI: Helderheid verstellen muur
+        GUI -> Muur ++: setBrightness()
+        GUI <-- Muur --: "{success:true}"
+        Mary <-- GUI: Klaar
+deactivate GUI
+@enduml
