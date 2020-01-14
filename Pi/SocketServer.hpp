@@ -1,8 +1,6 @@
 #ifndef SOCKETSERVER_HPP
 #define SOCKETSERVER_HPP
 
-#include "Appartement.hpp"
-
 #include <cstring>
 #include <netdb.h>
 #include <sys/socket.h>
@@ -14,14 +12,12 @@
 class SocketServer
 {
     public:
-        SocketServer(const Appartement&);
+        SocketServer();
         ~SocketServer();
-        
+
         void startServer();
         void acceptConnection();
     private:
-        Appartement a;
-
         int csock;
         int sockfd;
         struct sockaddr_in server_addr;

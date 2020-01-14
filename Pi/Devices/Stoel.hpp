@@ -5,9 +5,9 @@
 
 class Stoel: public Device
 {
-    public:
-        Stoel(int, Appartement*);
-        ~Stoel();
+public:
+    Stoel(int);
+    ~Stoel();
 
         void operator()();
         nlohmann::json getStatus();

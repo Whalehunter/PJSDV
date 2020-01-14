@@ -1,18 +1,17 @@
 #include "SocketServer.hpp"
+#include "Appartement.hpp"
 
 using namespace std;
 
 #define PORT 8883
 
-SocketServer::SocketServer(const Appartement& appartement)
+SocketServer::SocketServer()
 {
-    a = appartement;
     startServer();
 }
 
 SocketServer::~SocketServer()
-{
-}
+{}
 
 void SocketServer::startServer()
 {

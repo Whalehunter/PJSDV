@@ -14,22 +14,21 @@
 
 class Device
 {
-    protected:
-        int sock;
-        int knopValue;
-        int sensorValue;
+protected:
+    std::string name;
+    int sock;
+    int knopValue;
+    int sensorValue;
 
-        Appartement* a;
-    public:
-        Device(int, Appartement*);
-        virtual ~Device();
+    void handshake();
 
         virtual void sendMsg(const char*);
         virtual bool recvMsg(char*);
         virtual void operator()() = 0;
 
-        int getSock();
-        void setSock(int);
+    void sendMsg(char*);
+    void recvMsg(char*);
+    virtual void operator()() = 0;
 
         int getSensor();
         int getKnop();

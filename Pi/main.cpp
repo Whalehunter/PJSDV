@@ -7,14 +7,14 @@
 
 int main()
 {
-    Appartement a;
     SocketServer s(a);
 
  //   json nerds = "{ \"happy\": false, \"pi\": 3.141}"_json;
 
     while(1)
-    {
-
-    }
+    {}
 }
 
+Appartement* apm() {
+    return Appartement::getInstance();
+}

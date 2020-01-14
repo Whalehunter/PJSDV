@@ -1,8 +1,8 @@
 #include "Stoel.hpp"
 
-Stoel::Stoel(int n, Appartement* ap): Device(n, ap)
+Stoel::Stoel(int sock): Device(sock)
 {
-    std::cout << "Stoel aangemaakt" << std::endl;
+    this->name = "Stoel";
 }
 
 Stoel::~Stoel()
@@ -39,4 +39,3 @@ nlohmann::json Stoel::getStatus()
    return data;
    // return knopValue;
 }
-
