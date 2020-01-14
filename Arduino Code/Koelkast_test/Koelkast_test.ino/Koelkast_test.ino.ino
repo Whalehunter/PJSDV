@@ -1,6 +1,5 @@
 #include <Wire.h>
 #include <ESP8266WiFi.h>
-#include <ArduinoJson.h>
 
 #define I2C_SDL    D1
 #define I2C_SDA    D2
@@ -39,12 +38,10 @@ void setup(void) {
   Serial.printf("Connected to ", ssid);
 }
 
-
-
 void loop(void) {
   WiFiClient client;
   
-  turnOnPeltier(0);
+  turnOnPeltier();
   turnOnOffFan(1);
 
   Serial.printf("\n[Connecting to %s ... ", host);
@@ -52,43 +49,22 @@ void loop(void) {
     Serial.println("connected]");
     line = client.readStringUntil('\r');
     if (line == "ID?"){
-      client.print(String("k"));
+      client.print(String("z"));
     }
     line = client.readStringUntil('\r');
     if (line == "OK"){
-      //client.print(String("k"));
+      client.print(String("z"));
     }
     while (client.connected() || client.available()){  
       line = client.readStringUntil('\r');
-      Serial.println(line);
       if (line == "getStatus"){
-        StaticJsonDocument<100> data;
-        data["deur"] = deurOpenDicht();
-        data["NTC1"] = readNTC1();
-        data["NTC2"] = readNTC2();
-     
-        char buffer[100];
-
-        serializeJson(data, buffer);
-        Serial.println(buffer);
-        
-        client.print(String(buffer));          
+        NTC1 = readNTC1();
+        NTC2 = readNTC2();
+        ds = deurOpenDicht();
+        client.print(String(NTC1));
+        client.print(String(NTC2));
+        client.print(String(ds));
         line = "";
-      }
-      else if (line == "fanAan"){
-        turnOnOffFan(1);
-      }
-      else if (line == "fanUit"){
-        turnOnOffFan(0);
-      }
-      else if (line == "peltierAan"){
-        turnOnPeltier(1);
-      }
-      else if (line == "peltierUit"){
-        turnOnPeltier(0);
-      }
-      else {
-        Serial.println("Invalid input");
       }
     }
   Serial.println("Failed connection.");
@@ -167,15 +143,8 @@ int readNTC2(){
   return anin1;  
 }
 
-void turnOnPeltier(int i){
-  if (i == 1){
-    digitalWrite(D5, HIGH);
-    analogWrite(D5, 255);
-  }
-  else {
-    digitalWrite(D5, LOW);
-  }
-  
+void turnOnPeltier(){
+  analogWrite(D5, 255);
 }
 
 
