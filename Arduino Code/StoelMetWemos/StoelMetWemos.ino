@@ -1,5 +1,6 @@
 #include <Wire.h>
 #include <ESP8266WiFi.h>
+#include <ArduinoJson.h>
 
 #define I2C_SDL    D1
 #define I2C_SDA    D2
@@ -61,21 +62,28 @@ void loop(void) {
     }
     line = client.readStringUntil('\r');
     if (line == "OK"){
-      client.print(String("z"));
+      //client.print(String("z"));
     }
     while (client.connected() || client.available()){  
       line = client.readStringUntil('\r');
+      Serial.println(line);
       if (line == "getStatus"){
-        pb = leesPbUit();
-        ds = leesDsUit();
-        client.print(String(pb));
-        client.print(String(ds));
+        StaticJsonDocument<100> data;
+        data["drukknop"] = leesPbUit();
+        data["drukSensor"] = leesDsUit();
+     
+        char buffer[100];
+
+        serializeJson(data, buffer);
+        Serial.println(buffer);
+        
+        client.print(String(buffer));          
         line = "";
       }
-      else if (line == "lampAan"){
+      else if (line == "ledAan"){
         lampAanUit(1);
       }
-      else if (line == "lampUit"){
+      else if (line == "ledUit"){
         lampAanUit(0);
       }
       else if (line == "trilAan"){
@@ -85,7 +93,6 @@ void loop(void) {
         trilSensorAanUit(0);
       }
       else {
-        client.print(String("Invalid input"));
         Serial.println("Invalid input");
       }
     }
