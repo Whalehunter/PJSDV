@@ -24,7 +24,6 @@ void Stoel::operator()()//Overloaded functies moeten met 2 haakjes zodat je er z
 
     while(1) {
         /* get and store JSON values */
-
         memset(buffer, 0, sizeof(buffer));
         strcpy(buffer, "getStatus\r");
         sendMsg(buffer);
@@ -36,8 +35,6 @@ void Stoel::operator()()//Overloaded functies moeten met 2 haakjes zodat je er z
             return;
         }
 
-        std::cout << buffer << std::endl;
-
         try {
             auto j_stoel = json::parse(buffer); // hier moeten ook exceptions afgehandeld worden
 
@@ -47,17 +44,7 @@ void Stoel::operator()()//Overloaded functies moeten met 2 haakjes zodat je er z
         catch(json::parse_error) {
             std::cout << "parse error" << std::endl;
         }
-        std::cout << drukknop << std::endl;
-/*
-        if ((drukknop == 1) && (drukknopPrev != drukknop) && (ledStatus == 0)){
-        	ledAan();
-        	ledStatus = 1;
-        }
-        else if ((drukknop == 1) && (drukknopPrev != drukknop) && (ledStatus == 1)){
-            ledUit();
-            ledStatus = 0;
-        }
-*/
+
         if ((drukknop == 1) && (drukSensor == 1) && (trilStatus == 0) && ((drukknopPrev != drukknop) || (drukSensorPrev != drukSensor))){
         	if ((drukknop == 1) && (drukknopPrev != drukknop) && (ledStatus == 0)){
 				ledAan();
@@ -115,7 +102,9 @@ void Stoel::operator()()//Overloaded functies moeten met 2 haakjes zodat je er z
 
 json Stoel::getStatus()
 {
-    return knopValue;
+    json stoel;
+    stoel["Stoel"] = {{"Knop", drukknop}, {"Lamp", ledStatus}, {"Massage", trilStatus}, {"Drukplaat", drukSensor}};
+    return stoel;
 }
 
 void Stoel::ledAan(){
