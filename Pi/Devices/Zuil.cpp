@@ -39,10 +39,10 @@ void Zuil::operator()()
             std::cout << "Exception error at Zuil: " << e.what() << std::endl;
         }
 
-        if(knopValue) {
+        if(getKnop()) {
             noodAlarmAan();
         }
-        if(sensorValue >= 920) {
+        if(getSensor() >= 920) {
             brandAlarmAan();
         }
 

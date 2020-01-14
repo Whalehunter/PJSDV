@@ -32,7 +32,7 @@ void Gui::operator()()
             sendMsg(deviceStatus.dump().c_str());
         }
 
-        else if(*p == 'd') {
+        else if(*p == 'd' && a->devices.count(*p)) {
             Deur * deur = dynamic_cast<Deur *>(a->devices.find(*p++)->second);
 
             if (*p == 'o') {
@@ -52,7 +52,7 @@ void Gui::operator()()
             sendMsg("{\"success\":true}");
         }
 
-        else if(*p == 'f') {
+        else if(*p == 'f' && a->devices.count(*p)) {
             Zuil * zuil = dynamic_cast<Zuil *>(a->devices.find(*p++)->second);
 
             if(*p == 'n') {
@@ -69,7 +69,7 @@ void Gui::operator()()
             }
             sendMsg("{\"success\":true}");
         }
-        else if(*p == 's') {
+        else if(*p == 's' && a->devices.count(*p)) {
 
             Schemerlamp * schemerlamp = dynamic_cast<Schemerlamp *>(a->devices.find(*p++)->second);
             if (*p == 'l') {

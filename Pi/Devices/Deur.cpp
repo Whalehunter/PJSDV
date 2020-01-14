@@ -14,33 +14,13 @@ Deur::~Deur()
 
 void Deur::operator()()
 {
-    char buffer[256];
     int knopBinnenPrev = 0;
     int knopBuitenPrev = 0;
 
     while(1) {
         /* get and store JSON values */
 
-        sendMsg("getStatus\r");
-
-        memset(buffer, 0, sizeof(buffer));
-        if(recv(sock, buffer, 255, 0) < 1) { // dit wordt een functie
-            std::cout << "Deur disconnected from socket: " << sock << std::endl;
-            close(sock);
-            return;
-        }
-
-        /* try and catch json parse exceptions */
-
-        try {
-            auto j_deur = json::parse(buffer);
-
-            knopBinnen = j_deur.at("binnenKnop");
-            knopBuiten = j_deur.at("buitenKnop");
-        }
-        catch(json::exception& e) {
-            std::cout << "Exception error at Deur: " << e.what() << std::endl;
-        }
+        updateStatus();
 
         /* state machine */
 
@@ -134,6 +114,32 @@ void Deur::binnenLampUit()
     sendMsg("binnenLampUit\r");
 
     ledBinnen = 0;
+}
+
+void Deur::updateStatus()
+{
+    char buffer[256];
+
+    sendMsg("getStatus\r");
+
+    memset(buffer, 0, sizeof(buffer));
+    if(recv(sock, buffer, 255, 0) < 1) {
+        std::cout << "Deur disconnected from socket: " << sock << std::endl;
+        close(sock);
+        return;
+    }
+
+    /* try and catch json parse exceptions */
+
+    try {
+        auto j_deur = json::parse(buffer);
+
+        knopBinnen = j_deur.at("binnenKnop");
+        knopBuiten = j_deur.at("buitenKnop");
+    }
+    catch(json::exception& e) {
+        std::cout << "Exception error at Deur: " << e.what() << std::endl;
+    }
 }
 
 json Deur::getStatus()

@@ -31,6 +31,8 @@ class Device
         int getSock();
         void setSock(int);
 
+        int getSensor();
+        int getKnop();
         virtual nlohmann::json getStatus() = 0;
 };
 

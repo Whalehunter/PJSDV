@@ -29,6 +29,7 @@ class Deur: public Device
         void binnenLampAan();
         void binnenLampUit();
 
+        void updateStatus();
         nlohmann::json getStatus();
 };
 

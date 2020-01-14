@@ -32,3 +32,13 @@ void Device::setSock(int x)
 {
     sock = x;
 }
+
+int Device::getSensor()
+{
+    return sensorValue;
+}
+
+int Device::getKnop()
+{
+    return knopValue;
+}
