@@ -1,15 +1,27 @@
 #include <Wire.h>
 #include <Adafruit_NeoPixel.h>
+#include <ESP8266WiFi.h>
+#include <ArduinoJson.h>
+#include <ctype.h>
 
 #define I2C_SDL   D1
 #define I2C_SDA   D2
 #define RGB       D5
 #define NUMPIXELS 3
 
+int port = 8883;
+const char *ssid = "KAAS"; //voor Jeffrey piiWAP
+const char *password = "aanwezig2";
+const char* host = "192.168.5.1"; //voor Jeffrey 4.1
+
 void RGBstrip(int i); //0 is uit, 1 is aan, 2 is disco mode
-void RGBdisco();
-void AanUitLCD(int i);
-int leesinput(int i);
+void RGBbrightness(int i);
+void AanUitLCD(int i); //1 is dimmn, 0 is doorlaten
+int leesinput(int i); //1 is LDR waarde, 2 is POTmeter
+boolean isValidNumber(String str); // checkt of een string uit getallen bestaat
+/*van hbx2013 op Arduino Forum, geraadpleegd op 10-1-2020*/
+
+String line = "";
 int hex = 0x00;
 
 Adafruit_NeoPixel pixels(NUMPIXELS, RGB, NEO_GRB + NEO_KHZ800);
@@ -18,57 +30,125 @@ Adafruit_NeoPixel pixels(NUMPIXELS, RGB, NEO_GRB + NEO_KHZ800);
 
 
 void setup(void) {
+  pinMode(D4, OUTPUT);  //Set D4 as Output.
+  pinMode(D5, OUTPUT);  //Set D5 as Output.
+  
   pixels.begin(); // INITIALIZE NeoPixel strip object (REQUIRED)
+  pixels.show();
   Wire.begin();//Start wire
   Serial.begin(115200);//Set serial Baud
+  Serial.printf("Connecting to %s ", ssid);
+  WiFi.begin(ssid, password);
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+    delay(500);
+  }
+  Serial.print("connected to ");
+  Serial.println(ssid);
 }
 
 void loop(void) {
+  WiFiClient client;
+  RGBstrip(0);
+  AanUitLCD(0);
+  Serial.printf("\n[Connecting to %s ... ", host);
+  if (client.connect(host, port))
+  {
+    line = client.readStringUntil('\r');
+    if (line=="ID?"){
+      client.print(String("m")); //eigenlijk Muur
+    }
+    line = client.readStringUntil('\r');
+    if (line=="OK"){
+      Serial.println("Verified");
+      while (client.connected() || client.available()){
+        line = client.readStringUntil('\r');
+        Serial.println(line);
+        if (line == "getStatus"){
+          StaticJsonDocument<100> data;
+          data["ldr"] = leesinput(1);
+          data["pot"] = leesinput(2);
+          
+          char buffer[100];
 
-  RGBstrip(1);
-  AanUitLCD(1);//aan
-  delay(DELAYVAL);
-  AanUitLCD(0);//uit
-  delay(DELAYVAL);
-  int ldr = leesinput(1); //1:uitlezen van LDR
-  int pot = leesinput(2); //2:uitlezen van potmeter
-
-  Serial.print("LDR waarde: ");
-  Serial.println(ldr);  
-  delay(DELAYVAL);
-  Serial.print("Potmeter: ");
-  Serial.println(pot);   
-  delay(DELAYVAL);
+          serializeJson(data, buffer);
+          Serial.println(buffer);
+          
+          client.print(String(buffer));          
+          line = "";
+        }
+        else if (line == "LCDAan"){
+          AanUitLCD(1);
+          line = "";
+        }
+        else if (line == "LCDUit"){
+          AanUitLCD(0);
+          line = "";
+        }
+        else if (line == "Disco"){
+          RGBstrip(2);
+        }
+        else if (line == "RGBaan"){
+          RGBstrip(1);
+        }
+        else if (line == "RGBuit"){
+          RGBstrip(0);
+        }
+        else if (line == "dimmen"){
+          AanUitLCD(1);
+        }
+        else if (line == "doorlaten"){
+          AanUitLCD(0);
+        }
+        else if (isValidNumber(line)){
+          int temp = line.toInt();
+          if (temp >= 0 & temp <=1024){
+            RGBbrightness(temp);
+          }
+        }
+      }
+    }
+    else{
+      Serial.print("Failed verification.");
+    }
+    Serial.println("Failed connection.");
+    client.stop();
+  }
 }
 
 void RGBstrip(int i){
-  if (i==0){
+  if (i==0){		//uit
     pixels.clear();
     pixels.show();
   }
-  else if (i==1){
+  else if (i==1){	//aan
     for(int a=0; a<NUMPIXELS; a++) { //Elke pixel aanzetten
-      pixels.setPixelColor(i, pixels.Color(255,255,255));
+      pixels.setPixelColor(a,255,255,255);
       pixels.show();   // Send the updated pixel colors to the hardware
     }
   }
-  else if (i==3){
-    for(int a=0; a<NUMPIXELS; a++) { //Elke pixel aanzetten
-      pixels.setPixelColor(i, pixels.Color(0,0,255));
+  else if (i==2){	//disco
+    for(int a=0; a<NUMPIXELS; a++) {
+      pixels.setPixelColor(i,0,0,255);
       pixels.show();   // Send the updated pixel colors to the hardware
     }    
     delay(500);
-    for(int a=0; a<NUMPIXELS; a++) { //Elke pixel aanzetten
-      pixels.setPixelColor(i, pixels.Color(0,255,0));
+    for(int a=0; a<NUMPIXELS; a++) {
+      pixels.setPixelColor(i,0,255,0);
       pixels.show();   // Send the updated pixel colors to the hardware
     }    
     delay(500);
-    for(int a=0; a<NUMPIXELS; a++) { //Elke pixel aanzetten
-      pixels.setPixelColor(i, pixels.Color(255,0,0)); 
+    for(int a=0; a<NUMPIXELS; a++) {
+      pixels.setPixelColor(i,255,0,0); 
       pixels.show();   // Send the updated pixel colors to the hardware
     }
     delay(500);
   }
+}
+
+void RGBbrightness(int i){
+  pixels.setBrightness(i/4);
 }
 
 void AanUitLCD(int i){
@@ -116,3 +196,11 @@ int leesinput(int i){
     return 0;
   }
 }
+
+boolean isValidNumber(String str){
+   for(byte i=0;i<str.length();i++)
+   {
+      if(isDigit(str.charAt(i))) return true;
+        }
+   return false;
+} 

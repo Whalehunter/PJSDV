@@ -5,10 +5,23 @@
 
 class Muur: public Device
 {
-public:
-    Muur(int sock);
-    void operator()();
-    int getStatus();
-};
+    public:
+        Muur(int, Appartement*);
+        ~Muur();
 
+        void operator()();
+        nlohmann::json getStatus();
+        void updateWaardes();
+        void ToggleLed(int);
+
+        void RGBdimmen();
+        void RGBaan();
+        void RGBuit();
+        void RGBdisco();
+        void LCDdimmen();
+        void LCDdoorlaten();
+    private:
+        int ldr;
+        int pot;
+};
 #endif
