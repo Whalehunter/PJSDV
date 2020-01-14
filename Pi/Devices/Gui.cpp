@@ -54,7 +54,6 @@ void Gui::operator()()
 
         else if(*p == 'f' && a->devices.count(*p)) {
             Zuil * zuil = dynamic_cast<Zuil *>(a->devices.find(*p++)->second);
-
             if(*p == 'n') {
                 if (*(++p) == 'a') zuil->noodAlarmAan();
                 else zuil->noodAlarmUit();
@@ -69,8 +68,8 @@ void Gui::operator()()
             }
             sendMsg("{\"success\":true}");
         }
-        else if(*p == 's' && a->devices.count(*p)) {
 
+        else if(*p == 's' && a->devices.count(*p)) {
             Schemerlamp * schemerlamp = dynamic_cast<Schemerlamp *>(a->devices.find(*p++)->second);
             if (*p == 'l') {
                 if (*(++p) == 'a') schemerlamp->aan();
@@ -81,7 +80,6 @@ void Gui::operator()()
                 else schemerlamp->setDisco(false);
             }
             sendMsg("{\"success\":true}");
-
         }
 
         // sendMsg(buffer);
