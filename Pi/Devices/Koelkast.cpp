@@ -13,9 +13,8 @@ Koelkast::Koelkast(int n, Appartement* ap): Device(n, ap){
     std::cout << "Koelkast aangemaakt" << std::endl;
 }
 
-Koelkast::~Koelkast(){
-
-}
+Koelkast::~Koelkast()
+{}
 
 void Koelkast::operator()(){
     char buffer[256];
@@ -33,8 +32,6 @@ void Koelkast::operator()(){
 			close(sock);
 			return;
 		}
-
-		std::cout << buffer << std::endl;
 
 		try {
 			auto j_koelkast = json::parse(buffer); // hier moeten ook exceptions afgehandeld worden
