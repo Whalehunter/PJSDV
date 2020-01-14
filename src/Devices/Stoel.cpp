@@ -31,7 +31,7 @@ void Stoel::operator()()//Overloaded functies moeten met 2 haakjes zodat je er z
 
         memset(buffer, 0, sizeof(buffer));
         if(recv(sock, buffer, 255, 0) < 1) { // dit wordt een functie
-            std::cout << "Deur disconnected from socket: " << sock << std::endl;
+            std::cout << "Stoel disconnected from socket: " << sock << std::endl;
             close(sock);
             return;
         }

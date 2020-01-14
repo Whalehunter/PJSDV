@@ -29,7 +29,7 @@ void Koelkast::operator()(){
 
 		memset(buffer, 0, sizeof(buffer));
 		if(recv(sock, buffer, 255, 0) < 1) { // dit wordt een functie
-			std::cout << "Deur disconnected from socket: " << sock << std::endl;
+			std::cout << "Koelkast disconnected from socket: " << sock << std::endl;
 			close(sock);
 			return;
 		}
@@ -47,18 +47,21 @@ void Koelkast::operator()(){
 			std::cout << "parse error" << std::endl;
 		}
 
-		if ((koelkastDeur == 0) && !((std::clock() - timer / (double) CLOCKS_PER_SEC) >= 10.0)){
-			timer = std::clock();
+		if ((koelkastDeur == 0) && !(((std::clock() - timer) / (double) CLOCKS_PER_SEC) >= 5.0)){
 			peltierUit();
-			fanUit();
+			if (((std::clock() - timer) / (double) CLOCKS_PER_SEC) == 0.0){
+				timer = std::clock();
+			}
 		}
-		else {
+		else if ((koelkastDeur == 0) && (((std::clock() - timer) / (double) CLOCKS_PER_SEC) >= 5.0)){
+			koelAlarm = 1;
+			fanUit();
+			peltierUit();
+		}
+		else{
 			peltierAan();
 			fanAan();
-		}
-		if ((koelkastDeur == 0) && ((std::clock() - timer / (double) CLOCKS_PER_SEC) >= 10.0)) {
-			koelAlarm = 1;
-			fanAan();
+			timer = 0;
 		}
 	}
 	close(sock);
