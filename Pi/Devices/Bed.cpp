@@ -12,39 +12,22 @@ Bed::~Bed()
 
 void Bed::operator()()
 {
-    char buffer[255];
     int knopPrev = 0;
 
     while(1){
-    	memset(buffer, 0 , sizeof(buffer));
-    	strcpy(buffer, "getStatus\r");
-    	sendMsg(buffer);
+        /*Get and store JSON values*/
+        updateStatus();
 
-    	memset(buffer, 0, sizeof(buffer));
-    	if(recv(sock, buffer, 255, 0) < 1){
-    		std::cout << "Bed disconnected from socket: " << sock << std::endl;
-    		close(sock);
-    		return;
-    	}
-
-        try {
-            auto j_bed = json::parse(buffer); // hier moeten ook exceptions afgehandeld worden
-
-            knop = j_bed.at("knop");
-            druksensor = j_bed.at("druksensor");
-        }
-        catch(json::parse_error) {
-            std::cout << "Parsing error at Bed on socket " << sock << std::endl;
-        }
+        /*State Machine*/
         switch(state){
             case AAN:
                 if (knop == 1 && knopPrev != knop){
-                    ToggleLed(1);
+                    ToggleLed(0);
                 }
                 break;
             case UIT:
                 if (knop == 1 && knopPrev != knop){
-                    ToggleLed(0);
+                    ToggleLed(1);
                 }
         }
         knopPrev = knop;
@@ -56,6 +39,30 @@ nlohmann::json Bed::getStatus()
     json bedData;
     bedData["Bed"] = {{"Bed", state ? "aan" : "uit"}, {"knop", knop}, {"drukSensor", druksensor}};
     return bedData;
+}
+
+void Bed::updateStatus()
+{
+    char buffer[256];
+
+    sendMsg("getStatus\r");
+
+    memset(buffer, 0, sizeof(buffer));
+    if(recv(sock, buffer, 255, 0) < 1){
+        std::cout << "Bed disconnected from socket: " << sock << std::endl;
+        close(sock);
+        return;
+    }
+
+    try {
+        auto j_bed = json::parse(buffer); // hier moeten ook exceptions afgehandeld worden
+
+        knop = j_bed.at("knop");
+        druksensor = j_bed.at("druksensor");
+    }
+    catch(json::exception& e) {
+        std::cout << "Parsing error at Bed on socket " << sock << std::endl;
+    }
 }
 
 void Bed::ToggleLed(int i){
@@ -72,4 +79,8 @@ void Bed::ToggleLed(int i){
         sendMsg(buff);
         state = UIT;
     }
+}
+
+int Bed::getDruksensor(){
+    return druksensor;
 }

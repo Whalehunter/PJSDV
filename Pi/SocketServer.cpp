@@ -77,6 +77,7 @@ void SocketServer::handshake(int sock)
         case 's':
         case 'x':
         case 'y':
+        case 'm':
         case 'z': a.createDevice(sock, response[0]);
                   strcpy(response, "OK\r");
                   send(sock, response, strlen(response), 0); break;

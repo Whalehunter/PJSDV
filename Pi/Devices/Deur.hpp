@@ -9,12 +9,13 @@ class Deur: public Device
         enum deurStatus {DICHT, OPEN, OPSLOT};
 
         Deur::deurStatus state;
-        std::clock_t timer;
+
 
         int knopBinnen;
         int knopBuiten;
         int ledBinnen;
         int ledBuiten;
+        std::clock_t timer;
     public:
         Deur(int, Appartement*);
         ~Deur();

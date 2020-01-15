@@ -9,7 +9,7 @@
 #include "Devices/Muur.hpp"
 #include "Devices/Koelkast.hpp"
 
-Appartement::Appartement(): deur(0), gui(0), bed(0), stoel(0), zuil(0), muur(0), koelkast(0)
+Appartement::Appartement(): deur(0), gui(0), bed(0), stoel(0), zuil(0), schemerlamp(0), muur(0), koelkast(0)
 {}
 
 Appartement::~Appartement()

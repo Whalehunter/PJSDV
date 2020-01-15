@@ -1,4 +1,5 @@
 #include "Muur.hpp"
+#include "Deur.hpp"
 
 using json = nlohmann::json;
 using namespace std;
@@ -14,38 +15,25 @@ Muur::~Muur()
 
 void Muur::operator ()()
 {
-    char buffer[256];
-
     while(1){
-        sendMsg("getStatus\r");
-        /*memset(buffer, 0, sizeof(buffer));
-        strcpy(buffer, "getSatus\r");
-        sendMsg(buffer);
-        */
+        /*Get and store JSON values*/
+        updateStatus();
 
-        memset(buffer, 0, sizeof(buffer));
-        if(recv(sock, buffer, 255, 0) < 1){
-            std::cout << "Muur disconnected from socket: " << sock << std::endl;
-            close(sock);
-            return;
-        }
-
-        try {
-            auto j_muur = json::parse(buffer);
-
-            ldr = j_muur.at("ldr");
-            pot = j_muur.at("pot");
-        }
-        catch(json::parse_error){
-            std::cout << "Parsing error at Muur on socket " << sock << std::endl;
-        }
-
-        if (ldr >= 500){//deze waardes later fine tunen
+        /*checks*/
+        if (ldr >= 500){
             LCDdoorlaten();
+            if (a->devices.count('d')) {
+                dynamic_cast<Deur *>(a->devices.find('d')->second)->binnenLampUit();
+            }
         }
         else if (ldr < 500){
             LCDdimmen();
+            if (a->devices.count('d')) {
+                dynamic_cast<Deur *>(a->devices.find('d')->second)->binnenLampAan();
+            }
+
         }
+        /*Sends value of pot to WEMOS*/
         RGBdimmen();
     }
 }
@@ -55,6 +43,29 @@ nlohmann::json Muur::getStatus()
     json muurData = {/*{"Muur", state ? "LcdDimmen" : "LcdDoorlaten"},*/ {"LDR", ldr}, {"POT", pot}};
 
     return muurData;
+}
+
+void Muur::updateStatus()
+{
+    char buffer[256];
+
+    sendMsg("getStatus\r");
+    memset(buffer, 0, sizeof(buffer));
+    if(recv(sock, buffer, 255, 0) < 1){
+        std::cout << "Muur disconnected from socket: " << sock << std::endl;
+        close(sock);
+        return;
+    }
+
+    try {
+        auto j_muur = json::parse(buffer);
+
+        ldr = j_muur.at("ldr");
+        pot = j_muur.at("pot");
+    }
+    catch(json::exception& e){
+        std::cout << "Parsing error at Muur on socket " << sock << std::endl;
+    }
 }
 
 void Muur::LCDdimmen()
