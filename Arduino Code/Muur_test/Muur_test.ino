@@ -132,7 +132,8 @@ void loop(void) {
           Serial.println(line);
 
           for (int i=0;i<NUMPIXELS;i++) {
-            pixels.setPixelColor(i, pixels.Color(data["R"], data["G"], data["B"]));
+            String nLed = "LED"+String(i);
+            pixels.setPixelColor(i, pixels.Color(data[nLed]["R"], data[nLed]["G"], data[nLed]["B"]));
           }
           pixels.show();
 

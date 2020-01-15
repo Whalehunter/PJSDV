@@ -2,26 +2,36 @@
 #define MUUR_HPP
 
 #include "../Device.hpp"
+#include "../Componenten/RGB.hpp"
 
 class Muur: public Device
 {
-    public:
-        Muur(int, Appartement*);
-        ~Muur();
+    static const int LAMPEN = 3;
 
-        void operator()();
-        nlohmann::json getStatus();
-        void updateStatus();
-        void ToggleLed(int);
+    int ldr;
+    int pot;
+    RGBLed lampen[LAMPEN];
+    int raam;
 
-        void RGBdimmen();
-        void RGBaan();
-        void RGBuit();
-        void RGBdisco();
-        void LCDdimmen();
-        void LCDdoorlaten();
-    private:
-        int ldr;
-        int pot;
+    bool disco;
+    clock_t discoTimer;
+
+public:
+    Muur(int, Appartement*);
+    ~Muur();
+
+    void operator()();
+    nlohmann::json getStatus();
+    bool updateStatus();
+    void ToggleLed(int);
+    bool isDisco();
+    void RGBdimmen();
+    void RGBaan();
+    void RGBuit();
+    void setDisco(bool);
+    void LCDdimmen();
+    void LCDdoorlaten();
+    int potFilter(int);
+    const char * arduinoStatus();
 };
 #endif
