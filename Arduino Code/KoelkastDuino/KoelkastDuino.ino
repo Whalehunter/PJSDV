@@ -6,9 +6,9 @@
 #define I2C_SDA    D2
 
 int port = 8883;
-const char *ssid = "piiWAP";
+const char *ssid = "patricia";
 const char *password = "aanwezig2";
-const char* host = "192.168.4.1";
+const char* host = "192.168.6.1";
 
 int deurOpenDicht();
 void turnOnOffFan(int i);
@@ -64,8 +64,8 @@ void loop(void) {
       if (line == "getStatus"){
         StaticJsonDocument<100> data;
         data["deur"] = deurOpenDicht();
-        data["NTC1"] = readNTC1();
-        data["NTC2"] = readNTC2();
+        data["NTC1"] = readNTC(1);
+        data["NTC2"] = readNTC(0);
      
         char buffer[100];
 
@@ -137,34 +137,25 @@ void turnOnOffFan(int i){
   }
 }
 
-int readNTC1(){
-  Wire.beginTransmission(0x36);
-  Wire.write(byte(0xA2));          
-  Wire.write(byte(0x03));  
-  Wire.endTransmission(); 
-  
-  //Read analog 10bit inputs 0&1
+int readNTC(int i){
   Wire.requestFrom(0x36, 4);   
   unsigned int anin0 = Wire.read()&0x03;  
   anin0=anin0<<8;
-  anin0 = anin0|Wire.read();
-  Serial.println(anin0);
-  return anin0;  
-}
-
-int readNTC2(){
-  Wire.beginTransmission(0x36);
-  Wire.write(byte(0xA2));          
-  Wire.write(byte(0x03));  
-  Wire.endTransmission(); 
-  
-  //Read analog 10bit inputs 0&1
-  Wire.requestFrom(0x36, 4);   
+  anin0 = anin0|Wire.read();  
   unsigned int anin1 = Wire.read()&0x03;  
   anin1=anin1<<8;
-  anin1 = anin1|Wire.read();
-  Serial.println(anin1); 
-  return anin1;  
+  anin1 = anin1|Wire.read(); 
+  Serial.print("analog in 0: ");
+  Serial.println(anin0);   
+  Serial.print("analog in 1: ");
+  Serial.println(anin1);   
+  Serial.println("");
+  if (i){
+    return anin0;
+  }
+  else {
+    return anin1;
+  }
 }
 
 void turnOnPeltier(int i){

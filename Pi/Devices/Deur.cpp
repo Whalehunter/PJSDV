@@ -3,7 +3,7 @@
 
 using json = nlohmann::json;
 
-Deur::Deur(int n, Appartement* ap): Device(n, ap), state(DICHT), knopBinnen(0), knopBuiten(0), ledBinnen(0), ledBuiten(0), timer(0)
+Deur::Deur(int n, Appartement* ap): Device(n, ap), state(DICHT), knopBinnen(0), knopBuiten(0), ledBinnen(0), ledBuiten(0), timer(0), knipperTimer(0), noodKnipper(0)
 {
     std::cout << "Deur aangemaakt" << std::endl;
 }
@@ -14,16 +14,15 @@ Deur::~Deur()
 
 void Deur::operator()()
 {
+    /* used to check previous values to avoid jittery button presses */
     int knopBinnenPrev = 0;
     int knopBuitenPrev = 0;
 
     while(1) {
-        /* get and store JSON values */
-
-        updateStatus();
+        /* get and store JSON values, break from while if Deur is #gone */
+        if(!updateStatus()) break;
 
         /* state machine */
-
         switch(state) {
             case OPEN:
                 if(knopBinnen == 2 && knopBinnenPrev != knopBinnen) {
@@ -39,8 +38,7 @@ void Deur::operator()()
                 break;
         }
 
-        /* checks */
-
+        /* operations based on checks */
         if (knopBuiten == 1 && knopBuitenPrev != knopBuiten) {
             deurBelAan();
             buitenLampAan();
@@ -53,6 +51,18 @@ void Deur::operator()()
             buitenLampUit();
         }
 
+        if (noodKnipper == 1 && ((std::clock() - knipperTimer) / (double) CLOCKS_PER_SEC) >= 1.0) {
+            if(ledBinnen){
+                binnenLampUit(true); 
+                knipperTimer = std::clock();
+            }
+            else if (!ledBinnen){
+                binnenLampAan(true);
+                knipperTimer = std::clock();
+            }
+        }
+
+        /* store old value in Prev variables */
         knopBinnenPrev = knopBinnen;
         knopBuitenPrev = knopBuiten;
     }
@@ -77,6 +87,8 @@ void Deur::sluitDeur()
 void Deur::deurBelAan()
 {
     char cZuil = 'f';
+    /* check if device exists, then call its function */
+    /* dynamic cast to reach child functions */
     if (a->devices.count(cZuil))
         dynamic_cast<Zuil *>(a->devices.find(cZuil)->second)->deurBelAan();
 }
@@ -104,35 +116,50 @@ void Deur::buitenLampUit()
     timer = 0;
 }
 
-void Deur::binnenLampAan()
+void Deur::binnenLampAan(bool force)
 {
-    sendMsg("binnenLampAan\r");
+    if(!noodKnipper || force) {
+        sendMsg("binnenLampAan\r");
 
-    ledBinnen = 1;
+        ledBinnen = 1;
+    }
 }
 
-void Deur::binnenLampUit()
+void Deur::binnenLampUit(bool force)
 {
-    sendMsg("binnenLampUit\r");
+    if(!noodKnipper || force) {
+        sendMsg("binnenLampUit\r");
 
-    ledBinnen = 0;
+        ledBinnen = 0;
+    }
 }
 
-void Deur::updateStatus()
+void Deur::noodKnipperAan()
+{
+    noodKnipper = 1;
+    knipperTimer = std::clock();
+}
+
+void Deur::noodKnipperUit()
+{
+    noodKnipper = 0;
+    knipperTimer = 0;
+}
+
+bool Deur::updateStatus()
 {
     char buffer[256];
 
     sendMsg("getStatus\r");
 
     memset(buffer, 0, sizeof(buffer));
+    /* send message and check if client is still connected */
     if(recv(sock, buffer, 255, 0) < 1) {
         std::cout << "Deur disconnected from socket: " << sock << std::endl;
-        close(sock);
-        return;
+        return false;
     }
 
     /* try and catch json parse exceptions */
-
     try {
         auto j_deur = json::parse(buffer);
 
@@ -142,6 +169,7 @@ void Deur::updateStatus()
     catch(json::exception& e) {
         std::cout << "Exception error at Deur: " << e.what() << std::endl;
     }
+    return true;
 }
 
 json Deur::getStatus()
