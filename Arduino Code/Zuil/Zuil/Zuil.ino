@@ -21,22 +21,29 @@ void setup() {
 }
 
 void loop() {
-  int knopwaarde = leesKnop();
+  //int knopwaarde = leesKnop();
   //Serial.print("Knop: ");
   //Serial.println(knopwaarde);
-  BuzzerAanUit(knopwaarde);
-  //brandalarm();
-  LedAanUit(knopwaarde);
-  int input = leesinput(1);
-  Serial.print("Gas sensor: ");
-  Serial.println(input);
+  LedAanUit(1);
+  delay(100);
+  BuzzerAanUit(0);
+  brandalarm();
+
+  //int input = leesinput(1);
+  //Serial.print("Gas sensor: ");
+  //Serial.println(input);
   delay(10);
 }
 
 int leesKnop(){
+  Wire.beginTransmission(0x38);
+  Wire.write(byte(0x03));
+  Wire.write(byte(0x0F));
+  Wire.endTransmission(); 
+
   Wire.beginTransmission(0x38); 
-  Wire.write(byte(0x00));
-  Wire.endTransmission();  
+  Wire.write(byte(0x00));      
+  Wire.endTransmission();
   Wire.requestFrom(0x38, 1);          
   reading = Wire.read();
   if ((reading&0x01 == 1) && previous == 0) {
@@ -68,7 +75,7 @@ void BuzzerAanUit(int i) {
   else if (i == 0) {
     Wire.beginTransmission(0x38);
     Wire.write(byte(0x01));
-    Wire.write(byte(hex &= !(0x10)));
+    Wire.write(byte(hex &= ~(0x10)));
     Wire.endTransmission();
   }
 }
@@ -80,20 +87,20 @@ void brandalarm(){
 }
 void LedAanUit(int i) {
   Wire.beginTransmission(0x38);
-  Wire.write(byte(0x00));
+  Wire.write(byte(0x03));
   Wire.write(byte(0x0F));
   Wire.endTransmission();
-
+  
   if (i == 1) {
-    Wire.beginTransmission(0x38);
-    Wire.write(byte(0x01));
+    Wire.beginTransmission(0x38); 
+    Wire.write(byte(0x01));       
     Wire.write(byte(hex |= 0x20));
     Wire.endTransmission();
   }
   else if (i == 0) {
-    Wire.beginTransmission(0x38);
+    Wire.beginTransmission(0x38); 
     Wire.write(byte(0x01));
-    Wire.write(byte(hex &= (0x20)));
+    Wire.write(byte(hex &= ~(0x20)));
     Wire.endTransmission();
   }
 }
