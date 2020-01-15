@@ -3,7 +3,6 @@
 
 #include "../Device.hpp"
 
-
 class Bed: public Device
 {
     public:
@@ -11,9 +10,11 @@ class Bed: public Device
         ~Bed();
 
         void operator()();
+        void updateStatus();
         nlohmann::json getStatus();
         void updateWaardes();
         void ToggleLed(int);
+        int getDruksensor();
     private:
         enum bedStatus {UIT, AAN};
 

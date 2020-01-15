@@ -11,7 +11,7 @@ class Muur: public Device
 
         void operator()();
         nlohmann::json getStatus();
-        void updateWaardes();
+        void updateStatus();
         void ToggleLed(int);
 
         void RGBdimmen();

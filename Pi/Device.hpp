@@ -16,10 +16,11 @@ class Device
 {
 protected:
     int sock;
+    Appartement* a;
     int knopValue;
     int sensorValue;
 
-    Appartement* a;
+
 public:
     Device(int, Appartement*);
     virtual ~Device();

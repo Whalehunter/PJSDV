@@ -6,9 +6,9 @@
 class Zuil: public Device
 {
     private:
-        int zoemer;
-        int brand;
         int nood;
+        int brand;
+        int zoemer;
 
         clock_t timer;
     public:
