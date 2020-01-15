@@ -1,4 +1,5 @@
 #include "Zuil.hpp"
+#include "Deur.hpp"
 
 using json = nlohmann::json;
 
@@ -73,6 +74,9 @@ void Zuil::brandAlarmAan()
     if (!nood && !timer)
         zoemerAan();
     brand = 1;
+    if (a->devices.count('d')) {
+        dynamic_cast<Deur *>(a->devices.find('d')->second)->noodKnipperAan();
+    }
 }
 
 void Zuil::brandAlarmUit()
@@ -80,6 +84,9 @@ void Zuil::brandAlarmUit()
     if (!nood && !timer)
         zoemerUit();
     brand = 0;
+    if (a->devices.count('d')) {
+        dynamic_cast<Deur *>(a->devices.find('d')->second)->noodKnipperUit();
+    }
 }
 
 void Zuil::deurBelAan()

@@ -88,7 +88,7 @@ void Gui::operator()()
             }
             sendMsg("{\"success\":true}");
         }
-
+ 
         // sendMsg(buffer);
         memset(buffer, 0, sizeof(buffer));
     }

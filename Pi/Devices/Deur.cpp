@@ -3,7 +3,7 @@
 
 using json = nlohmann::json;
 
-Deur::Deur(int n, Appartement* ap): Device(n, ap), state(DICHT), knopBinnen(0), knopBuiten(0), ledBinnen(0), ledBuiten(0), timer(0)
+Deur::Deur(int n, Appartement* ap): Device(n, ap), state(DICHT), knopBinnen(0), knopBuiten(0), ledBinnen(0), ledBuiten(0), timer(0), knipperTimer(0), noodKnipper(0)
 {
     std::cout << "Deur aangemaakt" << std::endl;
 }
@@ -49,6 +49,17 @@ void Deur::operator()()
 
         if (ledBuiten == 1 && ((std::clock() - timer) / (double) CLOCKS_PER_SEC) >= 5.0) {
             buitenLampUit();
+        }
+
+        if (noodKnipper == 1 && ((std::clock() - knipperTimer) / (double) CLOCKS_PER_SEC) >= 1.0) {
+            if(ledBinnen){
+                binnenLampUit(); 
+                knipperTimer = std::clock();
+            }
+            else if (!ledBinnen){
+                binnenLampAan();
+                knipperTimer = std::clock();
+            }
         }
 
         /* store old value in Prev variables */
@@ -117,6 +128,18 @@ void Deur::binnenLampUit()
     sendMsg("binnenLampUit\r");
 
     ledBinnen = 0;
+}
+
+void Deur::noodKnipperAan()
+{
+    noodKnipper = 1;
+    knipperTimer = std::clock();
+}
+
+void Deur::noodKnipperUit()
+{
+    noodKnipper = 0;
+    knipperTimer = 0;
 }
 
 bool Deur::updateStatus()

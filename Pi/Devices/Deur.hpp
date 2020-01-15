@@ -15,7 +15,9 @@ class Deur: public Device
         int knopBuiten;
         int ledBinnen;
         int ledBuiten;
+        int noodKnipper;
         std::clock_t timer;
+        std::clock_t knipperTimer;
     public:
         Deur(int, Appartement*);
         ~Deur();
@@ -29,6 +31,8 @@ class Deur: public Device
         void buitenLampUit();
         void binnenLampAan();
         void binnenLampUit();
+        void noodKnipperAan();
+        void noodKnipperUit();
 
         bool updateStatus();
         nlohmann::json getStatus();
