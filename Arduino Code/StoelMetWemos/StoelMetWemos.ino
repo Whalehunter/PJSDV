@@ -6,9 +6,9 @@
 #define I2C_SDA    D2
 
 int port = 8883;
-const char *ssid = "piiWAP";
+const char *ssid = "patricia";
 const char *password = "aanwezig2";
-const char* host = "192.168.4.1";
+const char* host = "192.168.6.1";
 
 void trilSensorAanUit(int i); //0: uit, 1: aan
 void lampAanUit(int i); //0: uit, 1: aan 
@@ -116,7 +116,7 @@ void trilSensorAanUit(int i){
   else {
     Wire.beginTransmission(0x38);
     Wire.write(byte(0x01));           
-    Wire.write(byte(hex &= !(0x20)));            
+    Wire.write(byte(hex &= ~(0x20)));            
     Wire.endTransmission(); 
   }
 }
@@ -136,7 +136,7 @@ void lampAanUit(int i){
   else {
     Wire.beginTransmission(0x38);
     Wire.write(byte(0x01));           
-    Wire.write(byte(hex &= !(0x10)));            
+    Wire.write(byte(hex &= ~(0x10)));            
     Wire.endTransmission(); 
   }
 }

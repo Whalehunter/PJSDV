@@ -14,16 +14,15 @@ Deur::~Deur()
 
 void Deur::operator()()
 {
+    /* used to check previous values to avoid jittery button presses */
     int knopBinnenPrev = 0;
     int knopBuitenPrev = 0;
 
     while(1) {
-        /* get and store JSON values */
-
-        updateStatus();
+        /* get and store JSON values, break from while if Deur is #gone */
+        if(!updateStatus()) break;
 
         /* state machine */
-
         switch(state) {
             case OPEN:
                 if(knopBinnen == 2 && knopBinnenPrev != knopBinnen) {
@@ -39,8 +38,7 @@ void Deur::operator()()
                 break;
         }
 
-        /* checks */
-
+        /* operations based on checks */
         if (knopBuiten == 1 && knopBuitenPrev != knopBuiten) {
             deurBelAan();
             buitenLampAan();
@@ -53,6 +51,7 @@ void Deur::operator()()
             buitenLampUit();
         }
 
+        /* store old value in Prev variables */
         knopBinnenPrev = knopBinnen;
         knopBuitenPrev = knopBuiten;
     }
@@ -77,6 +76,8 @@ void Deur::sluitDeur()
 void Deur::deurBelAan()
 {
     char cZuil = 'f';
+    /* check if device exists, then call its function */
+    /* dynamic cast to reach child functions */
     if (a->devices.count(cZuil))
         dynamic_cast<Zuil *>(a->devices.find(cZuil)->second)->deurBelAan();
 }
@@ -118,21 +119,20 @@ void Deur::binnenLampUit()
     ledBinnen = 0;
 }
 
-void Deur::updateStatus()
+bool Deur::updateStatus()
 {
     char buffer[256];
 
     sendMsg("getStatus\r");
 
     memset(buffer, 0, sizeof(buffer));
+    /* send message and check if client is still connected */
     if(recv(sock, buffer, 255, 0) < 1) {
         std::cout << "Deur disconnected from socket: " << sock << std::endl;
-        close(sock);
-        return;
+        return false;
     }
 
     /* try and catch json parse exceptions */
-
     try {
         auto j_deur = json::parse(buffer);
 
@@ -142,6 +142,7 @@ void Deur::updateStatus()
     catch(json::exception& e) {
         std::cout << "Exception error at Deur: " << e.what() << std::endl;
     }
+    return true;
 }
 
 json Deur::getStatus()

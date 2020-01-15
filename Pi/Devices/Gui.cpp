@@ -23,13 +23,20 @@ void Gui::operator()()
         std::cout << buffer << std::endl;
         char *p = buffer;
 
+        /* loop through string and call getStatus on found devices */
+        /* append getStatus returns and send to GUI as json */
         if(*p == '-') {
             json deviceStatus;
-            while(*p)
-                if(a->devices.count(*(++p))) {
-                    deviceStatus.push_back(a->devices.find(*p)->second->getStatus());
-                }
+            for(std::map<char, Device*>::iterator i = a->devices.begin(); i != a->devices.end(); ++i) {
+                deviceStatus.push_back(i->second->getStatus());
+            }
             sendMsg(deviceStatus.dump().c_str());
+            /*      while(*p)
+                    if(a->devices.count(*(++p))) {
+                    deviceStatus.push_back(a->devices.find(*p)->second->getStatus());
+                    }
+                    sendMsg(deviceStatus.dump().c_str());
+                    */
         }
 
         else if(*p == 'd' && a->devices.count(*p)) {

@@ -23,6 +23,7 @@ void SocketServer::startServer()
         cout << "Error creating socket" << endl;
     }
 
+    char buffer[256];
     /* bind socket */
     if (bind(sockfd, (struct sockaddr*) &server_addr, sizeof(server_addr)) < 0) {
         cout << "Error binding socket" << endl;
@@ -33,6 +34,7 @@ void SocketServer::startServer()
         cout << "Error listening" << endl;
     }
 
+    /* start accepting connections in a new thread */
     thread acceptCon(&SocketServer::acceptConnection, this);
     acceptCon.detach();
 }
@@ -47,6 +49,7 @@ void SocketServer::acceptConnection()
 
             cout << "Accepting connection from " << clientip << " on socket " << csock << endl;
 
+            /* perform handshake in a separate thread to avoid collisions */
             thread handshakeThread(&SocketServer::handshake, this, csock);
             handshakeThread.detach();
         }
@@ -71,6 +74,7 @@ void SocketServer::handshake(int sock)
         cout << "Error listening" << endl;
     }
 
+    /* if valid ID -> create device object in Appartement */
     switch(response[0]) {
         case 'd':
         case 'f':
@@ -79,7 +83,6 @@ void SocketServer::handshake(int sock)
         case 'm':
         case 'x':
         case 'y':
-        case 'm':
         case 'z': a.createDevice(sock, response[0]);
                   strcpy(response, "OK\r");
                   send(sock, response, strlen(response), 0); break;
