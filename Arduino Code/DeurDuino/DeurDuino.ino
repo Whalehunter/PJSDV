@@ -10,9 +10,9 @@
 int port = 8883;
 //WiFiServer server(port);
 
-const char *ssid = "piiWAP";
+const char *ssid = "KAAS";
 const char *password = "aanwezig2";
-const char *host = "192.168.4.1";
+const char *host = "192.168.5.1";
 
 Servo myservo;
 int servoPos = 0;

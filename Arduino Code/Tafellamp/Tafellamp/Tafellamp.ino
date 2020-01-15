@@ -8,9 +8,9 @@
 #define RGB       D5
 #define NUMPIXELS 1
 #define PORT      8883
-#define SSID      "piiWAP"
+#define SSID      "KAAS"
 #define PASS      "aanwezig2"
-#define HOST      "192.168.4.1"
+#define HOST      "192.168.5.1"
 #define BUFSIZE   100
 
 Adafruit_NeoPixel pixels(NUMPIXELS, RGB, NEO_GRB + NEO_KHZ800);
