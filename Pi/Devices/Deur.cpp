@@ -35,6 +35,8 @@ void Deur::operator()()
                     openDeur();
                 }
                 break;
+            case OPSLOT:
+                break;
         }
 
         /* checks */

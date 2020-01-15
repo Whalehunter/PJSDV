@@ -84,6 +84,7 @@ $(document).ready(()=>{
         onChange:()=>{}
     });
 
+    /* MUUR */
     $('.muur .lamp .checkbox').checkbox();
 
 
