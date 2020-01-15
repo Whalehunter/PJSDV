@@ -40,7 +40,8 @@ void Muur::operator ()()
 
 nlohmann::json Muur::getStatus()
 {
-    json muurData = {/*{"Muur", state ? "LcdDimmen" : "LcdDoorlaten"},*/ {"LDR", ldr}, {"POT", pot}};
+    json muurData;
+    muurData["Muur"] = {{"LDR", ldr}, {"POT", pot}};
 
     return muurData;
 }
