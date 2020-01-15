@@ -53,11 +53,11 @@ void Deur::operator()()
 
         if (noodKnipper == 1 && ((std::clock() - knipperTimer) / (double) CLOCKS_PER_SEC) >= 1.0) {
             if(ledBinnen){
-                binnenLampUit(); 
+                binnenLampUit(true); 
                 knipperTimer = std::clock();
             }
             else if (!ledBinnen){
-                binnenLampAan();
+                binnenLampAan(true);
                 knipperTimer = std::clock();
             }
         }
@@ -116,18 +116,22 @@ void Deur::buitenLampUit()
     timer = 0;
 }
 
-void Deur::binnenLampAan()
+void Deur::binnenLampAan(bool force)
 {
-    sendMsg("binnenLampAan\r");
+    if(!noodKnipper || force) {
+        sendMsg("binnenLampAan\r");
 
-    ledBinnen = 1;
+        ledBinnen = 1;
+    }
 }
 
-void Deur::binnenLampUit()
+void Deur::binnenLampUit(bool force)
 {
-    sendMsg("binnenLampUit\r");
+    if(!noodKnipper || force) {
+        sendMsg("binnenLampUit\r");
 
-    ledBinnen = 0;
+        ledBinnen = 0;
+    }
 }
 
 void Deur::noodKnipperAan()

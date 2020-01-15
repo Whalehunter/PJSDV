@@ -29,8 +29,8 @@ class Deur: public Device
         void deurBelUit();
         void buitenLampAan();
         void buitenLampUit();
-        void binnenLampAan();
-        void binnenLampUit();
+        void binnenLampAan(bool force = false);
+        void binnenLampUit(bool force = false);
         void noodKnipperAan();
         void noodKnipperUit();
 
