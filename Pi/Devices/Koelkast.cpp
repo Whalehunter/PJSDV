@@ -62,7 +62,7 @@ void Koelkast::operator()(){
 			fanAan();
 
 		}
-		std::cout << openTimer << std::endl;
+	//	std::cout << openTimer << std::endl;
 	}
 	close(sock);
 	std::cout << "Connection closed on socket " << sock << std::endl;
