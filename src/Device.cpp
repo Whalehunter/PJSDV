@@ -1,27 +1,18 @@
 #include "Device.hpp"
-#include "nlohmann/json.hpp"
+//#include "nlohmann/json.hpp"
 
 //using json = nlohmann::json;
 
 Device::Device(int n, Appartement* ap): sock(n), a(ap), knopValue(0), sensorValue(0)
-{
-}
+{}
 
 Device::~Device()
-{
-}
-
-void Device::sendMsg(char* data)
-{
-    if (send(sock, data, strlen(data), 0) < 0) {
-        std::cout << "Error sending" << std::endl;
-    }
-}
+{}
 
 void Device::sendMsg(const char* data)
 {
     if (send(sock, data, strlen(data), 0) < 0) {
-        std::cout << "Error sending" << std::endl;
+        std::cout << "Error sending on socket: " << sock << std::endl;
     }
 }
 
@@ -32,10 +23,20 @@ bool Device::recvMsg(char* data)
 
 int Device::getSock()
 {
-    return this->sock;
+    return sock;
 }
 
 void Device::setSock(int x)
 {
     sock = x;
+}
+
+int Device::getSensor()
+{
+    return sensorValue;
+}
+
+int Device::getKnop()
+{
+    return knopValue;
 }

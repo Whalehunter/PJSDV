@@ -6,16 +6,22 @@
 class Zuil: public Device
 {
     private:
-        int zoemer;
-        int brand;
         int nood;
+        int brand;
+        int zoemer;
+
+        clock_t timer;
     public:
         Zuil(int, Appartement*);
         ~Zuil();
 
         void operator()();
-        void noodAlarm(int);
-        void brandAlarm(int);
+        void noodAlarmAan();
+        void noodAlarmUit();
+        void brandAlarmAan();
+        void brandAlarmUit();
+        void deurBelAan();
+        void deurBelUit();
         void zoemerAan();
         void zoemerUit();
 

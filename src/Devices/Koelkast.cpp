@@ -9,13 +9,12 @@
 
 using json = nlohmann::json;
 
-Koelkast::Koelkast(int n, Appartement* ap): Device(n, ap){
+Koelkast::Koelkast(int n, Appartement* ap): Device(n, ap), openTimer(0){
     std::cout << "Koelkast aangemaakt" << std::endl;
 }
 
-Koelkast::~Koelkast(){
-
-}
+Koelkast::~Koelkast()
+{}
 
 void Koelkast::operator()(){
     char buffer[256];
@@ -34,8 +33,6 @@ void Koelkast::operator()(){
 			return;
 		}
 
-		std::cout << buffer << std::endl;
-
 		try {
 			auto j_koelkast = json::parse(buffer); // hier moeten ook exceptions afgehandeld worden
 
@@ -47,22 +44,25 @@ void Koelkast::operator()(){
 			std::cout << "parse error" << std::endl;
 		}
 
-		if ((koelkastDeur == 0) && !(((std::clock() - timer) / (double) CLOCKS_PER_SEC) >= 5.0)){
-			peltierUit();
-			if (((std::clock() - timer) / (double) CLOCKS_PER_SEC) == 0.0){
-				timer = std::clock();
-			}
+		if ((koelkastDeur == 0) && (((std::clock() - openTimer) / (double) CLOCKS_PER_SEC) <= 5.0)){
+			peltierUit();/*
+			if (((std::clock() - openTimer) / (double) CLOCKS_PER_SEC) == 0.0){
+				openTimer = std::clock();
+
+			}*/
 		}
-		else if ((koelkastDeur == 0) && (((std::clock() - timer) / (double) CLOCKS_PER_SEC) >= 5.0)){
+		else if ((koelkastDeur == 0) && (((std::clock() - openTimer) / (double) CLOCKS_PER_SEC) >= 5.0)){
 			koelAlarm = 1;
 			fanUit();
 			peltierUit();
 		}
 		else{
+			openTimer = std::clock();
 			peltierAan();
 			fanAan();
-			timer = 0;
+
 		}
+		std::cout << openTimer << std::endl;
 	}
 	close(sock);
 	std::cout << "Connection closed on socket " << sock << std::endl;

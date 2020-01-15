@@ -10,31 +10,30 @@
 #include <unistd.h>
 #include <ctime>
 
-using json = nlohmann::json;
+//using json = nlohmann::json;
 
 class Device
 {
-    protected:
-        int sock;
-        int knopValue;
-        int sensorValue;
+protected:
+    int sock;
+    Appartement* a;
+    int knopValue;
+    int sensorValue;
 
-        Appartement* a;
-    public:
-        Device(int, Appartement*);
-        virtual ~Device();
 
-        virtual void sendMsg(char*);
-        virtual void sendMsg(const char*);
-        virtual bool recvMsg(char*);
-        virtual void operator()() = 0;
+public:
+    Device(int, Appartement*);
+    virtual ~Device();
 
-//        json dicks = {{"one","two"}};
+    virtual void sendMsg(const char*);
+    virtual bool recvMsg(char*);
+    virtual void operator()() = 0;
 
-        int getSock();
-        void setSock(int);
-
-        virtual nlohmann::json getStatus() = 0;
+    int getSock();
+    void setSock(int);
+    int getSensor();
+    int getKnop();
+    virtual nlohmann::json getStatus() = 0;
 };
 
 #endif

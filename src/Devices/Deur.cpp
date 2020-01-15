@@ -1,4 +1,5 @@
 #include "Deur.hpp"
+#include "Zuil.hpp"
 
 using json = nlohmann::json;
 
@@ -13,62 +14,42 @@ Deur::~Deur()
 
 void Deur::operator()()
 {
-    char buffer[256];
     int knopBinnenPrev = 0;
     int knopBuitenPrev = 0;
 
     while(1) {
         /* get and store JSON values */
 
-        memset(buffer, 0, sizeof(buffer));
-        strcpy(buffer, "getStatus\r");
-        sendMsg(buffer);
-
-        memset(buffer, 0, sizeof(buffer));
-        if(recv(sock, buffer, 255, 0) < 1) { // dit wordt een functie
-            std::cout << "Deur disconnected from socket: " << sock << std::endl;
-            close(sock);
-            return;
-        }
-
-        /* try and catch json parse exceptions */
-
-        try {
-            auto j_deur = json::parse(buffer); // hier moeten ook exceptions afgehandeld worden
-
-            knopBinnen = j_deur.at("binnenKnop");
-            knopBuiten = j_deur.at("buitenKnop");
-        }
-        catch(json::parse_error) {
-            std::cout << "Parsing error at Deur on socket " << sock << std::endl;
-        }
-
-       // knopBinnen = j_deur.at("binnenKnop");
-       // knopBuiten = j_deur.at("buitenKnop");
+        updateStatus();
 
         /* state machine */
 
         switch(state) {
             case OPEN:
-                if(knopBinnen == 1 && knopBinnenPrev != knopBinnen) {
+                if(knopBinnen == 2 && knopBinnenPrev != knopBinnen) {
                     sluitDeur();
-                } 
+                }
                 break;
             case DICHT:
-                if(knopBinnen == 1 && knopBinnenPrev != knopBinnen) {
+                if(knopBinnen == 2 && knopBinnenPrev != knopBinnen) {
                     openDeur();
                 }
+                break;
+            case OPSLOT:
                 break;
         }
 
         /* checks */
 
         if (knopBuiten == 1 && knopBuitenPrev != knopBuiten) {
-            deurBel();
+            deurBelAan();
             buitenLampAan();
         }
+        else if (knopBuiten == 0 && knopBuitenPrev != knopBuiten) {
+            deurBelUit();
+        }
 
-        if (ledBuiten == 1 && (std::clock() - timer / (double) CLOCKS_PER_SEC) >= 5.0) {
+        if (ledBuiten == 1 && ((std::clock() - timer) / (double) CLOCKS_PER_SEC) >= 5.0) {
             buitenLampUit();
         }
 
@@ -81,38 +62,35 @@ void Deur::operator()()
 
 void Deur::openDeur()
 {
-    char buff[256];
-    memset(buff, 0, sizeof(buff));
-    strcpy(buff, "deurOpen\r");
-    sendMsg(buff);
+    sendMsg("deurOpen\r");
 
     state = OPEN;
 }
 
 void Deur::sluitDeur()
 {
-    char buff[256];
-    memset(buff, 0, sizeof(buff));
-    strcpy(buff, "deurDicht\r");
-    sendMsg(buff);
+    sendMsg("deurDicht\r");
 
     state = DICHT;
 }
 
-void Deur::deurBel()
+void Deur::deurBelAan()
 {
-    char buff[256];
-    memset(buff, 0, sizeof(buff));
-    strcpy(buff, "deurBel\r");
-    sendMsg(buff);
+    char cZuil = 'f';
+    if (a->devices.count(cZuil))
+        dynamic_cast<Zuil *>(a->devices.find(cZuil)->second)->deurBelAan();
+}
+
+void Deur::deurBelUit()
+{
+    char cZuil = 'f';
+    if (a->devices.count(cZuil))
+        dynamic_cast<Zuil *>(a->devices.find(cZuil)->second)->deurBelUit();
 }
 
 void Deur::buitenLampAan()
 {
-    char buff[256];
-    memset(buff, 0, sizeof(buff));
-    strcpy(buff, "buitenLampAan\r");
-    sendMsg(buff);
+    sendMsg("buitenLampAan\r");
 
     ledBuiten = 1;
     timer = std::clock();
@@ -120,18 +98,56 @@ void Deur::buitenLampAan()
 
 void Deur::buitenLampUit()
 {
-    char buff[256];
-    memset(buff, 0, sizeof(buff));
-    strcpy(buff, "buitenLampUit\r");
-    sendMsg(buff);
+    sendMsg("buitenLampUit\r");
 
     ledBuiten = 0;
     timer = 0;
 }
 
+void Deur::binnenLampAan()
+{
+    sendMsg("binnenLampAan\r");
+
+    ledBinnen = 1;
+}
+
+void Deur::binnenLampUit()
+{
+    sendMsg("binnenLampUit\r");
+
+    ledBinnen = 0;
+}
+
+void Deur::updateStatus()
+{
+    char buffer[256];
+
+    sendMsg("getStatus\r");
+
+    memset(buffer, 0, sizeof(buffer));
+    if(recv(sock, buffer, 255, 0) < 1) {
+        std::cout << "Deur disconnected from socket: " << sock << std::endl;
+        close(sock);
+        return;
+    }
+
+    /* try and catch json parse exceptions */
+
+    try {
+        auto j_deur = json::parse(buffer);
+
+        knopBinnen = j_deur.at("binnenKnop");
+        knopBuiten = j_deur.at("buitenKnop");
+    }
+    catch(json::exception& e) {
+        std::cout << "Exception error at Deur: " << e.what() << std::endl;
+    }
+}
+
 json Deur::getStatus()
 {
-    json deurData = {{"State", state}, {"Binnenknop", knopBinnen}, {"Buitenknop", knopBuiten}, {"Binnenled", ledBinnen}, {"Buitenled", ledBuiten}};
+    json deurData;
+    deurData["Deur"] = {{"Deur", state ? "open" : "dicht"}, {"Binnenknop", knopBinnen}, {"Buitenknop", knopBuiten}, {"Binnenled", ledBinnen}, {"Buitenled", ledBuiten}};
 
     return deurData;
 }
