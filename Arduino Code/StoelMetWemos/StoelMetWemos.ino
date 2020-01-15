@@ -1,18 +1,19 @@
 #include <Wire.h>
 #include <ESP8266WiFi.h>
+#include <ArduinoJson.h>
 
 #define I2C_SDL    D1
 #define I2C_SDA    D2
 
 int port = 8883;
 const char *ssid = "piiWAP";
-const char *password = "aanwezig";
+const char *password = "aanwezig2";
 const char* host = "192.168.4.1";
 
-void trilSensorAanUit(int i);
-void lampAanUit(int i);
-int leesPbUit();
-int leesDsUit();
+void trilSensorAanUit(int i); //0: uit, 1: aan
+void lampAanUit(int i); //0: uit, 1: aan 
+int leesPbUit();  //0: niet ingedrukt, 1: ingedrukt
+int leesDsUit();  //0: niks, 1: ligt wat op de sensor
 
 String line = "";
 int pb = 0;
@@ -20,14 +21,12 @@ int ds = 0;
 int hex = 0x00;
   
 void setup(void) {
-  pinMode(D4, OUTPUT);  //Set D4 as Output.
-  pinMode(D5, OUTPUT);  //Set D5 as Output.
+  trilSensorAanUit(0);
+  lampAanUit(0);
   
   Wire.begin();  //Start wire.
   Serial.begin(115200);  //Set serial Baud.
-/*
-  WiFi.mode(WIFI_STA);
-  WiFi.hostname("wemos");
+  Serial.printf("Connecting to", ssid);
   WiFi.begin(ssid, password);
 
   Serial.println("Connecting");
@@ -36,65 +35,70 @@ void setup(void) {
     Serial.print(".");
     delay(500);
   }
-
-  Serial.println("");
-  Serial.print("Connected to ");
-  Serial.println(ssid);
-
-  Serial.print("IP address: ");
-  Serial.println(WiFi.localIP());
-  server.begin();
-  Serial.print("Port: ");
-  Serial.println(port);
-
-  WiFiClient client = server.available();
-  
-  Serial.printf("\n[Connecting to %s ... ", host);
-  if (client.connect(host, port))
-  {
-    Serial.println("connected]");
-    line = client.readStringUntil('\r');
-    if (line == "ID?"){
-      client.print(String("ei"));
-    }
-    line = client.readStringUntil('\r');
-    if (line == "OK"){
-      client.print(String("ei"));
-    }
-  }*/
+  Serial.printf("Connected to ", ssid);
 }
 
 
 
 void loop(void) {
-  WiFiClient client = server.available();
+  WiFiClient client;
   
-  digitalWrite(D5, HIGH);  //LED D4 ON.
-  delay(500); 
-  
-  lampAanUit(1);
-  trilSensorAanUit(0);
   pb = leesPbUit();
   ds = leesDsUit();
 
   Serial.println(pb);
   Serial.println(ds);
   Serial.println();
+
+  trilSensorAanUit(0);
+  lampAanUit(0);
   
+  Serial.printf("\n[Connecting to %s ... ", host);
   if (client.connect(host, port)){
+    Serial.println("connected]");
     line = client.readStringUntil('\r');
-    while (line == "getStatus"){  
-      while (client.connected() || client.available()){
-        pb = leesPbUit();
-        ds = leesDsUit();
-        client.print(String(pb));
-        client.print(String(ds));
-      }
-      client.stop();
+    if (line == "ID?"){
+      client.print(String("z"));
     }
+    line = client.readStringUntil('\r');
+    if (line == "OK"){
+      //client.print(String("z"));
+    }
+    while (client.connected() || client.available()){  
+      line = client.readStringUntil('\r');
+      Serial.println(line);
+      if (line == "getStatus"){
+        StaticJsonDocument<100> data;
+        data["drukknop"] = leesPbUit();
+        data["drukSensor"] = leesDsUit();
+     
+        char buffer[100];
+
+        serializeJson(data, buffer);
+        Serial.println(buffer);
+        
+        client.print(String(buffer));          
+        line = "";
+      }
+      else if (line == "ledAan"){
+        lampAanUit(1);
+      }
+      else if (line == "ledUit"){
+        lampAanUit(0);
+      }
+      else if (line == "trilAan"){
+        trilSensorAanUit(1);
+      }
+      else if (line == "trilUit"){
+        trilSensorAanUit(0);
+      }
+      else {
+        Serial.println("Invalid input");
+      }
+    }
+  Serial.println("Failed connection.");
+  client.stop();
   }
-  digitalWrite(D5, LOW);  //LED D4 OFF.
-  delay(500);
 }
 
 void trilSensorAanUit(int i){
@@ -138,15 +142,30 @@ void lampAanUit(int i){
 }
 
 int leesPbUit(){
+  Wire.beginTransmission(0x38);
+  Wire.write(byte(0x03));          
+  Wire.write(byte(0x0F));         
+  Wire.endTransmission();
+  
   Wire.beginTransmission(0x38); 
   Wire.write(byte(0x00));      
   Wire.endTransmission();
   Wire.requestFrom(0x38, 1);  //request data from 0x38   
   unsigned int inputs = Wire.read();//Write value on address of inputs.
-  return inputs&0x01;
+  if (inputs&0x01 == 1){
+    return 1;
+  }
+  else {
+    return 0;
+  }
 }
 
 int leesDsUit(){
+  Wire.beginTransmission(0x36);
+  Wire.write(byte(0xA2));          
+  Wire.write(byte(0x03));  
+  Wire.endTransmission(); 
+
   Wire.requestFrom(0x36, 4);  //request data from 0x36   
   unsigned int anin0 = Wire.read()&0x03;  
   anin0=anin0<<8;
