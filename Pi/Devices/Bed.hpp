@@ -10,7 +10,7 @@ class Bed: public Device
         ~Bed();
 
         void operator()();
-        void updateStatus();
+        bool updateStatus();
         nlohmann::json getStatus();
         void updateWaardes();
         void ToggleLed(int);

@@ -15,8 +15,8 @@ void Bed::operator()()
     int knopPrev = 0;
 
     while(1){
-        /*Get and store JSON values*/
-        updateStatus();
+        /*Get and store JSON values, break from while Bed is gone*/
+        if(!updateStatus()) break;
 
         /*State Machine*/
         switch(state){
@@ -41,7 +41,7 @@ nlohmann::json Bed::getStatus()
     return bedData;
 }
 
-void Bed::updateStatus()
+bool Bed::updateStatus()
 {
     char buffer[256];
 
@@ -51,7 +51,7 @@ void Bed::updateStatus()
     if(recv(sock, buffer, 255, 0) < 1){
         std::cout << "Bed disconnected from socket: " << sock << std::endl;
         close(sock);
-        return;
+        return false;
     }
 
     try {
@@ -63,6 +63,7 @@ void Bed::updateStatus()
     catch(json::exception& e) {
         std::cout << "Parsing error at Bed on socket " << sock << std::endl;
     }
+    return true;
 }
 
 void Bed::ToggleLed(int i){

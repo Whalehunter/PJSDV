@@ -3,7 +3,7 @@
 
 using json = nlohmann::json;
 
-Deur::Deur(int n, Appartement* ap): Device(n, ap), state(DICHT), knopBinnen(0), knopBuiten(0), ledBinnen(0), ledBuiten(0), timer(0), knipperTimer(0), noodKnipper(0)
+Deur::Deur(int n, Appartement* ap): Device(n, ap), state(DICHT), knopBinnen(0), knopBuiten(0), ledBinnen(0), ledBuiten(0), noodKnipper(0), timer(0), knipperTimer(0)
 {
     std::cout << "Deur aangemaakt" << std::endl;
 }
