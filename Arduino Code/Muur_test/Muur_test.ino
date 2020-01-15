@@ -108,7 +108,7 @@ void loop(void) {
         }
         else if (isValidNumber(line)){
           int temp = line.toInt();
-          if (temp >= 0 & temp <=1024){
+          if (temp >= 0 && temp <=1024){
             RGBbrightness(temp);
           }
           line = "";
