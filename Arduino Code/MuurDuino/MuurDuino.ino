@@ -139,17 +139,17 @@ void RGBstrip(int i){
       pixels.setPixelColor(a,0,0,255);
       pixels.show();   // Send the updated pixel colors to the hardware
     }
-    delay(500);
+    delay(10);
     for(int a=0; a<NUMPIXELS; a++) {
       pixels.setPixelColor(a,0,255,0);
       pixels.show();   // Send the updated pixel colors to the hardware
     }
-    delay(500);
+    delay(10);
     for(int a=0; a<NUMPIXELS; a++) {
       pixels.setPixelColor(a,255,0,0);
       pixels.show();   // Send the updated pixel colors to the hardware
     }
-    delay(500);
+    delay(10);
   }
 }
 
