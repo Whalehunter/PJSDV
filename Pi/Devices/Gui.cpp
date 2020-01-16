@@ -3,6 +3,7 @@
 #include "Zuil.hpp"
 #include "Schemerlamp.hpp"
 #include "Stoel.hpp"
+#include "Bed.hpp"
 #include <string>
 
 using json = nlohmann::json;
@@ -107,6 +108,13 @@ void Gui::operator()()
                 else schemerlamp->setDisco(false);
             }
             sendMsg("{\"success\":true}");
+        }
+
+        else if (*p == 'y' && a->devices.count(*p)) {
+            Bed * bed = dynamic_cast<Bed *>(a->devices.find(*p++)->second);
+            if (*p == 'l') {
+                if (*(++p) == 'a') bed->ledAan();
+                else bed->ledUit();
         }
 
         // sendMsg(buffer);

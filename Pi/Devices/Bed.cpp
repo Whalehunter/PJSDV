@@ -22,12 +22,12 @@ void Bed::operator()()
         switch(state){
             case AAN:
                 if (knop && !knopPrev){
-                    ToggleLed(0);
+                    ledUit();
                 }
                 break;
             case UIT:
                 if (knop && !knopPrev){
-                    ToggleLed(1);
+                    ledAan();
                 }
         }
         knopPrev = knop;
@@ -37,7 +37,7 @@ void Bed::operator()()
 nlohmann::json Bed::getStatus()
 {
     json bedData;
-    bedData["Bed"] = {{"Bed", state ? "aan" : "uit"}, {"knop", knop}, {"drukSensor", druksensor}};
+    bedData["Bed"] = {{"Lamp", state}, {"knop", knop}, {"drukSensor", druksensor}};
     return bedData;
 }
 
