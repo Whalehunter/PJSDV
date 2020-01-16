@@ -59,13 +59,16 @@ nlohmann::json Muur::getStatus()
 
 bool Muur::updateStatus()
 {
-    char buffer[256];
+    char buffer[300] ={};
     sendMsg("getStatus\r");
-    if(recv(sock, buffer, 255, 0) < 1){
+
+//    memset(buffer, 0, sizeof(buffer));
+    if(recv(sock, buffer, 299, 0) < 1){
         std::cout << "Muur disconnected from socket: " << sock << std::endl;
         close(sock);
         return false;
     }
+    std::cout << buffer << std::endl;
 
     try {
         auto j_muur = json::parse(buffer);
@@ -76,6 +79,7 @@ bool Muur::updateStatus()
             lampen[i].setBrightness(pot/4);
             json o = j_muur.at(std::to_string(i));
             lampen[i].setKleur(o.at("r"), o.at("g"), o.at("b"));
+            sendMsg(arduinoStatus());
         }
 
         if (isDisco() && ((std::clock() - discoTimer) / (double) CLOCKS_PER_SEC) >= 0.5) {
@@ -90,7 +94,7 @@ bool Muur::updateStatus()
         }
     }
     catch(json::exception& e){
-        std::cout << "Parsing error at Muur on socket " << sock << std::endl;
+        std::cout << "Parsing error: " << e.what() << std::endl;
     }
 
     return true;
