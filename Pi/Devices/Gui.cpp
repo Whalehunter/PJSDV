@@ -56,6 +56,7 @@ void Gui::operator()()
                     stoel->ledUit();
                 }
             }
+            sendMsg("{\"success\":true}");
         }
 
         else if(*p == 'd' && a->devices.count(*p)) {

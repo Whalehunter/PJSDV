@@ -40,7 +40,15 @@ $(document).ready(()=>{
     });
 
     /* STOEL */
-    $('.stoel .trillen .checkbox').checkbox();
+    $('.stoel .trillen .checkbox').checkbox({
+        onChecked:()=>{msg('zta',(data)=>{if(!data.success)console.log(data)})},
+        onUnchecked:()=>{msg('ztu',(data)=>{console.log(data)})}
+    });
+
+    $('.stoel .lamp .checkbox').checkbox({
+        onChecked:()=>{msg('zla',(data)=>{if(!data.success)console.log(data)})},
+        onUnchecked:()=>{msg('zlu',(data)=>{console.log(data)})}
+    })
 
     /* ZUIL */
     $('.zuil .zoemer .checkbox').checkbox({
