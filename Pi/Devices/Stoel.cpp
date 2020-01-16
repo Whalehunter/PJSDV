@@ -45,9 +45,9 @@ void Stoel::operator()()//Overloaded functies moeten met 2 haakjes zodat je er z
             toggleLed();
         }
 
-        if (!drukSensor){
+        if (!drukSensor && trilStatus){
             trilUit();
-        } else if (drukknop && !drukknopPrev){
+        } else if (drukknop && !drukknopPrev && drukSensor){
             toggleTril();
         }
 

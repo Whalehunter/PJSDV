@@ -49,7 +49,7 @@ void Gui::operator()()
                 } else {
                     stoel->trilUit();
                 }
-            } else if ('l') {   // lamp
+            } else if (*p == 'l') {   // lamp
                 if (*(++p) == 'a') {
                     stoel->ledAan();
                 } else {
