@@ -1,7 +1,8 @@
 <!doctype html>
 <html lang="nl">
   <head>
-    <title>Control panel</title>
+      <title>Control panel</title>
+      <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="UTF-8"/>
     <link rel="stylesheet" type="text/css" href="semantic/dist/semantic.min.css">
     <script src="jquery-3.4.1.min.js"></script>
