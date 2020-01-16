@@ -74,7 +74,19 @@
                 </div>
                 <div class="column plek">
                   <p><b>Plek</b></p>
-                  <p>Beschikbaar</p>
+                  <p><span>Beschikbaar</span></p>
+                </div>
+                <div class="column lamp">
+                    <p><b>Lamp</b></p>
+                    <div class="ui fitted toggle checkbox">
+                        <input name="" type="checkbox" value=""/>
+                    </div>
+                </div>
+                <div class="column knop">
+                    <p><b>Knop</b></p>
+                    <div class="ui fitted slider disabled checkbox">
+                        <input name="" type="checkbox" value=""/>
+                    </div>
                 </div>
               </div>
             </div>

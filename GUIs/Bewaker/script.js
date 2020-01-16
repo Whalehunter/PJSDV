@@ -1,5 +1,6 @@
 // Bij page reload alle ajax requests cancellen, zodat de pagina een beetje snel verversen kan.
 var msgs = [];
+APPARATEN = '-sdfzk';
 window.addEventListener('beforeunload', ()=>{
     msgs.forEach((req)=>{
         req.abort();
@@ -89,7 +90,7 @@ $(document).ready(()=>{
 
 
     /* Update interval */
-    msg('-dsf', updateElements);
+    msg(APPARATEN, updateElements);
 
     function updateElements(data) {
 
@@ -117,6 +118,31 @@ $(document).ready(()=>{
                     sHelderheid = s.helderheid + ' %';
                 }
                 $('.schemerlamp-helderheid').text(sHelderheid);
+            }
+
+            /* STOEL */
+            if (key.Stoel) {
+                let s = key.Stoel;
+                if (s.Knop) {
+                    $('.stoel .knop .checkbox').checkbox('set checked');
+                } else {
+                    $('.stoel .knop .checkbox').checkbox('set unchecked');
+                }
+                if (s.Lamp) {
+                    $('.stoel .lamp .checkbox').checkbox('set checked');
+                } else {
+                    $('.stoel .lamp .checkbox').checkbox('set unchecked');
+                }
+                if (s.Massage) {
+                    $('.stoel .trillen .checkbox').checkbox('set checked');
+                } else {
+                    $('.stoel .trillen .checkbox').checkbox('set unchecked');
+                }
+                if (s.Drukplaat) {
+                    $('.stoel .plek span').text("Bezet");
+                } else {
+                    $('.stoel .plek span').text("Beschikbaar");
+                }
             }
 
             /* ZUIL */
@@ -198,7 +224,7 @@ $(document).ready(()=>{
 
         });
 
-        setTimeout(()=>{msg('-dsfk', updateElements)}, 100);
+        setTimeout(()=>{msg(APPARATEN, updateElements)}, 100);
     }
 
     function setCheckbox(where, action) {
