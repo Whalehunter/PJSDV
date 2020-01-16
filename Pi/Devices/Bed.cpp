@@ -21,12 +21,12 @@ void Bed::operator()()
         /*State Machine*/
         switch(state){
             case AAN:
-                if (knop == 1 && knopPrev != knop){
+                if (knop && !knopPrev){
                     ToggleLed(0);
                 }
                 break;
             case UIT:
-                if (knop == 1 && knopPrev != knop){
+                if (knop && !knopPrev){
                     ToggleLed(1);
                 }
         }
@@ -43,11 +43,8 @@ nlohmann::json Bed::getStatus()
 
 bool Bed::updateStatus()
 {
-    char buffer[256];
-
+    char buffer[256] = {0};
     sendMsg("getStatus\r");
-
-    memset(buffer, 0, sizeof(buffer));
     if(recv(sock, buffer, 255, 0) < 1){
         std::cout << "Bed disconnected from socket: " << sock << std::endl;
         close(sock);
@@ -67,19 +64,21 @@ bool Bed::updateStatus()
 }
 
 void Bed::ToggleLed(int i){
-    if(i==1){
-        char buff[256];
-        memset(buff, 0, sizeof(buff));
-        strcpy(buff, "lampAan\r");
-        sendMsg(buff);
-        state = AAN;
-    }else if (i == 0){
-        char buff[256];
-        memset(buff, 0, sizeof(buff));
-        strcpy(buff, "lampUit\r");
-        sendMsg(buff);
-        state = UIT;
+    if (i) {
+        ledAan();
+    } else {
+        ledUit();
     }
+}
+
+void Bed::ledAan() {
+    sendMsg("lampAan\r");
+    state = AAN;
+}
+
+void Bed::ledUit() {
+    sendMsg("lampUit\r");
+    state = UIT;
 }
 
 int Bed::getDruksensor(){

@@ -14,6 +14,8 @@ class Bed: public Device
         nlohmann::json getStatus();
         void updateWaardes();
         void ToggleLed(int);
+        void ledAan();
+        void ledUit();
         int getDruksensor();
     private:
         enum bedStatus {UIT, AAN};
