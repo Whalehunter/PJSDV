@@ -69,7 +69,9 @@ void Koelkast::operator()(){
 }
 
 json Koelkast::getStatus(){
-    return {{"Deur", koelkastDeur}, {"Koelelement", }, {"m1", NTC1}, {"m2", NTC2}};
+    json koelk;
+    koelk["Koelkast"] = {{"Deur", koelkastDeur}, {"Koelelement", }, {"m1", NTC1}, {"m2", NTC2}};
+    return koelk;
 }
 
 void Koelkast::disableKoelAlarm(){
