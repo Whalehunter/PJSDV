@@ -69,7 +69,7 @@ void Koelkast::operator()(){
 }
 
 json Koelkast::getStatus(){
-    return knopValue;
+    return {{"Deur", koelkastDeur}, {"Koelelement", }, {"m1", NTC1}, {"m2", NTC2}};
 }
 
 void Koelkast::disableKoelAlarm(){
@@ -95,6 +95,8 @@ void Koelkast::peltierAan(){
 	memset(buffer, 0, sizeof(buffer));
 	strcpy(buffer, "peltierAan\r");
 	sendMsg(buffer);
+
+        koelelement = 1;
 }
 
 void Koelkast::peltierUit(){
@@ -102,4 +104,6 @@ void Koelkast::peltierUit(){
 	memset(buffer, 0, sizeof(buffer));
 	strcpy(buffer, "peltierUit\r");
 	sendMsg(buffer);
+
+        koelelement = 0;
 }

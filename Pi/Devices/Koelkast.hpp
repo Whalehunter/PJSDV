@@ -22,6 +22,7 @@ class Koelkast: public Device{
 		int NTC1{};
 		int NTC2{};
 		int koelAlarm{};
+		int koelelement{};
 	public:
 		Koelkast(int, Appartement*);
 		~Koelkast();
