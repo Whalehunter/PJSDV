@@ -18,32 +18,13 @@ Stoel::~Stoel()
 
 void Stoel::operator()()//Overloaded functies moeten met 2 haakjes zodat je er zoveel mogelijk over kan sturen als je wilt.
 {
-    char buffer[256];
-    int drukSensorPrev = 0;
     int drukknopPrev = 0;
 
     while(1) {
         /* get and store JSON values */
-        memset(buffer, 0, sizeof(buffer));
-        strcpy(buffer, "getStatus\r");
-        sendMsg(buffer);
+        sendMsg("getStatus\r");
 
-        memset(buffer, 0, sizeof(buffer));
-        if(recv(sock, buffer, 255, 0) < 1) { // dit wordt een functie
-            std::cout << "Stoel disconnected from socket: " << sock << std::endl;
-            close(sock);
-            return;
-        }
-
-        try {
-            auto j_stoel = json::parse(buffer); // hier moeten ook exceptions afgehandeld worden
-
-            drukknop = j_stoel.at("drukknop");
-            drukSensor = j_stoel.at("drukSensor");
-        }
-        catch(json::exception& e) {
-            std::cout << "parse error" << std::endl;
-        }
+        if(!updateStatus()) break;
 
         if ((drukknop == 1) && (drukknopPrev != drukknop) && (ledStatus == 0)){
 			ledAan();
@@ -67,7 +48,6 @@ void Stoel::operator()()//Overloaded functies moeten met 2 haakjes zodat je er z
         	trilStatus = 0;
         }
 
-        drukSensorPrev = drukSensor;
         drukknopPrev = drukknop;
     }
     close(sock);
@@ -79,6 +59,27 @@ json Stoel::getStatus()
     json stoel;
     stoel["Stoel"] = {{"Knop", drukknop}, {"Lamp", ledStatus}, {"Massage", trilStatus}, {"Drukplaat", drukSensor}};
     return stoel;
+}
+
+bool Stoel::updateStatus(){
+    char buffer[256];
+    memset(buffer, 0, sizeof(buffer));
+    if(recv(sock, buffer, 255, 0) < 1) { // dit wordt een functie
+        std::cout << "Stoel disconnected from socket: " << sock << std::endl;
+        close(sock);
+        return false;
+    }
+
+    try {
+        auto j_stoel = json::parse(buffer); // hier moeten ook exceptions afgehandeld worden
+
+        drukknop = j_stoel.at("drukknop");
+        drukSensor = j_stoel.at("drukSensor");
+    }
+    catch(json::exception& e) {
+        std::cout << "parse error" << std::endl;
+    }
+    return true;
 }
 
 void Stoel::ledAan(){

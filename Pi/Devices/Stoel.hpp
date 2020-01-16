@@ -11,6 +11,7 @@ class Stoel: public Device
         ~Stoel();
         void operator()();
         nlohmann::json getStatus();
+        bool updateStatus();
         void ledAan();
         void ledUit();
         void trilAan();
