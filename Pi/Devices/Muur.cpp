@@ -17,7 +17,7 @@ void Muur::operator ()()
 {
     while(1){
         /*Get and store JSON values*/
-        if (!updateStatus()) break;
+        updateStatus();
 
         /*checks*/
         if (ldr >= 500){
@@ -45,7 +45,7 @@ nlohmann::json Muur::getStatus()
     return muurData;
 }
 
-bool Muur::updateStatus()
+void Muur::updateStatus()
 {
     char buffer[256];
 
@@ -54,7 +54,7 @@ bool Muur::updateStatus()
     if(recv(sock, buffer, 255, 0) < 1){
         std::cout << "Muur disconnected from socket: " << sock << std::endl;
         close(sock);
-        return false;
+        return;
     }
 
     try {
@@ -66,17 +66,22 @@ bool Muur::updateStatus()
     catch(json::exception& e){
         std::cout << "Parsing error at Muur on socket " << sock << std::endl;
     }
-    return true;
 }
 
 void Muur::LCDdimmen()
 {
-    sendMsg("dimmen\r");
+    char buff[256];
+    memset(buff, 0, sizeof(buff));
+    strcpy(buff, "dimmen\r");
+    sendMsg(buff);
 }
 
 void Muur::LCDdoorlaten()
 {
-    sendMsg("doorlaten\r");
+    char buff[256];
+    memset(buff, 0, sizeof(buff));
+    strcpy(buff, "doorlaten\r");
+    sendMsg(buff);
 }
 
 
@@ -88,7 +93,10 @@ void Muur::RGBdimmen()
     string str = p.str();
     char* tempc = (char*) str.c_str();
 
-    sendMsg(tempc);
+    char buff[256];
+    memset(buff, 0, sizeof(buff));
+    strcpy(buff, tempc);
+    sendMsg(buff);
 
     if (pot == 0){
         RGBuit();
@@ -100,15 +108,24 @@ void Muur::RGBdimmen()
 
 void Muur::RGBaan()
 {
-    sendMsg("RGBaan\r");
+    char buff[256];
+    memset(buff, 0, sizeof(buff));
+    strcpy(buff, "RGBaan\r");
+    sendMsg(buff);
 }
 
 void Muur::RGBuit()
 {
-    sendMsg("RGBuit\r");
+    char buff[256];
+    memset(buff, 0, sizeof(buff));
+    strcpy(buff, "RGBuit\r");
+    sendMsg(buff);
 }
 
 void Muur::RGBdisco()
 {
-    sendMsg("Disco\r");
+    char buff[256];
+    memset(buff, 0, sizeof(buff));
+    strcpy(buff, "Disco\r");
+    sendMsg(buff);
 }
