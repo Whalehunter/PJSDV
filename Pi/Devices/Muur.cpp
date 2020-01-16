@@ -107,7 +107,8 @@ const char * Muur::arduinoStatus() {
         msg[name] = lampen[i].getKleur();
     }
     msg["S"] = raam;
-    return (msg.dump()+"\r").c_str();
+    std::string aa = msg.dump();
+    return (aa+"\r").c_str();
 }
 
 void Muur::LCDdimmen()
