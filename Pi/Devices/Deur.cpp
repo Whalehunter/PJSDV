@@ -47,13 +47,13 @@ void Deur::operator()()
             deurBelUit();
         }
 
-        if (ledBuiten == 1 && ((std::clock() - timer) / (double) CLOCKS_PER_SEC) >= 5.0) {
+        if (ledBuiten == 1 && ((std::clock() - timer) / (double) CLOCKS_PER_SEC) >= 30.0) {
             buitenLampUit();
         }
 
         if (noodKnipper == 1 && ((std::clock() - knipperTimer) / (double) CLOCKS_PER_SEC) >= 1.0) {
             if(ledBinnen){
-                binnenLampUit(true); 
+                binnenLampUit(true);
                 knipperTimer = std::clock();
             }
             else if (!ledBinnen){
