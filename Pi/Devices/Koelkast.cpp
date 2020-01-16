@@ -68,17 +68,17 @@ void Koelkast::operator()(){
 	std::cout << "Connection closed on socket " << sock << std::endl;
 }
 
-json Koelkast::getStatus(){
+json Koelkast::getStatus() {
     json koelk;
-    koelk["Koelkast"] = {{"Deur", koelkastDeur}, {"Koelelement", }, {"m1", NTC1}, {"m2", NTC2}};
+    koelk["Koelkast"] = {{"Deur", koelkastDeur}, {"Koelelement", koelelement}, {"m1", NTC1}, {"m2", NTC2}};
     return koelk;
 }
 
-void Koelkast::disableKoelAlarm(){
+void Koelkast::disableKoelAlarm() {
 	koelAlarm = 0;
 }
 
-void Koelkast::fanAan(){
+void Koelkast::fanAan() {
 	char buffer[256];
 	memset(buffer, 0, sizeof(buffer));
 	strcpy(buffer, "fanAan\r");
