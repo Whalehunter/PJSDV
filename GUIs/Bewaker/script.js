@@ -1,6 +1,6 @@
 // Bij page reload alle ajax requests cancellen, zodat de pagina een beetje snel verversen kan.
 var msgs = [];
-APPARATEN = '-sdfzk';
+APPARATEN = '-sdfzky';
 window.addEventListener('beforeunload', ()=>{
     msgs.forEach((req)=>{
         req.abort();
@@ -88,10 +88,13 @@ $(document).ready(()=>{
         onUnchecked:()=>{msg('ds',(data)=>{console.log(data)})}
     });
 
-    $('.bed .alarm .checkbox').checkbox();
+    /* BED */
     $('.bed .lamp .checkbox').checkbox({
-        onChange:()=>{}
+        onChecked:()=>{msg('yla',(data)=>{if(!data.success)console.log(data)})},
+        onUnchecked:()=>{msg('ylu',(data)=>{console.log(data)})}
     });
+
+    $('.bed .message .close').click(()=>{$('.bed .message').hide()});
 
     /* MUUR */
     $('.muur .lamp .checkbox').checkbox();
@@ -105,6 +108,8 @@ $(document).ready(()=>{
         if (!data) {
             return;
         }
+
+        inbraak = {};
 
         data.forEach((key)=>{
             /* SCHEMERLAMP */
@@ -126,6 +131,8 @@ $(document).ready(()=>{
                     sHelderheid = s.helderheid + ' %';
                 }
                 $('.schemerlamp-helderheid').text(sHelderheid);
+
+                inbraak.schemerlamp = s.Beweging;
             }
 
             /* STOEL */
@@ -232,7 +239,32 @@ $(document).ready(()=>{
                 setCheckbox('.deur '+deur, c);
             }
 
+            /* BED */
+            if (key.Bed) {
+                let b = key.Bed;
+
+                if (b.Lamp) {
+                    $('.bed .lamp .checkbox').checkbox('set checked');
+                } else {
+                    $('.bed .lamp .checkbox').checkbox('set unchecked');
+                }
+
+                if (b.knop) {
+                    $('.bed .knop .checkbox').checkbox('set checked');
+                } else {
+                    $('.bed .knop .checkbox').checkbox('set unchecked');
+                }
+
+                $('.bed .plek span').text(b.drukSensor);
+                inbraak.bed = b.drukSensor;
+
+            }
+
         });
+
+        if (inbraak.bed === "Bezet" && inbraak.schemerlamp === 1) {
+            $('.bed .message').show();
+        }
 
         setTimeout(()=>{msg(APPARATEN, updateElements)}, 100);
     }

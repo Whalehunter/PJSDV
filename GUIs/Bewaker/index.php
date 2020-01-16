@@ -242,17 +242,22 @@
                     <input type="checkbox">
                   </div>
                 </div>
-                <div class="column alarm">
-                  <p><b>Alarm</b></p>
-                  <div class="ui fitted toggle checkbox">
-                    <input type="checkbox">
+                <div class="column knop">
+                  <p><b>Knop</b></p>
+                  <div class="ui fitted slider checkbox">
+                    <input type="checkbox" disabled="disabled">
                   </div>
                 </div>
-                <div class="column">
+                <div class="column plek">
                   <p><b>Plek</b></p>
-                  <p>Bezet</p>
+                  <p><span></span></p>
                 </div>
               </div>
+            </div>
+            <div class="ui hidden warning message">
+                <i class="close icon"></i>
+                <div class="header">INBRAAK ALARM!!!</div>
+                <p>Er is mogelijk een inbraak gepleegd</p>
             </div>
           </div>
         </div>
