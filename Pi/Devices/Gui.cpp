@@ -2,6 +2,7 @@
 #include "Deur.hpp"
 #include "Zuil.hpp"
 #include "Schemerlamp.hpp"
+#include "Stoel.hpp"
 #include <string>
 
 using json = nlohmann::json;
@@ -37,6 +38,24 @@ void Gui::operator()()
                 }
             sendMsg(deviceStatus.dump().c_str());
 
+        }
+
+        else if (*p == 'z' && a->devices.count(*p)) {
+            Stoel * stoel = dynamic_cast<Stoel*>(a->devices.find(*p++)->second);
+
+            if (*p == 't') {    // trillen
+                if (*(++p) == 'a') {
+                    stoel->trilAan();
+                } else {
+                    stoel->trilUit();
+                }
+            } else if ('l') {   // lamp
+                if (*(++p) == 'a') {
+                    stoel->ledAan();
+                } else {
+                    stoel->ledUit();
+                }
+            }
         }
 
         else if(*p == 'd' && a->devices.count(*p)) {
