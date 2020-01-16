@@ -142,19 +142,27 @@
               <div class="ui divided three column grid">
                 <div class="column deur">
                   <p><b>Deur</b></p>
+                  <p><span></span></p>
+                </div>
+                <div class="column koeler">
+                  <p><b>Koeler</b></p>
                   <div class="ui fitted slider disabled checkbox">
                     <input name="" type="checkbox" value=""/>
                   </div>
                 </div>
-                <div class="column koeler">
-                  <p><b>Koeler</b></p>
-                  <div class="ui fitted toggle checkbox">
-                    <input name="" type="checkbox" value=""/>
-                  </div>
+                <div class="column fan">
+                    <p><b>Fan</b></p>
+                    <div class="ui fitted slider disabled checkbox">
+                        <input name="" type="checkbox" value=""/>
+                    </div>
                 </div>
                 <div class="column">
-                  <p><b>Temperatuur</b></p>
-                  <p><i style="color:#8b0000" class="fitted large thermometer half icon"></i> <span id="fridge-temp">15</span>&#8451;</p>
+                  <p><b>NTC Binnen</b></p>
+                  <p><i style="color:#8b0000" class="fitted large thermometer half icon"></i> <span id="fridge-temp-2">15</span>&#8451;</p>
+                </div>
+                <div class="column">
+                  <p><b>NTC Buiten</b></p>
+                  <p><i style="color:#8b0000" class="fitted large thermometer half icon"></i> <span id="fridge-temp-1">15</span>&#8451;</p>
                 </div>
               </div>
             </div>

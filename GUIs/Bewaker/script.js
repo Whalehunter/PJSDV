@@ -146,6 +146,31 @@ $(document).ready(()=>{
                 $('.zuil .gasmelder-waarde').text(z.Gasmeter);
             }
 
+            /* KOELKAST */
+            if (key.Koelkast) {
+                let k = key.Koelkast;
+                if (k.Deur) {
+                    $('.koelkast .deur span').text("Dicht");
+                } else {
+                    $('.koelkast .deur span').text("Open");
+                }
+
+                if (k.Koelelement) {
+                    $('.koelkast .koeler .checkbox').checkbox('set checked');
+                } else {
+                    $('.koelkast .koeler .checkbox').checkbox('set unchecked');
+                }
+
+                if (k.Fan) {
+                    $('.koelkast .fan .checkbox').checkbox('set checked');
+                } else {
+                    $('.koelkast .fan .checkbox').checkbox('set unchecked');
+                }
+
+                $('#fridge-temp-2').text(k.m1);
+                $('#fridge-temp-1').text(k.m2);
+            }
+
             /* DEUR */
             if (key.Deur) {
                 let buitenKnop = '.outside.switch', binnenKnop = '.inside.switch', buitenLed = '.outside.lamp', binnenLed = '.inside.lamp', deur = '.deur';
@@ -173,7 +198,7 @@ $(document).ready(()=>{
 
         });
 
-        setTimeout(()=>{msg('-dsf', updateElements)}, 100);
+        setTimeout(()=>{msg('-dsfk', updateElements)}, 100);
     }
 
     function setCheckbox(where, action) {
