@@ -4,6 +4,7 @@
 #include "Schemerlamp.hpp"
 #include "Stoel.hpp"
 #include "Bed.hpp"
+#include "Muur.hpp"
 #include <string>
 
 using json = nlohmann::json;
@@ -115,6 +116,14 @@ void Gui::operator()()
             if (*p == 'l') {
                 if (*(++p) == 'a') bed->ledAan();
                 else bed->ledUit();
+            }
+        }
+
+        else if (*p == 'm' && a->devices.count(*p)) {
+            Muur * muur = dynamic_cast<Muur *>(a->devices.find(*p++)->second);
+            if (*p == 'd') {
+                if (*(++p) == 'a') muur->setDisco(true);
+                else muur->setDisco(false);
             }
         }
 

@@ -14,7 +14,7 @@
 #define PASS      "aanwezig2"
 #define HOST      "192.168.4.1"
 
-#define BUFSIZE  100
+#define BUFSIZE  300
 
 /* Leest LDR en POT-meter waardes op */
 void getAnalog(unsigned int &ldr, unsigned int &pot) {
