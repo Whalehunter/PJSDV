@@ -148,8 +148,10 @@ $(document).ready(()=>{
                 }
                 if (s.Drukplaat) {
                     $('.stoel .plek span').text("Bezet");
+                    $('.stoel .trillen input').removeAttr('disabled');
                 } else {
                     $('.stoel .plek span').text("Beschikbaar");
+                    $('.stoel .trillen input').attr('disabled', 'disabled');
                 }
             }
 
