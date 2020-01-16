@@ -26,6 +26,15 @@ public:
             return rgb->brightness;
         return 0;
     }
+    void updateDiscoColor() {
+        if (currentDiscoColor == "rood") {
+            currentDiscoColor = "groen";
+        } else if (currentDiscoColor == "groen") {
+            currentDiscoColor = "blauw";
+        } else {
+            currentDiscoColor = "rood";
+        }
+    }
     void setBrightness(int pot) {
         rgb->brightness = pot;
     }

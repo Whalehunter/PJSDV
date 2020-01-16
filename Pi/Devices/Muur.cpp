@@ -41,8 +41,8 @@ void Muur::operator ()()
             }
 
         }
-        /*Sends value of pot to WEMOS*/
-        RGBdimmen();
+
+        sendMsg(arduinoStatus().c_str());
     }
 }
 
@@ -83,13 +83,11 @@ bool Muur::updateStatus()
         for (int i=0;i<LAMPEN;i++) {
             msg["LED"+std::to_string(i)] = lampen[i].getKleur(isDisco());
         }
-        msg["S"] = raam;
 
         if (isDisco() && ((std::clock() - discoTimer) / (double) CLOCKS_PER_SEC) >= 0.5) {
             discoTimer = std::clock();
         }
 
-        sendMsg((msg.dump()+"\r").c_str());
     }
     catch(json::exception& e){
         std::cout << "Parsing error: " << e.what() << std::endl;
@@ -102,37 +100,24 @@ std::string Muur::arduinoStatus() {
     json msg = json::object();
     for (int i=0;i<LAMPEN;i++) {
         std::string name = "LED" + std::to_string(i);
-        msg[name] = lampen[i].getKleur();
+        msg[name] = lampen[i].getKleur(isDisco());
     }
     msg["S"] = raam;
-    std::string aa = msg.dump();
-    return (aa+"\r");
+    return (msg.dump()+"\r");
 }
 
 void Muur::LCDdimmen()
 {
     raam = 1;
-    sendMsg(arduinoStatus().c_str());
 }
 
 void Muur::LCDdoorlaten()
 {
     raam = 0;
-    sendMsg(arduinoStatus().c_str());
 }
 
 bool Muur::isDisco() {
     return disco;
-}
-
-void Muur::RGBdimmen()
-{
-    if (pot == 0){
-        RGBuit();
-    }
-    else {
-        RGBaan();
-    }
 }
 
 void Muur::RGBaan()
@@ -140,7 +125,6 @@ void Muur::RGBaan()
     for (int i=0;i<LAMPEN;i++) {
         lampen[i].aan();
     }
-    sendMsg(arduinoStatus().c_str());
 }
 
 void Muur::RGBuit()
@@ -148,7 +132,6 @@ void Muur::RGBuit()
     for (int i=0;i<LAMPEN;i++) {
         lampen[i].uit();
     }
-    sendMsg(arduinoStatus().c_str());
 }
 
 void Muur::setDisco(bool run)
