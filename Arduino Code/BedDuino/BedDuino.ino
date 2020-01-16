@@ -40,8 +40,8 @@ void setup() {
 }
 
 void loop() {
+  LedAanUit(0);
   WiFiClient client;
-
   
   Serial.printf("\n[Connecting to %s ... ", host);
   if (client.connect(host, port))
@@ -120,14 +120,13 @@ int leesDruksensor(){
   Wire.requestFrom(0x36, 4);   
   unsigned int anin0 = Wire.read()&0x03;  
   anin0=anin0<<8;
-  return anin0;
-//  if (anin0 > 100){
-//    knop = 1;
-//  }
-//  else {
-//    knop = 0;
-//  }
-//  return knop;
+  if (anin0 > 100){
+    knop = 1;
+  }
+  else {
+    knop = 0;
+  }
+  return knop;
 }
 
 int leesKnop(){
