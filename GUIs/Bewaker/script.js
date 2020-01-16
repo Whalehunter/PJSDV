@@ -1,5 +1,6 @@
 // Bij page reload alle ajax requests cancellen, zodat de pagina een beetje snel verversen kan.
 var msgs = [];
+APPARATEN = '-sdfzky';
 window.addEventListener('beforeunload', ()=>{
     msgs.forEach((req)=>{
         req.abort();
@@ -34,12 +35,16 @@ $(document).ready(()=>{
         onUnchecked:()=>{msg('sdu',afhandel)}
     });
 
-    $('.schemerlamp .brightness .button').click(()=>{
-        // Respond op buttons met data attribute
+    /* STOEL */
+    $('.stoel .trillen .checkbox').checkbox({
+        onChecked:()=>{msg('zta',(data)=>{if(!data.success)console.log(data)})},
+        onUnchecked:()=>{msg('ztu',(data)=>{console.log(data)})}
     });
 
-    /* STOEL */
-    $('.stoel .trillen .checkbox').checkbox();
+    $('.stoel .lamp .checkbox').checkbox({
+        onChecked:()=>{msg('zla',(data)=>{if(!data.success)console.log(data)})},
+        onUnchecked:()=>{msg('zlu',(data)=>{console.log(data)})}
+    })
 
     /* ZUIL */
     $('.zuil .zoemer .checkbox').checkbox({
@@ -79,23 +84,28 @@ $(document).ready(()=>{
         onUnchecked:()=>{msg('ds',(data)=>{console.log(data)})}
     });
 
-    $('.bed .alarm .checkbox').checkbox();
+    /* BED */
     $('.bed .lamp .checkbox').checkbox({
-        onChange:()=>{}
+        onChecked:()=>{msg('yla',(data)=>{if(!data.success)console.log(data)})},
+        onUnchecked:()=>{msg('ylu',(data)=>{console.log(data)})}
     });
+
+    $('.bed .message .close').click(()=>{$('.bed .message').hide()});
 
     /* MUUR */
     $('.muur .lamp .checkbox').checkbox();
 
 
     /* Update interval */
-    msg('-dsf', updateElements);
+    msg(APPARATEN, updateElements);
 
     function updateElements(data) {
 
         if (!data) {
             return;
         }
+
+        inbraak = {};
 
         data.forEach((key)=>{
             /* SCHEMERLAMP */
@@ -117,6 +127,35 @@ $(document).ready(()=>{
                     sHelderheid = s.helderheid + ' %';
                 }
                 $('.schemerlamp-helderheid').text(sHelderheid);
+
+                inbraak.schemerlamp = s.Beweging;
+            }
+
+            /* STOEL */
+            if (key.Stoel) {
+                let s = key.Stoel;
+                if (s.Knop) {
+                    $('.stoel .knop .checkbox').checkbox('set checked');
+                } else {
+                    $('.stoel .knop .checkbox').checkbox('set unchecked');
+                }
+                if (s.Lamp) {
+                    $('.stoel .lamp .checkbox').checkbox('set checked');
+                } else {
+                    $('.stoel .lamp .checkbox').checkbox('set unchecked');
+                }
+                if (s.Massage) {
+                    $('.stoel .trillen .checkbox').checkbox('set checked');
+                } else {
+                    $('.stoel .trillen .checkbox').checkbox('set unchecked');
+                }
+                if (s.Drukplaat) {
+                    $('.stoel .plek span').text("Bezet");
+                    $('.stoel .trillen input').removeAttr('disabled');
+                } else {
+                    $('.stoel .plek span').text("Beschikbaar");
+                    $('.stoel .trillen input').attr('disabled', 'disabled');
+                }
             }
 
             /* ZUIL */
@@ -146,6 +185,31 @@ $(document).ready(()=>{
                 $('.zuil .gasmelder-waarde').text(z.Gasmeter);
             }
 
+            /* KOELKAST */
+            if (key.Koelkast) {
+                let k = key.Koelkast;
+                if (k.Deur) {
+                    $('.koelkast .deur span').text("Dicht");
+                } else {
+                    $('.koelkast .deur span').text("Open");
+                }
+
+                if (k.Koelelement) {
+                    $('.koelkast .koeler .checkbox').checkbox('set checked');
+                } else {
+                    $('.koelkast .koeler .checkbox').checkbox('set unchecked');
+                }
+
+                if (k.Fan) {
+                    $('.koelkast .fan .checkbox').checkbox('set checked');
+                } else {
+                    $('.koelkast .fan .checkbox').checkbox('set unchecked');
+                }
+
+                $('#fridge-temp-2').text(k.m1);
+                $('#fridge-temp-1').text(k.m2);
+            }
+
             /* DEUR */
             if (key.Deur) {
                 let buitenKnop = '.outside.switch', binnenKnop = '.inside.switch', buitenLed = '.outside.lamp', binnenLed = '.inside.lamp', deur = '.deur';
@@ -154,8 +218,12 @@ $(document).ready(()=>{
                 if (!d.Binnenknop) c = 'set unchecked';
                 setCheckbox('.deur '+binnenKnop, c);
 
-                if(d.Buitenknop) c = 'set checked';
-                else c = 'set unchecked';
+                if(d.Buitenknop) {
+                    c = 'set checked';
+                    $('.deur .info.message').show();
+                } else {
+                    c = 'set unchecked';
+                }
                 setCheckbox('.deur '+buitenKnop, c);
 
                 if (d.Binnenled) c = 'set checked';
@@ -166,14 +234,41 @@ $(document).ready(()=>{
                 else c = 'set unchecked';
                 setCheckbox('.deur '+buitenLed, c);
 
-                if (d.Deur == 'open') c = 'set checked';
-                else c = 'set unchecked';
+                if (d.Deur == 'open') {
+                    c = 'set checked';
+                    $('.deur .info.message').hide();
+                } else c = 'set unchecked';
                 setCheckbox('.deur '+deur, c);
+            }
+
+            /* BED */
+            if (key.Bed) {
+                let b = key.Bed;
+
+                if (b.Lamp) {
+                    $('.bed .lamp .checkbox').checkbox('set checked');
+                } else {
+                    $('.bed .lamp .checkbox').checkbox('set unchecked');
+                }
+
+                if (b.knop) {
+                    $('.bed .knop .checkbox').checkbox('set checked');
+                } else {
+                    $('.bed .knop .checkbox').checkbox('set unchecked');
+                }
+
+                $('.bed .plek span').text(b.drukSensor);
+                inbraak.bed = b.drukSensor;
+
             }
 
         });
 
-        setTimeout(()=>{msg('-dsf', updateElements)}, 100);
+        if (inbraak.bed === "Bezet" && inbraak.schemerlamp === 1) {
+            $('.bed .message').show();
+        }
+
+        setTimeout(()=>{msg(APPARATEN, updateElements)}, 100);
     }
 
     function setCheckbox(where, action) {

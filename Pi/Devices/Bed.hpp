@@ -10,10 +10,12 @@ class Bed: public Device
         ~Bed();
 
         void operator()();
-        void updateStatus();
+        bool updateStatus();
         nlohmann::json getStatus();
         void updateWaardes();
         void ToggleLed(int);
+        void ledAan();
+        void ledUit();
         int getDruksensor();
     private:
         enum bedStatus {UIT, AAN};

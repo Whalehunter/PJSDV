@@ -15,19 +15,19 @@ void Bed::operator()()
     int knopPrev = 0;
 
     while(1){
-        /*Get and store JSON values*/
-        updateStatus();
+        /*Get and store JSON values, break from while Bed is gone*/
+        if(!updateStatus()) break;
 
         /*State Machine*/
         switch(state){
             case AAN:
-                if (knop == 1 && knopPrev != knop){
-                    ToggleLed(0);
+                if (knop && !knopPrev){
+                    ledUit();
                 }
                 break;
             case UIT:
-                if (knop == 1 && knopPrev != knop){
-                    ToggleLed(1);
+                if (knop && !knopPrev){
+                    ledAan();
                 }
         }
         knopPrev = knop;
@@ -37,21 +37,18 @@ void Bed::operator()()
 nlohmann::json Bed::getStatus()
 {
     json bedData;
-    bedData["Bed"] = {{"Bed", state ? "aan" : "uit"}, {"knop", knop}, {"drukSensor", druksensor}};
+    bedData["Bed"] = {{"Lamp", state}, {"knop", knop}, {"drukSensor", druksensor ? "Bezet" : "Beschikbaar"}};
     return bedData;
 }
 
-void Bed::updateStatus()
+bool Bed::updateStatus()
 {
-    char buffer[256];
-
+    char buffer[256] = {0};
     sendMsg("getStatus\r");
-
-    memset(buffer, 0, sizeof(buffer));
     if(recv(sock, buffer, 255, 0) < 1){
         std::cout << "Bed disconnected from socket: " << sock << std::endl;
         close(sock);
-        return;
+        return false;
     }
 
     try {
@@ -63,22 +60,25 @@ void Bed::updateStatus()
     catch(json::exception& e) {
         std::cout << "Parsing error at Bed on socket " << sock << std::endl;
     }
+    return true;
 }
 
 void Bed::ToggleLed(int i){
-    if(i==1){
-        char buff[256];
-        memset(buff, 0, sizeof(buff));
-        strcpy(buff, "lampAan\r");
-        sendMsg(buff);
-        state = AAN;
-    }else if (i == 0){
-        char buff[256];
-        memset(buff, 0, sizeof(buff));
-        strcpy(buff, "lampUit\r");
-        sendMsg(buff);
-        state = UIT;
+    if (i) {
+        ledAan();
+    } else {
+        ledUit();
     }
+}
+
+void Bed::ledAan() {
+    sendMsg("lampAan\r");
+    state = AAN;
+}
+
+void Bed::ledUit() {
+    sendMsg("lampUit\r");
+    state = UIT;
 }
 
 int Bed::getDruksensor(){

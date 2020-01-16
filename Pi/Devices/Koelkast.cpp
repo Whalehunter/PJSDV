@@ -62,21 +62,23 @@ void Koelkast::operator()(){
 			fanAan();
 
 		}
-		std::cout << openTimer << std::endl;
+	//	std::cout << openTimer << std::endl;
 	}
 	close(sock);
 	std::cout << "Connection closed on socket " << sock << std::endl;
 }
 
-json Koelkast::getStatus(){
-    return knopValue;
+json Koelkast::getStatus() {
+    json koelk;
+    koelk["Koelkast"] = {{"Deur", koelkastDeur}, {"Koelelement", koelelement}, {"m1", NTC1}, {"m2", NTC2}, {"Fan", fan}};
+    return koelk;
 }
 
-void Koelkast::disableKoelAlarm(){
+void Koelkast::disableKoelAlarm() {
 	koelAlarm = 0;
 }
 
-void Koelkast::fanAan(){
+void Koelkast::fanAan() {
 	char buffer[256];
 	memset(buffer, 0, sizeof(buffer));
 	strcpy(buffer, "fanAan\r");
@@ -95,6 +97,8 @@ void Koelkast::peltierAan(){
 	memset(buffer, 0, sizeof(buffer));
 	strcpy(buffer, "peltierAan\r");
 	sendMsg(buffer);
+
+        koelelement = 1;
 }
 
 void Koelkast::peltierUit(){
@@ -102,4 +106,6 @@ void Koelkast::peltierUit(){
 	memset(buffer, 0, sizeof(buffer));
 	strcpy(buffer, "peltierUit\r");
 	sendMsg(buffer);
+
+        koelelement = 0;
 }
