@@ -95,7 +95,9 @@ void loop(void) {
     line = getLine(client);
     if (line == "ID?"){
       client.print(String("m")); /* Identificeert zichzelf als 'm' (Muur) */
-    } else if (line == "OK") {
+    } 
+    line = getLine(client);
+    if (line == "OK") {
       Serial.println("Verified");
 
       while (client.connected() || client.available()) {
@@ -103,10 +105,10 @@ void loop(void) {
         Serial.println(line);
 
         if (line == "getStatus") {
-          StaticJsonDocument<100> data;
+          StaticJsonDocument<300> data;
           for (int i=0;i<NUMPIXELS;i++){
             int r, g, b;
-            StaticJsonDocument<100> doc;
+            StaticJsonDocument<300> doc;
             JsonObject obj = doc.to<JsonObject>();
             px(i,r,g,b);
             obj["r"] = r;
