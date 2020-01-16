@@ -95,7 +95,7 @@ void loop(void) {
     line = getLine(client);
     if (line == "ID?"){
       client.print(String("m")); /* Identificeert zichzelf als 'm' (Muur) */
-    } 
+    }
     line = getLine(client);
     if (line == "OK") {
       Serial.println("Verified");
@@ -122,7 +122,7 @@ void loop(void) {
           data["ldr"] = ldr;
           data["pot"] = pot;
 
-          char buffer[100];
+          char buffer[255];
 
           serializeJson(data, buffer);
           Serial.println(buffer);
