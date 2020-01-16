@@ -115,6 +115,7 @@ void Gui::operator()()
             if (*p == 'l') {
                 if (*(++p) == 'a') bed->ledAan();
                 else bed->ledUit();
+            }
         }
 
         // sendMsg(buffer);
