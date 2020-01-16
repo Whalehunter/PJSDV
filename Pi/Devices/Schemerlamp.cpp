@@ -31,7 +31,7 @@ void Schemerlamp::operator()()
         }
 
         /* als 5 min voorbij zonder beweging -> disco uit */
-        if(isDisco() && ((std::clock() - activityTimer) / (double) COCKS_PER_SEC) >= 5) {
+        if(isDisco() && ((std::clock() - activityTimer) / (double) COCKS_PER_SEC) >= 300) {
             setDisco(false);
             activityTimer = 0;
         }
