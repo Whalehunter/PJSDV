@@ -79,7 +79,7 @@ bool Muur::updateStatus()
             lampen[i].setBrightness(pot/4);
             json o = j_muur.at(std::to_string(i));
             lampen[i].setKleur(o.at("r"), o.at("g"), o.at("b"));
-            sendMsg(arduinoStatus());
+            sendMsg(arduinoStatus().c_str());
         }
 
         if (isDisco() && ((std::clock() - discoTimer) / (double) CLOCKS_PER_SEC) >= 0.5) {
@@ -100,7 +100,7 @@ bool Muur::updateStatus()
     return true;
 }
 
-const char * Muur::arduinoStatus() {
+std::string Muur::arduinoStatus() {
     json msg = json::object();
     for (int i=0;i<LAMPEN;i++) {
         std::string name = "LED" + std::to_string(i);
@@ -108,19 +108,19 @@ const char * Muur::arduinoStatus() {
     }
     msg["S"] = raam;
     std::string aa = msg.dump();
-    return (aa+"\r").c_str();
+    return (aa+"\r");
 }
 
 void Muur::LCDdimmen()
 {
     raam = 1;
-    sendMsg(arduinoStatus());
+    sendMsg(arduinoStatus().c_str());
 }
 
 void Muur::LCDdoorlaten()
 {
     raam = 0;
-    sendMsg(arduinoStatus());
+    sendMsg(arduinoStatus().c_str());
 }
 
 bool Muur::isDisco() {
@@ -142,7 +142,7 @@ void Muur::RGBaan()
     for (int i=0;i<LAMPEN;i++) {
         lampen[i].aan();
     }
-    sendMsg(arduinoStatus());
+    sendMsg(arduinoStatus().c_str());
 }
 
 void Muur::RGBuit()
@@ -150,7 +150,7 @@ void Muur::RGBuit()
     for (int i=0;i<LAMPEN;i++) {
         lampen[i].uit();
     }
-    sendMsg(arduinoStatus());
+    sendMsg(arduinoStatus().c_str());
 }
 
 void Muur::setDisco(bool run)
@@ -159,13 +159,13 @@ void Muur::setDisco(bool run)
         for (int i=0;i<LAMPEN;i++) {
             lampen[i].setKleur(255,255,255);
         }
-        sendMsg(arduinoStatus());
+        sendMsg(arduinoStatus().c_str());
     } else if (!disco && run) {
         for (int i=0;i<LAMPEN;i++) {
             lampen[i].setKleur(0,0,0);
         }
         discoTimer = std::clock();
-        sendMsg(arduinoStatus());
+        sendMsg(arduinoStatus().c_str());
     }
     disco = run;
 }

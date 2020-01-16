@@ -32,6 +32,6 @@ public:
     void LCDdimmen();
     void LCDdoorlaten();
     int potFilter(int);
-    const char * arduinoStatus();
+    std::string arduinoStatus();
 };
 #endif
