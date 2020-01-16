@@ -37,7 +37,7 @@ void Bed::operator()()
 nlohmann::json Bed::getStatus()
 {
     json bedData;
-    bedData["Bed"] = {{"Lamp", state}, {"knop", knop}, {"drukSensor", druksensor}};
+    bedData["Bed"] = {{"Lamp", state}, {"knop", knop}, {"drukSensor", druksensor ? "Bezet" : "Beschikbaar"}};
     return bedData;
 }
 
