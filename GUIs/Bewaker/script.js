@@ -35,10 +35,6 @@ $(document).ready(()=>{
         onUnchecked:()=>{msg('sdu',afhandel)}
     });
 
-    $('.schemerlamp .brightness .button').click(()=>{
-        // Respond op buttons met data attribute
-    });
-
     /* STOEL */
     $('.stoel .trillen .checkbox').checkbox({
         onChecked:()=>{msg('zta',(data)=>{if(!data.success)console.log(data)})},
