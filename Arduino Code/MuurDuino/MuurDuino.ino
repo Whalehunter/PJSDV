@@ -108,7 +108,7 @@ void loop(void) {
         }
         else if (isValidNumber(line)){
           int temp = line.toInt();
-          if (temp >= 0 & temp <=1024){
+          if (temp >= 0 && temp <=1024){
             RGBbrightness(temp);
           }
           line = "";
@@ -136,17 +136,17 @@ void RGBstrip(int i){
   }
   else if (i==2){	//disco
     for(int a=0; a<NUMPIXELS; a++) {
-      pixels.setPixelColor(i,0,0,255);
+      pixels.setPixelColor(a,0,0,255);
       pixels.show();   // Send the updated pixel colors to the hardware
     }
     delay(500);
     for(int a=0; a<NUMPIXELS; a++) {
-      pixels.setPixelColor(i,0,255,0);
+      pixels.setPixelColor(a,0,255,0);
       pixels.show();   // Send the updated pixel colors to the hardware
     }
     delay(500);
     for(int a=0; a<NUMPIXELS; a++) {
-      pixels.setPixelColor(i,255,0,0);
+      pixels.setPixelColor(a,255,0,0);
       pixels.show();   // Send the updated pixel colors to the hardware
     }
     delay(500);
