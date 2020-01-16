@@ -59,16 +59,14 @@ nlohmann::json Muur::getStatus()
 
 bool Muur::updateStatus()
 {
-    char buffer[300] ={};
+    char buffer[400] = {0};
     sendMsg("getStatus\r");
 
-//    memset(buffer, 0, sizeof(buffer));
-    if(recv(sock, buffer, 299, 0) < 1){
+    if(recv(sock, buffer, 399, 0) < 1){
         std::cout << "Muur disconnected from socket: " << sock << std::endl;
         close(sock);
         return false;
     }
-    std::cout << buffer << std::endl;
 
     try {
         auto j_muur = json::parse(buffer);
