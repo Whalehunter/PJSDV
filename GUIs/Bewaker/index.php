@@ -217,6 +217,10 @@
                 </div>
               </div>
             </div>
+            <div class="ui hidden info message">
+                <div class="header">Deurbel</div>
+                <p>Er staat iemand voor de deur!</p>
+            </div>
           </div>
         </div>
 

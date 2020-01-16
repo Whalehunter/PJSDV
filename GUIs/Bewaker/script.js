@@ -218,8 +218,12 @@ $(document).ready(()=>{
                 if (!d.Binnenknop) c = 'set unchecked';
                 setCheckbox('.deur '+binnenKnop, c);
 
-                if(d.Buitenknop) c = 'set checked';
-                else c = 'set unchecked';
+                if(d.Buitenknop) {
+                    c = 'set checked';
+                    $('.deur .info.message').show();
+                } else {
+                    c = 'set unchecked';
+                }
                 setCheckbox('.deur '+buitenKnop, c);
 
                 if (d.Binnenled) c = 'set checked';
@@ -230,8 +234,10 @@ $(document).ready(()=>{
                 else c = 'set unchecked';
                 setCheckbox('.deur '+buitenLed, c);
 
-                if (d.Deur == 'open') c = 'set checked';
-                else c = 'set unchecked';
+                if (d.Deur == 'open') {
+                    c = 'set checked';
+                    $('.deur .info.message').hide();
+                } else c = 'set unchecked';
                 setCheckbox('.deur '+deur, c);
             }
 
