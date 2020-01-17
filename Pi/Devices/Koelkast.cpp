@@ -102,6 +102,7 @@ void Koelkast::peltierUit(){
 }
 
 float Koelkast::calculateCelsius(float i){
-	float temp = (190.0/1500.0)*i-40.0;
-	return temp;
+	//Formule gevonden op: https://www.jameco.com/Jameco/workshop/TechTip/temperature-measurement-ntc-thermistors.html
+	float C = 1.00 / (1.00 / 298.15 + 1.00 / 3380.00*(log (1023.00 / i - 1.00))) - 273.15;
+	return C;
 }
