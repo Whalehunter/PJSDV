@@ -66,7 +66,9 @@ void Koelkast::operator()(){
 }
 
 json Koelkast::getStatus(){
-    return knopValue;
+	json koelk;
+	koelk["Koelkast"] = {{"Deur", koelkastDeur}, {"Koelelement", koelelement}, {"m1", NTC1}, {"m2", NTC2}, {"Fan", fan}};
+	return koelk;
 }
 
 void Koelkast::disableKoelAlarm(){
@@ -74,31 +76,21 @@ void Koelkast::disableKoelAlarm(){
 }
 
 void Koelkast::fanAan(){
-	char buffer[256];
-	memset(buffer, 0, sizeof(buffer));
-	strcpy(buffer, "fanAan\r");
-	sendMsg(buffer);
+	sendMsg("fanAan\r");
 }
 
 void Koelkast::fanUit(){
-	char buffer[256];
-	memset(buffer, 0, sizeof(buffer));
-	strcpy(buffer, "fanUit\r");
-	sendMsg(buffer);
+	sendMsg("fanUit\r");
 }
 
 void Koelkast::peltierAan(){
-	char buffer[256];
-	memset(buffer, 0, sizeof(buffer));
-	strcpy(buffer, "peltierAan\r");
-	sendMsg(buffer);
+	sendMsg("peltierAan\r");
+	koelelement = 1;
 }
 
 void Koelkast::peltierUit(){
-	char buffer[256];
-	memset(buffer, 0, sizeof(buffer));
-	strcpy(buffer, "peltierUit\r");
-	sendMsg(buffer);
+	sendMsg("peltierUit\r");
+	koelelement = 0;
 }
 
 float Koelkast::calculateCelsius(float i){

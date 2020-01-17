@@ -26,6 +26,7 @@ class Koelkast: public Device{
 		int koelAlarm{};
 		float tempOut{};
 		float tempIn{};
+		int koelelement{};
 	public:
 		Koelkast(int, Appartement*);
 		~Koelkast();
