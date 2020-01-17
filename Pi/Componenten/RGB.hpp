@@ -38,16 +38,6 @@ public:
     void setBrightness(int pot) {
         rgb->brightness = pot;
     }
-    void setOld() {
-        old->red   = rgb->red;
-        old->green = rgb->green;
-        old->blue  = rgb->blue;
-    }
-    void getOld() {
-        rgb->red   = old->red;
-        rgb->green = old->green;
-        rgb->blue  = old->blue;
-    }
     void setKleur(int r, int g , int b) {
         rgb->red   = r;
         rgb->green = g;
@@ -55,24 +45,24 @@ public:
     }
     void uit() {
         if (isOn() && !isOff()) {
-            setOld();
-            setKleur(0,0,0);
+            setBrightness(0);
         }
     }
     void aan() {
-        if (isOff() && !isOn())
-            getOld();
+        if (isOff() && !isOn()) {
+            setBrightness(255);
+        }
     }
     nlohmann::json getKleur(bool disco = false) {
         if (!disco) return {{"R", rgb->brightness},{"G", rgb->brightness},{"B",rgb->brightness}};
         return {{"R", getDiscoColor("rood")}, {"G", getDiscoColor("groen")}, {"B", getDiscoColor("blauw")}};
     }
     bool isOn() {
-        if (rgb->red == 0 && rgb->blue == 0 && rgb->green == 0) return false;
+        if (rgb->brightness != 0) return false;
         return true;
     }
     bool isOff() {
-        if (rgb->red != 0 || rgb->blue != 0 || rgb->green != 0) return false;
+        if (rgb->brightness == 0) return false;
         return true;
     }
 };

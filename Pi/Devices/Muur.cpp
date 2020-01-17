@@ -39,7 +39,6 @@ void Muur::operator ()()
             if (a->devices.count('d')) {
                 dynamic_cast<Deur *>(a->devices.find('d')->second)->binnenLampAan();
             }
-
         }
 
         sendMsg(arduinoStatus().c_str());
@@ -70,7 +69,6 @@ bool Muur::updateStatus()
 
     try {
         auto j_muur = json::parse(buffer);
-
         ldr = j_muur.at("ldr");
         pot = j_muur.at("pot");
         for (int i=0;i<LAMPEN;i++) {
@@ -79,22 +77,18 @@ bool Muur::updateStatus()
             lampen[i].setKleur(o.at("r"), o.at("g"), o.at("b"));
         }
 
-        json msg = json::object();
-        for (int i=0;i<LAMPEN;i++) {
-            msg["LED"+std::to_string(i)] = lampen[i].getKleur(isDisco());
-        }
-
-        if (isDisco() && ((std::clock() - discoTimer) / (double) CLOCKS_PER_SEC) >= 0.5) {
-            discoTimer = std::clock();
-            for (int i = 0; i < LAMPEN; i++) {
-                lampen[i].updateDiscoColor();
-            }
-        }
-
     }
     catch(json::exception& e){
         std::cout << "Parsing error: " << e.what() << std::endl;
     }
+
+    if (isDisco() && ((std::clock() - discoTimer) / (double) CLOCKS_PER_SEC) >= 0.5) {
+        discoTimer = std::clock();
+        for (int i = 0; i < LAMPEN; i++) {
+            lampen[i].updateDiscoColor();
+        }
+    }
+
 
     return true;
 }
