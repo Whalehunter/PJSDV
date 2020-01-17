@@ -34,7 +34,7 @@ void Muur::operator ()()
                 dynamic_cast<Deur *>(a->devices.find('d')->second)->binnenLampUit();
             }
         }
-        else {
+        else if (!ldrOverride){
             LCDdimmen();
             if (a->devices.count('d')) {
                 dynamic_cast<Deur *>(a->devices.find('d')->second)->binnenLampAan();
@@ -72,11 +72,12 @@ bool Muur::updateStatus()
         ldr = j_muur.at("ldr");
         pot = j_muur.at("pot");
         for (int i=0;i<LAMPEN;i++) {
-            int currentPot = lampen[i].getBrightness();
+            int currentPot = lampen[i].rgb->polPot;
             if (currentPot - pot < 10 || currentPot - pot > -10)
                 lampen[i].setBrightness(pot/4);
             json o = j_muur.at(std::to_string(i));
             lampen[i].setKleur(o.at("r"), o.at("g"), o.at("b"));
+            lampen[i].rgb->polPot = pot;
         }
 
     }

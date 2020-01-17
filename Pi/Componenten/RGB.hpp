@@ -11,6 +11,7 @@ public:
     int green;
     int blue;
     int brightness = 255;
+    int polPot;
     RGB(int r,int g,int b):red(r),green(g),blue(b){};
 };
 
@@ -61,11 +62,11 @@ public:
         return {{"R", getDiscoColor("rood")}, {"G", getDiscoColor("groen")}, {"B", getDiscoColor("blauw")}};
     }
     bool isOn() {
-        if (rgb->brightness != 0) return false;
+        if (rgb->brightness == 0) return false;
         return true;
     }
     bool isOff() {
-        if (rgb->brightness == 0) return false;
+        if (rgb->brightness != 0) return false;
         return true;
     }
 };
