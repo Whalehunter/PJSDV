@@ -45,11 +45,7 @@ void Koelkast::operator()(){
 		}
 
 		if ((koelkastDeur == 0) && (((std::clock() - openTimer) / (double) CLOCKS_PER_SEC) <= 5.0)){
-			peltierUit();/*
-			if (((std::clock() - openTimer) / (double) CLOCKS_PER_SEC) == 0.0){
-				openTimer = std::clock();
-
-			}*/
+			peltierUit();
 		}
 		else if ((koelkastDeur == 0) && (((std::clock() - openTimer) / (double) CLOCKS_PER_SEC) >= 5.0)){
 			koelAlarm = 1;
@@ -62,50 +58,43 @@ void Koelkast::operator()(){
 			fanAan();
 
 		}
-	//	std::cout << openTimer << std::endl;
+		tempOut = calculateCelsius(NTC1);
+		tempIn = calculateCelsius(NTC2);
 	}
 	close(sock);
 	std::cout << "Connection closed on socket " << sock << std::endl;
 }
 
-json Koelkast::getStatus() {
-    json koelk;
-    koelk["Koelkast"] = {{"Deur", koelkastDeur}, {"Koelelement", koelelement}, {"m1", NTC1}, {"m2", NTC2}, {"Fan", fan}};
-    return koelk;
+json Koelkast::getStatus(){
+	json koelk;
+	koelk["Koelkast"] = {{"Deur", koelkastDeur}, {"Koelelement", koelelement}, {"m1", tempOut}, {"m2", tempIn}, {"Fan", fan}};
+	return koelk;
 }
 
-void Koelkast::disableKoelAlarm() {
+void Koelkast::disableKoelAlarm(){
 	koelAlarm = 0;
 }
 
-void Koelkast::fanAan() {
-	char buffer[256];
-	memset(buffer, 0, sizeof(buffer));
-	strcpy(buffer, "fanAan\r");
-	sendMsg(buffer);
+void Koelkast::fanAan(){
+	sendMsg("fanAan\r");
 }
 
 void Koelkast::fanUit(){
-	char buffer[256];
-	memset(buffer, 0, sizeof(buffer));
-	strcpy(buffer, "fanUit\r");
-	sendMsg(buffer);
+	sendMsg("fanUit\r");
 }
 
 void Koelkast::peltierAan(){
-	char buffer[256];
-	memset(buffer, 0, sizeof(buffer));
-	strcpy(buffer, "peltierAan\r");
-	sendMsg(buffer);
-
-        koelelement = 1;
+	sendMsg("peltierAan\r");
+	koelelement = 1;
 }
 
 void Koelkast::peltierUit(){
-	char buffer[256];
-	memset(buffer, 0, sizeof(buffer));
-	strcpy(buffer, "peltierUit\r");
-	sendMsg(buffer);
+	sendMsg("peltierUit\r");
+	koelelement = 0;
+}
 
-        koelelement = 0;
+float Koelkast::calculateCelsius(float i){
+	//Formule gevonden op: https://www.jameco.com/Jameco/workshop/TechTip/temperature-measurement-ntc-thermistors.html
+	float C = 1.00 / (1.00 / 298.15 + 1.00 / 3380.00*(log (1023.00 / i - 1.00))) - 273.15;
+	return C;
 }

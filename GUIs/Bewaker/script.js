@@ -163,8 +163,6 @@ $(document).ready(()=>{
                 let z = key.Zuil, c = 'set checked';
                 if (!z.Zoemer) c = 'set unchecked';
                 $('.zuil .zoemer .checkbox').checkbox(c);
-                if (!z.Lamp) c = 'set unchecked'; else c = 'set checked';
-                $('.zuil .lamp .checkbox').checkbox(c);
                 if (!z.Brandalarm) c = 'set unchecked'; else c = 'set checked';
                 $('.zuil .brandalarm .checkbox').checkbox(c);
                 if (!z.Noodalarm) c = 'set unchecked'; else c = 'set checked';
@@ -259,7 +257,6 @@ $(document).ready(()=>{
 
                 $('.bed .plek span').text(b.drukSensor);
                 inbraak.bed = b.drukSensor;
-
             }
 
         });
