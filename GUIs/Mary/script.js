@@ -133,9 +133,20 @@ $(document).ready(()=>{
 
             if (d.Bed) $('.bed .lamp .checkbox').checkbox(d.Bed.Lamp?c:u);
 
+            if (d.Muur) {
+                let m = d.Muur;
+                $('.muur .lamp .checkbox').checkbox(isAan(m.LED0)?c:u);
+                $('.muur .screen .checkbox').checkbox(m.Raam?c:u);
+            }
 
         });
 
         setTimeout(()=>{msg(APPARATEN, updateElements)}, 100);
     }
 });
+
+function isAan(led){
+    if (!led.R && !led.B && !led.G)
+        return false;
+    return true;
+}
