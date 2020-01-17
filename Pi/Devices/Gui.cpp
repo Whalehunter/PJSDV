@@ -126,6 +126,14 @@ void Gui::operator()()
                 if (*(++p) == 'a') muur->setDisco(true);
                 else muur->setDisco(false);
             }
+            else if (*p == 'l') {
+                if (*(++p) == 'a') muur->RGBaan();
+                else muur->RGBuit();
+            }
+            else if (*p == 'r') {
+                if (*(++p) == 'a') muur->LCDdimmen();
+                else muur->LCDdoorlaten();
+            }
             sendMsg("{\"success\":true}");
         }
 

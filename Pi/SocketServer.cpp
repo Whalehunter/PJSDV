@@ -29,7 +29,7 @@ void SocketServer::startServer()
     }
 
     /* listen */
-    if (listen(sockfd, 5) < 0) {
+    if (listen(sockfd, 9) < 0) { // 9 was 5
         cout << "Error listening" << endl;
     }
 
