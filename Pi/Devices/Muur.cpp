@@ -28,7 +28,7 @@ void Muur::operator ()()
         }
 
         /* Indien LDR hoger is dan 500, lamp uit en raam zichtbaar houden */
-        if (ldr >= 500) {
+        if (ldr >= 500 && !ldrOverride) {
             LCDdoorlaten();
             if (a->devices.count('d')) {
                 dynamic_cast<Deur *>(a->devices.find('d')->second)->binnenLampUit();
@@ -72,7 +72,9 @@ bool Muur::updateStatus()
         ldr = j_muur.at("ldr");
         pot = j_muur.at("pot");
         for (int i=0;i<LAMPEN;i++) {
-            lampen[i].setBrightness(pot/4);
+            int currentPot = lampen[i].getBrightness();
+            if (currentPot - pot < 10 || currentPot - pot > -10)
+                lampen[i].setBrightness(pot/4);
             json o = j_muur.at(std::to_string(i));
             lampen[i].setKleur(o.at("r"), o.at("g"), o.at("b"));
         }

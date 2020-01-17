@@ -9,6 +9,7 @@ class Muur: public Device
     static const int LAMPEN = 3;
 
     int ldr;
+    bool ldrOverride = false;
     int pot;
     RGBLed lampen[LAMPEN];
     int raam;
@@ -32,6 +33,7 @@ public:
     void LCDdimmen();
     void LCDdoorlaten();
     int potFilter(int);
+
     std::string arduinoStatus();
 };
 #endif

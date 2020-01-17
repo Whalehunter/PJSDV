@@ -38,6 +38,9 @@ public:
     void setBrightness(int pot) {
         rgb->brightness = pot;
     }
+    int getBrightness() {
+        return rgb->brightness;
+    }
     void setKleur(int r, int g , int b) {
         rgb->red   = r;
         rgb->green = g;
