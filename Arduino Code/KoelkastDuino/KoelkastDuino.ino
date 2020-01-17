@@ -89,6 +89,9 @@ void loop(void) {
       else {
         Serial.println("Invalid input");
       }
+      float C;
+      C = 1.00 / (1.00 / 298.15 + 1.00 / 3380.00*(log (1024.00 / (float) 480 - 1.00))) - 273.15;
+      Serial.print(C);
     }
   Serial.println("Failed connection.");
   client.stop();
