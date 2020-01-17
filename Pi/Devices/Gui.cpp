@@ -30,10 +30,10 @@ void Gui::operator()()
         /* append getStatus returns and send to GUI as json */
         if(*p == '-') {
             json deviceStatus;
-               /*for(std::map<char, Device*>::iterator i = a->devices.begin(); i != a->devices.end(); ++i) {
-                 deviceStatus.push_back(i->second->getStatus());
-                 }
-                 sendMsg(deviceStatus.dump().c_str());*/
+            /*for(std::map<char, Device*>::iterator i = a->devices.begin(); i != a->devices.end(); ++i) {
+              deviceStatus.push_back(i->second->getStatus());
+              }
+              sendMsg(deviceStatus.dump().c_str());*/
             while(*p)
                 if(a->devices.count(*(++p))) {
                     deviceStatus.push_back(a->devices.find(*p)->second->getStatus());
@@ -117,6 +117,7 @@ void Gui::operator()()
                 if (*(++p) == 'a') bed->ledAan();
                 else bed->ledUit();
             }
+            sendMsg("{\"success\":true}");
         }
 
         else if (*p == 'm' && a->devices.count(*p)) {
@@ -125,6 +126,7 @@ void Gui::operator()()
                 if (*(++p) == 'a') muur->setDisco(true);
                 else muur->setDisco(false);
             }
+            sendMsg("{\"success\":true}");
         }
 
         // sendMsg(buffer);

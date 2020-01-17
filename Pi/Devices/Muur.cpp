@@ -86,6 +86,9 @@ bool Muur::updateStatus()
 
         if (isDisco() && ((std::clock() - discoTimer) / (double) CLOCKS_PER_SEC) >= 0.5) {
             discoTimer = std::clock();
+            for (int i = 0; i < LAMPEN; i++) {
+                lampen[i].updateDiscoColor();
+            }
         }
 
     }
