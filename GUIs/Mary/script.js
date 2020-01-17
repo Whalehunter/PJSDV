@@ -107,22 +107,22 @@ $(document).ready(()=>{
 
             if (d.Stoel) {
                 let s = d.Stoel;
-                $('.stoel .lamp .checkbox').checkbox(s.Lamp?c:u);
-                $('.stoel .trillen .checkbox').checkbox(s.Massage?c:u);
+                $('.stoel .lamp .checkbox').checkbox(s.Lamp ? c : u);
+                $('.stoel .trillen .checkbox').checkbox(s.Massage ? c : u);
             }
 
-            if (d.Zuil) $('.zuil .zoemer .checkbox').checkbox(d.Zuil.Zoemer?c:u);
+            $('.zuil .zoemer .checkbox').checkbox(d.Zuil && d.Zuil.Zoemer ? c : u);
 
             if (d.Koelkast) {
                 let k = d.Koelkast;
-                $('.koelkast .deur span').text(k.Deur?"Dicht":"Open");
+                $('.koelkast .deur span').text(k.Deur ? "Dicht" : "Open");
                 $('#fridge-temp-2').text(k.m1);
                 $('#fridge-temp-1').text(k.m2);
             }
 
             if (d.Deur) {
                 let r = d.Deur;
-                if (r.Deur) {
+                if (r.Deur === "open") {
                     $('.deur .info.message').hide();
                     t = c;
                 } else t = u;
@@ -131,7 +131,7 @@ $(document).ready(()=>{
                 $('.deur .outside.lamp .checkbox').checkbox(r.Buitenled?c:u);
             }
 
-            if (d.Bed) $('.bed .lamp .checkbox').checkbox(d.Bed.Lamp?c:u);
+            $('.bed .lamp .checkbox').checkbox(d.Bed && d.Bed.Lamp ? c : u);
 
             if (d.Muur) {
                 let m = d.Muur;

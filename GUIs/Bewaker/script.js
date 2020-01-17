@@ -1,6 +1,6 @@
 // Bij page reload alle ajax requests cancellen, zodat de pagina een beetje snel verversen kan.
 var msgs = [];
-APPARATEN = '-sdfzky';
+APPARATEN = '-sdfzkym';
 window.addEventListener('beforeunload', ()=>{
     msgs.forEach((req)=>{
         req.abort();
@@ -259,6 +259,12 @@ $(document).ready(()=>{
                 inbraak.bed = b.drukSensor;
             }
 
+            if (key.Muur) {
+                let m = key.Muur;
+                $('.muur .screen .checkbox').checkbox(m.raam?'set checked':'set unchecked');
+                $('.muur .lamp .checkbox').checkbox(isAan(m.LED0)?'set checked':'set unchecked');
+            }
+
         });
 
         if (inbraak.bed === "Bezet" && inbraak.schemerlamp === 1) {
@@ -270,6 +276,13 @@ $(document).ready(()=>{
 
     function setCheckbox(where, action) {
         $(where+" .checkbox").checkbox(action);
+    }
+
+
+    function isAan(led){
+        if (!led.R && !led.B && !led.G)
+            return false;
+        return true;
     }
 
 });

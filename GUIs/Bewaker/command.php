@@ -5,7 +5,7 @@ header('Content-Type: application/json');
 
 define('PORT', 8883);
 define('ADDRESS', '192.168.4.1');
-define('SOCKSIZE', 256);
+define('SOCKSIZE', 1024);
 
 
 function connect()
