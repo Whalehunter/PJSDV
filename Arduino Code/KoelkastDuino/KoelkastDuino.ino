@@ -12,8 +12,7 @@ const char* host = "192.168.6.1";
 
 int deurOpenDicht();
 void turnOnOffFan(int i);
-int readNTC1();
-int readNTC2();
+int readNTC1(int i);
 void turnOnPeltier();
 
 String line = "";
@@ -64,8 +63,8 @@ void loop(void) {
       if (line == "getStatus"){
         StaticJsonDocument<100> data;
         data["deur"] = deurOpenDicht();
-        data["NTC1"] = readNTC(1);
-        data["NTC2"] = readNTC(0);
+        data["NTC1"] = readNTC1(1);
+        data["NTC2"] = readNTC1(0);
      
         char buffer[100];
 
@@ -132,12 +131,12 @@ void turnOnOffFan(int i){
   else {
     Wire.beginTransmission(0x38);
     Wire.write(byte(0x01));           
-    Wire.write(byte(hex &= !(0x10)));            
+    Wire.write(byte(hex &= ~(0x10)));            
     Wire.endTransmission(); 
   }
 }
 
-int readNTC(int i){
+int readNTC1(int i){
   Wire.requestFrom(0x36, 4);   
   unsigned int anin0 = Wire.read()&0x03;  
   anin0=anin0<<8;
