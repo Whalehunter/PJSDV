@@ -9,7 +9,6 @@ class Muur: public Device
     static const int LAMPEN = 3;
 
     int ldr;
-    bool ldrOverride = false;
     int pot;
     RGBLed lampen[LAMPEN];
     int raam;
@@ -20,6 +19,7 @@ class Muur: public Device
 public:
     Muur(int, Appartement*);
     ~Muur();
+    bool ldrOverride = false;
 
     void operator()();
     nlohmann::json getStatus();

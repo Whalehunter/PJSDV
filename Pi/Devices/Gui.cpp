@@ -131,8 +131,15 @@ void Gui::operator()()
                 else muur->RGBuit();
             }
             else if (*p == 'r') {
-                if (*(++p) == 'a') muur->LCDdimmen();
-                else muur->LCDdoorlaten();
+                if (*(++p) == 'a') {
+                    if (muur->ldrOverride) muur->ldrOverride = false;
+                    else muur->ldrOverride = true;
+                    muur->LCDdimmen();
+                } else {
+                    if (muur->ldrOverride) muur->ldrOverride = false;
+                    else muur->ldrOverride = true;
+                    muur->LCDdoorlaten();
+                }
             }
             sendMsg("{\"success\":true}");
         }
