@@ -136,9 +136,8 @@ void loop(void) {
           for (int i=0;i<NUMPIXELS;i++) {
             String nLed = "LED"+String(i);
             pixels.setPixelColor(i, pixels.Color(data[nLed]["R"], data[nLed]["G"], data[nLed]["B"]));
+            pixels.show();
           }
-          pixels.show();
-
           setLCD(data["S"]);
         }
         line = "";
