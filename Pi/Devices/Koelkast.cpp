@@ -45,11 +45,7 @@ void Koelkast::operator()(){
 		}
 
 		if ((koelkastDeur == 0) && (((std::clock() - openTimer) / (double) CLOCKS_PER_SEC) <= 5.0)){
-			peltierUit();/*
-			if (((std::clock() - openTimer) / (double) CLOCKS_PER_SEC) == 0.0){
-				openTimer = std::clock();
-
-			}*/
+			peltierUit();
 		}
 		else if ((koelkastDeur == 0) && (((std::clock() - openTimer) / (double) CLOCKS_PER_SEC) >= 5.0)){
 			koelAlarm = 1;
@@ -62,23 +58,22 @@ void Koelkast::operator()(){
 			fanAan();
 
 		}
-	//	std::cout << openTimer << std::endl;
+		tempOut = calculateCelsius(NTC1);
+		tempIn = calculateCelsius(NTC2);
 	}
 	close(sock);
 	std::cout << "Connection closed on socket " << sock << std::endl;
 }
 
-json Koelkast::getStatus() {
-    json koelk;
-    koelk["Koelkast"] = {{"Deur", koelkastDeur}, {"Koelelement", koelelement}, {"m1", NTC1}, {"m2", NTC2}, {"Fan", fan}};
-    return koelk;
+json Koelkast::getStatus(){
+    return knopValue;
 }
 
-void Koelkast::disableKoelAlarm() {
+void Koelkast::disableKoelAlarm(){
 	koelAlarm = 0;
 }
 
-void Koelkast::fanAan() {
+void Koelkast::fanAan(){
 	char buffer[256];
 	memset(buffer, 0, sizeof(buffer));
 	strcpy(buffer, "fanAan\r");
@@ -97,8 +92,6 @@ void Koelkast::peltierAan(){
 	memset(buffer, 0, sizeof(buffer));
 	strcpy(buffer, "peltierAan\r");
 	sendMsg(buffer);
-
-        koelelement = 1;
 }
 
 void Koelkast::peltierUit(){
@@ -106,6 +99,9 @@ void Koelkast::peltierUit(){
 	memset(buffer, 0, sizeof(buffer));
 	strcpy(buffer, "peltierUit\r");
 	sendMsg(buffer);
+}
 
-        koelelement = 0;
+float Koelkast::calculateCelsius(float i){
+	float temp = (190.0/1500.0)*i-40.0;
+	return temp;
 }

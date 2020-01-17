@@ -9,6 +9,8 @@
 #define DEVICES_KOELKAST_HPP_
 
 #include "../Device.hpp"
+#include <iostream>
+#include <iomanip>
 
 
 class Koelkast: public Device{
@@ -19,10 +21,11 @@ class Koelkast: public Device{
 		int koelkastDeur{};
 		int fan{};
 		int timerAanUit{};
-		int NTC1{};
-		int NTC2{};
+		float NTC1{};
+		float NTC2{};
 		int koelAlarm{};
-		int koelelement{};
+		float tempOut{};
+		float tempIn{};
 	public:
 		Koelkast(int, Appartement*);
 		~Koelkast();
@@ -33,6 +36,7 @@ class Koelkast: public Device{
 		void fanUit();
 		void peltierAan();
 		void peltierUit();
+		float calculateCelsius(float i);
 };
 
 
