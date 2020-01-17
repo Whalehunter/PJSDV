@@ -80,6 +80,11 @@ $(document).ready(()=>{
         onUnchecked:()=>{msg('mdu')}
     });
 
+    $('.muur .screen .checkbox').checkbox({
+        onChecked:()=>{msg('msa')},
+        onUnchecked:()=>{msg('msu')}
+    })
+
 
     /* UPDATE WAARDEN */
     msg(APPARATEN, updateElements);
