@@ -11,6 +11,7 @@ class Schemerlamp: public Device
     RGBLed lamp;
     bool disco;
     clock_t discoTimer;
+    clock_t activityTimer;
     std::string currentDiscoColor = "rood";
     void updateDiscoColor();
 
@@ -29,6 +30,7 @@ class Schemerlamp: public Device
     void uit();
     void aan();
 
+    bool updateStatus();
     nlohmann::json getStatus();
 };
 #endif

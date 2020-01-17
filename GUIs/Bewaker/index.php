@@ -1,7 +1,8 @@
 <!doctype html>
 <html lang="nl">
   <head>
-    <title>Control panel</title>
+      <title>Control panel</title>
+      <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="UTF-8"/>
     <link rel="stylesheet" type="text/css" href="semantic/dist/semantic.min.css">
     <script src="jquery-3.4.1.min.js"></script>
@@ -45,13 +46,6 @@
                         <input name="" type="checkbox" value=""/>
                     </div>
                 </div>
-                <div class="column brightness">
-                    <p><b>Lamp Helderheid</b> <span class="schemerlamp-helderheid"></span></p>
-                    <div class="ui mini buttons">
-                        <div data-inc="10" class="ui icon basic button"><i class="minus icon"></i></div>
-                        <div data-inc="-10" class="ui icon basic button"><i class="plus icon"></i></div>
-                    </div>
-                </div>
               </div>
             </div>
           </div>
@@ -74,7 +68,19 @@
                 </div>
                 <div class="column plek">
                   <p><b>Plek</b></p>
-                  <p>Beschikbaar</p>
+                  <p><span>Beschikbaar</span></p>
+                </div>
+                <div class="column lamp">
+                    <p><b>Lamp</b></p>
+                    <div class="ui fitted toggle checkbox">
+                        <input name="" type="checkbox" value=""/>
+                    </div>
+                </div>
+                <div class="column knop">
+                    <p><b>Knop</b></p>
+                    <div class="ui fitted slider disabled checkbox">
+                        <input name="" type="checkbox" value=""/>
+                    </div>
                 </div>
               </div>
             </div>
@@ -142,19 +148,27 @@
               <div class="ui divided three column grid">
                 <div class="column deur">
                   <p><b>Deur</b></p>
+                  <p><span></span></p>
+                </div>
+                <div class="column koeler">
+                  <p><b>Koeler</b></p>
                   <div class="ui fitted slider disabled checkbox">
                     <input name="" type="checkbox" value=""/>
                   </div>
                 </div>
-                <div class="column koeler">
-                  <p><b>Koeler</b></p>
-                  <div class="ui fitted toggle checkbox">
-                    <input name="" type="checkbox" value=""/>
-                  </div>
+                <div class="column fan">
+                    <p><b>Fan</b></p>
+                    <div class="ui fitted slider disabled checkbox">
+                        <input name="" type="checkbox" value=""/>
+                    </div>
                 </div>
                 <div class="column">
-                  <p><b>Temperatuur</b></p>
-                  <p><i style="color:#8b0000" class="fitted large thermometer half icon"></i> <span id="fridge-temp">15</span>&#8451;</p>
+                  <p><b>NTC Binnen</b></p>
+                  <p><i style="color:#8b0000" class="fitted large thermometer half icon"></i> <span id="fridge-temp-2">15</span>&#8451;</p>
+                </div>
+                <div class="column">
+                  <p><b>NTC Buiten</b></p>
+                  <p><i style="color:#8b0000" class="fitted large thermometer half icon"></i> <span id="fridge-temp-1">15</span>&#8451;</p>
                 </div>
               </div>
             </div>
@@ -203,6 +217,10 @@
                 </div>
               </div>
             </div>
+            <div class="ui hidden info message">
+                <div class="header">Deurbel</div>
+                <p>Er staat iemand voor de deur!</p>
+            </div>
           </div>
         </div>
 
@@ -221,17 +239,22 @@
                     <input type="checkbox">
                   </div>
                 </div>
-                <div class="column alarm">
-                  <p><b>Alarm</b></p>
-                  <div class="ui fitted toggle checkbox">
-                    <input type="checkbox">
+                <div class="column knop">
+                  <p><b>Knop</b></p>
+                  <div class="ui fitted slider checkbox">
+                    <input type="checkbox" disabled="disabled">
                   </div>
                 </div>
-                <div class="column">
+                <div class="column plek">
                   <p><b>Plek</b></p>
-                  <p>Bezet</p>
+                  <p><span></span></p>
                 </div>
               </div>
+            </div>
+            <div class="ui hidden warning message">
+                <i class="close icon"></i>
+                <div class="header">INBRAAK ALARM!!!</div>
+                <p>Er is mogelijk een inbraak gepleegd</p>
             </div>
           </div>
         </div>

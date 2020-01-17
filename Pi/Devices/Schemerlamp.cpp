@@ -17,30 +17,23 @@ void Schemerlamp::operator()()
 {
 
     while(1) {
-        char buf[256];
-        strcpy(buf, "getStatus\r");
-        sendMsg(buf);
-        memset(buf, 0, sizeof(buf));
-
-        if (recv(sock, buf, 255, 0) < 1) {
-            std::cout << "Schemerlamp is #gone" << std::endl;
-            close(sock);
-            return;
-        }
-
-        try {
-            auto jSL = json::parse(buf);
-            lamp.setKleur(jSL.at("rood"), jSL.at("groen"), jSL.at("blauw"));
-            beweging = jSL.at("beweging");
-        }
-        catch(json::exception& e) {
-            std::cout << "Exception error at Deur: " << e.what() << std::endl;
-        }
+        if (!updateStatus()) break;
 
         if (isDisco() && ((std::clock() - discoTimer) / (double) COCKS_PER_SEC) >= 0.5) {
             json msg = {{"R", getDiscoKleur("rood")},{"G", getDiscoKleur("groen")},{"B", getDiscoKleur("blauw")},};
             sendMsg((msg.dump()+"\r").c_str());
             updateDiscoColor();
+        }
+
+        /* reset 5min timer als beweging */
+        if(isDisco() && beweging) {
+            activityTimer = std::clock();
+        }
+
+        /* als 5 min voorbij zonder beweging -> disco uit */
+        if(isDisco() && ((std::clock() - activityTimer) / (double) COCKS_PER_SEC) >= 300) {
+            setDisco(false);
+            activityTimer = 0;
         }
     }
     close(sock);
@@ -65,10 +58,12 @@ void Schemerlamp::setDisco(bool d) {
     if (disco && !d) {
         json msg = {{"R", 255},{"G", 255},{"B", 255}};
         sendMsg((msg.dump()+"\r").c_str());
+        activityTimer = 0;
     } else if (!disco && d) {
         json msg = {{"R", 0},{"G", 0},{"B", 0}};
         sendMsg((msg.dump()+"\r").c_str());
         discoTimer = std::clock();
+        activityTimer = std::clock();
     }
     disco = d;
 }
@@ -97,6 +92,29 @@ void Schemerlamp::uit() {
 void Schemerlamp::aan() {
     lamp.aan();
     sendMsg((lamp.getKleur().dump()+"\r").c_str());
+}
+
+bool Schemerlamp::updateStatus()
+{
+    char buf[256];
+    sendMsg("getStatus\r");
+    memset(buf, 0, sizeof(buf));
+
+    if (recv(sock, buf, 255, 0) < 1) {
+        std::cout << "Schemerlamp is #gone" << std::endl;
+        close(sock);
+        return false;
+    }
+
+    try {
+        auto jSL = json::parse(buf);
+        lamp.setKleur(jSL.at("rood"), jSL.at("groen"), jSL.at("blauw"));
+        beweging = jSL.at("beweging");
+    }
+    catch(json::exception& e) {
+        std::cout << "Exception error at Deur: " << e.what() << std::endl;
+    }
+    return true;
 }
 
 json Schemerlamp::getStatus()

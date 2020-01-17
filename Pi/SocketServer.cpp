@@ -23,7 +23,6 @@ void SocketServer::startServer()
         cout << "Error creating socket" << endl;
     }
 
-    char buffer[256];
     /* bind socket */
     if (bind(sockfd, (struct sockaddr*) &server_addr, sizeof(server_addr)) < 0) {
         cout << "Error binding socket" << endl;

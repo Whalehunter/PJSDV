@@ -15,6 +15,8 @@ class Stoel: public Device
         void ledUit();
         void trilAan();
         void trilUit();
+        void toggleLed();
+        void toggleTril();
     private:
         int drukknop{};
         int drukSensor{};
