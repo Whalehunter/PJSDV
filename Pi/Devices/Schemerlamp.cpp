@@ -19,9 +19,9 @@ void Schemerlamp::operator()()
         if (!updateStatus()) break;
 
         if (isDisco() && ((std::clock() - discoTimer) / (double) COCKS_PER_SEC) >= 0.5) {
-            json msg = {{"R", getDiscoKleur("rood")},{"G", getDiscoKleur("groen")},{"B", getDiscoKleur("blauw")},};
+            json msg = lamp.getKleur(isDisco());
             sendMsg((msg.dump()+"\r").c_str());
-            updateDiscoColor();
+            lamp.updateDiscoColor();
         }
 
         /* reset 5min timer als beweging */
@@ -37,16 +37,6 @@ void Schemerlamp::operator()()
     }
     close(sock);
     std::cout << "Schemerlamp connection closed" << std::endl;
-}
-
-void Schemerlamp::updateDiscoColor() {
-    if (currentDiscoColor == "rood") {
-        currentDiscoColor = "groen";
-    } else if (currentDiscoColor == "groen") {
-        currentDiscoColor = "blauw";
-    } else {
-        currentDiscoColor = "rood";
-    }
 }
 
 bool Schemerlamp::isDisco() {

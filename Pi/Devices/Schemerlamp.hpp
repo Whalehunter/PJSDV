@@ -12,7 +12,6 @@ class Schemerlamp: public Device
     bool disco;
     clock_t discoTimer;
     clock_t activityTimer;
-    std::string currentDiscoColor = "rood";
     void updateDiscoColor();
 
     public:
