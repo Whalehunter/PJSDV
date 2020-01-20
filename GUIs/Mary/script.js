@@ -142,7 +142,7 @@ $(document).ready(()=>{
                 $('.deur .outside.lamp .checkbox').checkbox(r.Buitenled?c:u);
             }
 
-            $('.bed .lamp .checkbox').checkbox(d.Bed && d.Bed.Lamp ? c : u);
+            if (d.Bed) $('.bed .lamp .checkbox').checkbox(d.Bed.Lamp?c:u);
 
             if (d.Muur) {
                 let m = d.Muur;
