@@ -50,7 +50,7 @@ nlohmann::json Muur::getStatus()
     json muurData;
     muurData["Muur"] = {{"LDR", ldr}, {"POT", pot}, {"Raam", raam}};
     for (int i=0;i<LAMPEN;i++){
-        muurData["Muur"]["LED" + std::to_string(i)] = lampen[i].getKleur();
+        muurData["Muur"]["LED" + std::to_string(i)] = lampen[i].getKleur(isDisco());
     }
 
     return muurData;
