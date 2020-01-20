@@ -152,3 +152,8 @@ function isAan(led){
         return false;
     return true;
 }
+function isDisco(led) {
+    if ((led.R || led.B || led.G) && (!led.R || !led.B || !led.G))
+        return true;
+    return false;
+}
