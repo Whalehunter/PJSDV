@@ -57,15 +57,6 @@ void Schemerlamp::setDisco(bool d) {
     disco = d;
 }
 
-int Schemerlamp::getDiscoKleur(std::string kleur) {
-    if (lamp.currentDiscoColor == kleur) {
-        discoTimer = std::clock();
-        return 255;
-    }
-
-    return 0;
-}
-
 void Schemerlamp::setKleur(int r, int g, int b) {
     lamp.setKleur(r,g,b);
     json kleur = lamp.getKleur();

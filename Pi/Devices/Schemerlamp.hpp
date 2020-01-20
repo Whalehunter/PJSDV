@@ -7,14 +7,13 @@
 
 class Schemerlamp: public Device
 {
-    int beweging;
-    RGBLed lamp;
-    bool disco;
-    clock_t discoTimer;
-    clock_t activityTimer;
-    void updateDiscoColor();
+    int beweging;               // Beweging detectie waarde
+    RGBLed lamp;                // Lamp waarden
+    bool disco;                 // Disco status
+    clock_t discoTimer;         // Disco timer waarde
+    clock_t activityTimer;      // Activity timer waarde
 
-    public:
+public:
     Schemerlamp(int, Appartement*);
     ~Schemerlamp();
 
@@ -22,11 +21,10 @@ class Schemerlamp: public Device
     void setKleur(int,int,int); // Kleur setten voor lamp
     bool isDisco();             // Discostand status ophalen
     void setDisco(bool);        // Discostand aan/uit zetten
-    int getDiscoKleur(std::string); //
-    void uit();
-    void aan();
+    void uit();                     // Lamp uit
+    void aan();                     // Lamp aan
 
-    bool updateStatus();
-    nlohmann::json getStatus();
+    bool updateStatus();        // WEMOS import status update
+    nlohmann::json getStatus(); // JSON object met schemerlamp waarden
 };
 #endif
