@@ -278,7 +278,7 @@ $(document).ready(()=>{
                     aan = isAan(m.LED0);
                 $('.muur .screen .checkbox').checkbox(m.raam?'set checked':'set unchecked');
                 $('.muur .lamp .checkbox').checkbox(aan?'set checked':'set unchecked');
-                $('.muur .disco .checkbox').checkbox(aan&&isDisco(m.LED0)?'set checked':'set unchecked');
+                $('.muur .disco .checkbox').checkbox(m.Disco?'set checked':'set unchecked');
             }
 
         });
@@ -299,12 +299,6 @@ $(document).ready(()=>{
         if (!led.R && !led.B && !led.G)
             return false;
         return true;
-    }
-
-    function isDisco(led) {
-        if ((led.R || led.B || led.G) && (!led.R || !led.B || !led.G))
-            return true;
-        return false;
     }
 
 });

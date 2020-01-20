@@ -138,7 +138,7 @@ $(document).ready(()=>{
                     aan = isAan(m.LED0);
                 $('.muur .lamp .checkbox').checkbox(aan?c:u);
                 $('.muur .screen .checkbox').checkbox(m.Raam?c:u);
-                $('.muur .disco .checkbox').checkbox(aan&&isDisco(m.LED0)?c:u);
+                $('.muur .disco .checkbox').checkbox(m.Disco?c:u);
             }
 
         });
@@ -151,9 +151,4 @@ function isAan(led){
     if (!led.R && !led.B && !led.G)
         return false;
     return true;
-}
-function isDisco(led) {
-    if ((led.R || led.B || led.G) && (!led.R || !led.B || !led.G))
-        return true;
-    return false;
 }
