@@ -128,14 +128,19 @@
                                     <p><span></span></p>
                                 </div>
                                 <div class="column">
-                                    <p><b>NTC Binnen</b></p>
+                                    <p><b>Temp. Binnen</b></p>
                                     <p><i style="color:#8b0000" class="fitted large thermometer half icon"></i> <span id="fridge-temp-2">15</span>&#8451;</p>
                                 </div>
                                 <div class="column">
-                                    <p><b>NTC Buiten</b></p>
+                                    <p><b>Temp. Buiten</b></p>
                                     <p><i style="color:#8b0000" class="fitted large thermometer half icon"></i> <span id="fridge-temp-1">15</span>&#8451;</p>
                                 </div>
                             </div>
+                        </div>
+                        <div class="ui hidden warning message">
+                            <i class="close icon"></i>
+                            <div class="header">Koelkast alarm</div>
+                            <p>De koelkast deur staat nog open</p>
                         </div>
                     </div>
                 </div>

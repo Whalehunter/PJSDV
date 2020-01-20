@@ -163,11 +163,11 @@
                     </div>
                 </div>
                 <div class="column">
-                  <p><b>NTC Binnen</b></p>
+                  <p><b>Temp. Binnen</b></p>
                   <p><i style="color:#8b0000" class="fitted large thermometer half icon"></i> <span id="fridge-temp-2">15</span>&#8451;</p>
                 </div>
                 <div class="column">
-                  <p><b>NTC Buiten</b></p>
+                  <p><b>Temp. Buiten</b></p>
                   <p><i style="color:#8b0000" class="fitted large thermometer half icon"></i> <span id="fridge-temp-1">15</span>&#8451;</p>
                 </div>
               </div>

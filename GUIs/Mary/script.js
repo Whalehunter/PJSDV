@@ -22,38 +22,41 @@ function msg(txt, fun=null) {
 $(document).ready(()=>{
     // Schemerlamp
     $('.schemerlamp .lamp .checkbox').checkbox({
-        onChecked:()=>{msg('sla')},
-        onUnchecked:()=>{msg('slu')}
+        onChecked:()=>{msg('sla')}, // Schemerlamp lamp aan
+        onUnchecked:()=>{msg('slu')} // schemerlamp lamp uit
     });
 
     $('.schemerlamp .disco .checkbox').checkbox({
-        onChecked:()=>{msg('sda')},
-        onUnchecked:()=>{msg('sdu')},
+        onChecked:()=>{msg('sda')}, // Discostand van schemerlamp aan
+        onUnchecked:()=>{msg('sdu')}, // Discostand van schemerlamp uit
     });
 
     // Stoel
     $('.stoel .trillen .checkbox').checkbox({
-        onChecked:()=>{msg('zta')},
-        onUnchecked:()=>{msg('ztu')},
+        onChecked:()=>{msg('zta')}, // stoel trilstand aan
+        onUnchecked:()=>{msg('ztu')}, // stoel trilstand uit
     });
     $('.stoel .lamp .checkbox').checkbox({
-        onChecked:()=>{msg('zla')},
-        onUnchecked:()=>{msg('zlu')}
+        onChecked:()=>{msg('zla')}, // lamp van stoel aan
+        onUnchecked:()=>{msg('zlu')} // lamp van stoel uit
     });
 
     // Zuil
     $('.zuil .zoemer .checkbox').checkbox({
-        onChecked:()=>{msg('fza')},
-        onUnchecked:()=>{msg('fzu')}
+        onChecked:()=>{msg('fza')}, // zoemer op zuil aanzetten
+        onUnchecked:()=>{msg('fzu')} // zoemer op zuil uitzetten
     });
 
     // Koelkast
-    $('.koelkast .deur .checkbox').checkbox();
-    $('.koelkast .koeler .checkbox').checkbox();
+    $('.koelkast .koeler .checkbox').checkbox(); // Checkbox mogelijk maken
+    $('.koelkast .message .close').click(()=>{
+        $('.koelkast .message').hide(); // verberg message
+        msg('k');               // stop koelkast open deur alarm
+    })
 
     // Deur
     $('.deur .outside.lamp .checkbox').checkbox({
-        onChecked:()=>{msg('dba')},
+        onChecked:()=>{msg('dba')}, //
         onUnchecked:()=>{msg('dbu')}
     });
     $('.deur .deur .checkbox').checkbox({

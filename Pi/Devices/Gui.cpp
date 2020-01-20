@@ -5,6 +5,7 @@
 #include "Stoel.hpp"
 #include "Bed.hpp"
 #include "Muur.hpp"
+#include "Koelkast.hpp"
 #include <string>
 
 using json = nlohmann::json;
@@ -89,7 +90,11 @@ void Gui::operator()()
             sendMsg("{\"success\":true}");
         }
 
-        else if (*p == 'm' && a->devices.count(*p)) { // muur
+        else if (*p == 'k' && a->devices.count(*p)) { // Koelkast
+            dynamic_cast<Koelkast *>(a->devices.find(*p)->second)->disableKoelAlarm();
+        }
+
+        else if (*p == 'm' && a->devices.count(*p)) { // Muur
             Muur * muur = dynamic_cast<Muur *>(a->devices.find(*p++)->second);
             if (*p == 'd') {    // disco aan/uit
                 if (*(++p) == 'a') muur->setDisco(true);
