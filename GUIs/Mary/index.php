@@ -87,29 +87,19 @@
                     <div class="content">
                         <h2 class="header">Zuil</h2>
                         <div class="ui divider"></div>
-                        <div class="description">
-                            <div class="ui divided two column grid">
-                                <div class="column zoemer">
-                                    <p><b>Zoemer</b></p>
-                                    <div class="ui fitted slider checkbox">
-                                        <input name="" type="checkbox" value=""/>
-                                    </div>
-                                </div>
+                        <div class="ui icon nood hidden warning message">
+                            <i class="exclamation triangle icon"></i>
+                            <div class="content">
+                                <div class="header">NOOD!</div>
+                                <span>Mary heeft de noodalarm gedrukt!</span>
                             </div>
                         </div>
-                    </div>
-                    <div class="ui icon nood hidden warning message">
-                        <i class="exclamation triangle icon"></i>
-                        <div class="content">
-                            <div class="header">NOOD!</div>
-                            <span>Mary heeft de noodalarm gedrukt!</span>
-                        </div>
-                    </div>
-                    <div class="ui icon brand hidden warning message">
-                        <i class="exclamation triangle icon"></i>
-                        <div class="content">
-                            <div class="header">BRAND!</div>
-                            <span>Let op: er is kans op brand!</span>
+                        <div class="ui icon brand hidden warning message">
+                            <i class="exclamation triangle icon"></i>
+                            <div class="content">
+                                <div class="header">BRAND!</div>
+                                <span>Let op: er is kans op brand!</span>
+                            </div>
                         </div>
                     </div>
                 </div>
