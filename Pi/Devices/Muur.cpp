@@ -73,7 +73,7 @@ bool Muur::updateStatus()
         pot = j_muur.at("pot");
         for (int i=0;i<LAMPEN;i++) {
             int currentPot = lampen[i].rgb->polPot;
-            if (currentPot - pot < 10 || currentPot - pot > -10)
+            if (currentPot - pot > 10 || currentPot - pot < -10)
                 lampen[i].setBrightness(pot/4);
             json o = j_muur.at(std::to_string(i));
             lampen[i].setKleur(o.at("r"), o.at("g"), o.at("b"));
