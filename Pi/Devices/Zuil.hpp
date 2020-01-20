@@ -15,17 +15,17 @@ class Zuil: public Device
         Zuil(int, Appartement*);
         ~Zuil();
 
-        void operator()();
-        void noodAlarmAan();
-        void noodAlarmUit();
-        void brandAlarmAan();
-        void brandAlarmUit();
-        void deurBelAan();
-        void deurBelUit();
-        void zoemerAan();
-        void zoemerUit();
+        void operator()();    // thread loop
+        void noodAlarmAan();  // noodalarm aan
+        void noodAlarmUit();  // noodalarm uit
+        void brandAlarmAan(); // brandalarm aan
+        void brandAlarmUit(); // brandalarm uit
+        void deurBelAan();    // deurbel aan
+        void deurBelUit();    // deurbel uit
+        void zoemerAan();     // zoemer aan
+        void zoemerUit();     // zoemer uit
 
-        nlohmann::json getStatus();
+        nlohmann::json getStatus(); // json object met alle variables van zuil
 };
 
 #endif
