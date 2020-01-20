@@ -33,6 +33,7 @@ public:
     void LCDdimmen();
     void LCDdoorlaten();
     int potFilter(int);
+    void setBrightness(bool);
 
     std::string arduinoStatus();
 };
