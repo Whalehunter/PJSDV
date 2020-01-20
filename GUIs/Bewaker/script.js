@@ -93,7 +93,20 @@ $(document).ready(()=>{
     $('.bed .message .close').click(()=>{$('.bed .message').hide()});
 
     /* MUUR */
-    $('.muur .lamp .checkbox').checkbox();
+    $('.muur .lamp .checkbox').checkbox({
+        onChecked:()=>{msg('mla',afhandel)},
+        onUnchecked:()=>{msg('mlu',afhandel)}
+    });
+
+    $('.muur .disco .checkbox').checkbox({
+        onChecked:()=>{msg('mda',afhandel)},
+        onUnchecked:()=>{msg('mdu',afhandel)}
+    });
+
+    $('.muur .screen .checkbox').checkbox({
+        onChecked:()=>{msg('msa',afhandel)},
+        onUnchecked:()=>{msg('msu',afhandel)}
+    });
 
 
     /* Update interval */
@@ -260,9 +273,11 @@ $(document).ready(()=>{
             }
 
             if (key.Muur) {
-                let m = key.Muur;
+                let m = key.Muur,
+                    aan = isAan(m.LED0);
                 $('.muur .screen .checkbox').checkbox(m.raam?'set checked':'set unchecked');
-                $('.muur .lamp .checkbox').checkbox(isAan(m.LED0)?'set checked':'set unchecked');
+                $('.muur .lamp .checkbox').checkbox(aan?'set checked':'set unchecked');
+                $('.muur .disco .checkbox').checkbox(aan&&isDisco(m.LED0)?'set checked':'set unchecked');
             }
 
         });
