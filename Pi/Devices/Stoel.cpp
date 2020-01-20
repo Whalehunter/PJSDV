@@ -16,11 +16,11 @@ void Stoel::operator()()//Overloaded functies moeten met 2 haakjes zodat je er z
     char buffer[256] = {0};
     int drukknopPrev = 0;
 
-    while(1) {
+    while (1) {
         /* get and store Stoel status */
         sendMsg("getStatus\r");
 
-        if(recv(sock, buffer, 255, 0) < 1) { // dit wordt een functie
+        if (!recvMsg(buffer)) {
             std::cout << "Stoel disconnected from socket: " << sock << std::endl;
             close(sock);
             return;
@@ -32,17 +32,17 @@ void Stoel::operator()()//Overloaded functies moeten met 2 haakjes zodat je er z
             drukknop = j_stoel.at("drukknop");
             drukSensor = j_stoel.at("drukSensor");
         }
-        catch(json::exception& e) {
+        catch (json::exception& e) {
             std::cout << e.what() << std::endl;
         }
 
-        if (drukknop && !drukknopPrev){
+        if (drukknop && !drukknopPrev) {
             toggleLed();
         }
 
-        if (!drukSensor && trilStatus){
+        if (!drukSensor && trilStatus) {
             trilUit();
-        } else if (drukknop && !drukknopPrev && drukSensor){
+        } else if (drukknop && !drukknopPrev && drukSensor) {
             toggleTril();
         }
 
@@ -59,7 +59,8 @@ json Stoel::getStatus()
     return stoel;
 }
 
-void Stoel::toggleLed() {
+void Stoel::toggleLed()
+{
     if (ledStatus) {
         Stoel::ledUit();
     } else {
@@ -67,17 +68,20 @@ void Stoel::toggleLed() {
     }
 }
 
-void Stoel::ledAan(){
+void Stoel::ledAan()
+{
     sendMsg("ledAan\r");
     ledStatus = 1;
 }
 
-void Stoel::ledUit(){
+void Stoel::ledUit()
+{
     sendMsg("ledUit\r");
     ledStatus = 0;
 }
 
-void Stoel::toggleTril() {
+void Stoel::toggleTril()
+{
     if (trilStatus) {
         Stoel::trilUit();
     } else {
@@ -85,12 +89,14 @@ void Stoel::toggleTril() {
     }
 }
 
-void Stoel::trilAan(){
+void Stoel::trilAan()
+{
     sendMsg("trilAan\r");
     trilStatus = 1;
 }
 
-void Stoel::trilUit(){
+void Stoel::trilUit()
+{
     sendMsg("trilUit\r");
     trilStatus = 0;
 }
