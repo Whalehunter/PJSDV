@@ -35,7 +35,7 @@ void Deur::operator()()
             break;
         }
 
-        /* operations based on checks */
+        /* operations based on checks, check doorbell */
         if (knopBuiten == 1 && knopBuitenPrev != knopBuiten) {
             deurBelAan();
             buitenLampAan();

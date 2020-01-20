@@ -51,7 +51,7 @@ bool Bed::updateStatus()
     }
 
     try {
-        auto j_bed = json::parse(buffer); // hier moeten ook exceptions afgehandeld worden
+        auto j_bed = json::parse(buffer);
 
         knop = j_bed.at("knop");
         druksensor = j_bed.at("druksensor");
