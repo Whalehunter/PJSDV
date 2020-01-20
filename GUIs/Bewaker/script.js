@@ -272,6 +272,7 @@ $(document).ready(()=>{
                 inbraak.bed = b.drukSensor;
             }
 
+            /* MUUR */
             if (key.Muur) {
                 let m = key.Muur,
                     aan = isAan(m.LED0);
