@@ -6,6 +6,7 @@ window.addEventListener('beforeunload', ()=>{
     });
 });
 
+// Ajax bericht sturen naar server
 function msg(txt, fun=null) {
     msgs.push($.ajax('command.php', {
         dataType: 'json',
