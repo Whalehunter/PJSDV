@@ -2,25 +2,24 @@
 
 using json = nlohmann::json;
 
-Stoel::Stoel(int n, Appartement* ap): Device(n, ap)
+Stoel::Stoel(int n, Appartement* ap): Device(n, ap)//Stoel Aanmaken
 {
-    ledStatus = 0;
     std::cout << "Stoel aangemaakt" << std::endl;
 }
 
-Stoel::~Stoel()
+Stoel::~Stoel()//Stoel vernietigen
 {}
 
-void Stoel::operator()()//Overloaded functies moeten met 2 haakjes zodat je er zoveel mogelijk over kan sturen als je wilt.
+//Overloaded functies moeten met 2 haakjes zodat je er zoveel als je wilt over kan sturen.
+void Stoel::operator()()//Opereratie functie van stoel
 {
     char buffer[256] = {0};
     int drukknopPrev = 0;
 
     while(1) {
-        /* get and store Stoel status */
-        sendMsg("getStatus\r");
+        sendMsg("getStatus\r");//Stuur getStatus naar device
 
-        if(recv(sock, buffer, 255, 0) < 1) { // dit wordt een functie
+        if(recv(sock, buffer, 255, 0) < 1) {
             std::cout << "Stoel disconnected from socket: " << sock << std::endl;
             close(sock);
             return;
@@ -52,14 +51,14 @@ void Stoel::operator()()//Overloaded functies moeten met 2 haakjes zodat je er z
     std::cout << "Connection closed on socket " << sock << std::endl;
 }
 
-json Stoel::getStatus()
+json Stoel::getStatus()//Get Status voor de GUI
 {
     json stoel;
     stoel["Stoel"] = {{"Knop", drukknop}, {"Lamp", ledStatus}, {"Massage", trilStatus}, {"Drukplaat", drukSensor}};
     return stoel;
 }
 
-void Stoel::toggleLed() {
+void Stoel::toggleLed() {//Leeslamp toggle
     if (ledStatus) {
         Stoel::ledUit();
     } else {
@@ -67,17 +66,17 @@ void Stoel::toggleLed() {
     }
 }
 
-void Stoel::ledAan(){
+void Stoel::ledAan(){//Leeslamp Aan
     sendMsg("ledAan\r");
     ledStatus = 1;
 }
 
-void Stoel::ledUit(){
+void Stoel::ledUit(){//Leeslamp Uit
     sendMsg("ledUit\r");
     ledStatus = 0;
 }
 
-void Stoel::toggleTril() {
+void Stoel::toggleTril() {//Trill element toggle
     if (trilStatus) {
         Stoel::trilUit();
     } else {
@@ -85,12 +84,12 @@ void Stoel::toggleTril() {
     }
 }
 
-void Stoel::trilAan(){
+void Stoel::trilAan(){//Trill element Aan
     sendMsg("trilAan\r");
     trilStatus = 1;
 }
 
-void Stoel::trilUit(){
+void Stoel::trilUit(){//Trill element Uit
     sendMsg("trilUit\r");
     trilStatus = 0;
 }

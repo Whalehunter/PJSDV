@@ -2,20 +2,20 @@
 
 using json = nlohmann::json;
 
-Koelkast::Koelkast(int n, Appartement* ap): Device(n, ap), openTimer(0)
+Koelkast::Koelkast(int n, Appartement* ap): Device(n, ap), openTimer(0)//Koelkast aanmaken
 {
     std::cout << "Koelkast aangemaakt" << std::endl;
 }
 
-Koelkast::~Koelkast()
+Koelkast::~Koelkast()//Koelkast vernietigen
 {}
 
-void Koelkast::operator()()
+void Koelkast::operator()()//Operatie functie van koelkast
 {
     char buffer[256] = {0};
 
     while (1) {
-        sendMsg("getStatus\r");
+        sendMsg("getStatus\r");//Stuur getStatus naar device
 
         memset(buffer, 0, sizeof(buffer));
         if (recv(sock, buffer, 255, 0) < 1) {
@@ -55,41 +55,41 @@ void Koelkast::operator()()
     std::cout << "Connection closed on socket " << sock << std::endl;
 }
 
-json Koelkast::getStatus()
+json Koelkast::getStatus()//GetStatus voor de GUI
 {
     json koelk;
     koelk["Koelkast"] = {{"Deur", koelkastDeur}, {"Koelelement", koelelement}, {"m1", tempOut}, {"m2", tempIn}, {"Fan", fan}, {"Alarm", koelAlarm}};
     return koelk;
 }
 
-void Koelkast::disableKoelAlarm()
+void Koelkast::disableKoelAlarm()//Koelalarm uit
 {
     koelAlarm = 0;
 }
 
-void Koelkast::fanAan()
+void Koelkast::fanAan()//Fan aan
 {
     sendMsg("fanAan\r");
 }
 
-void Koelkast::fanUit()
+void Koelkast::fanUit()//Fan uit
 {
     sendMsg("fanUit\r");
 }
 
-void Koelkast::peltierAan()
+void Koelkast::peltierAan()//Peltier aan
 {
     sendMsg("peltierAan\r");
     koelelement = 1;
 }
 
-void Koelkast::peltierUit()
+void Koelkast::peltierUit()//Peltier uit
 {
     sendMsg("peltierUit\r");
     koelelement = 0;
 }
 
-float Koelkast::calculateCelsius(float i)
+float Koelkast::calculateCelsius(float i)//Berekent de temperatuur in Celcius
 {
     //Formule gevonden op: https://www.jameco.com/Jameco/workshop/TechTip/temperature-measurement-ntc-thermistors.html
     float C = 1.00 / (1.00 / 298.15 + 1.00 / 3380.00*(log (1023.00 / i - 1.00))) - 273.15;
