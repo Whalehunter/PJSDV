@@ -17,7 +17,6 @@ void Stoel::operator()()//Overloaded functies moeten met 2 haakjes zodat je er z
     int drukknopPrev = 0;
 
     while (1) {
-        /* get and store Stoel status */
         sendMsg("getStatus\r");
 
         if (!recvMsg(buffer)) {
@@ -28,7 +27,6 @@ void Stoel::operator()()//Overloaded functies moeten met 2 haakjes zodat je er z
 
         try {
             auto j_stoel = json::parse(buffer);
-
             drukknop = j_stoel.at("drukknop");
             drukSensor = j_stoel.at("drukSensor");
         }
