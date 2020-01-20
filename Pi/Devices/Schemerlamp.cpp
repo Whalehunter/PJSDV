@@ -58,7 +58,7 @@ void Schemerlamp::setDisco(bool d) {
 }
 
 int Schemerlamp::getDiscoKleur(std::string kleur) {
-    if (this->currentDiscoColor == kleur) {
+    if (lamp.currentDiscoColor == kleur) {
         discoTimer = std::clock();
         return 255;
     }
