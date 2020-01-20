@@ -193,7 +193,7 @@
                         <h2 class="header">Muur</h2>
                         <div class="ui divider"></div>
                         <div class="description">
-                            <div class="ui divided three column grid">
+                            <div class="ui divided two column grid">
                                 <div class="column lamp">
                                     <p><b>Lamp</b></p>
                                     <div class="ui fitted toggle checkbox">
@@ -210,6 +210,12 @@
                                 <div class="column screen">
                                     <p><b>Scherm</b></p>
                                     <div class="ui fitted toggle checkbox">
+                                        <input name="" type="checkbox" value=""/>
+                                    </div>
+                                </div>
+                                <div class="column disco">
+                                    <p><b>Discostand</b></p>
+                                    <div class="ui fitted slider checkbox">
                                         <input name="" type="checkbox" value=""/>
                                     </div>
                                 </div>

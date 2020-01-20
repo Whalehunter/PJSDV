@@ -88,13 +88,8 @@ $(document).ready(()=>{
         onUnchecked:()=>{msg('mru')}
     });
 
-    $('.muur .dimmer .plus.button').click(()=>{
-        msg('mbu',afhandel);
-    });
-    $('.muur .dimmer .minus.button').click(()=>{
-        msg('mbd',afhandel);
-    });
-
+    $('.muur .dimmer .plus.button').click(()=>{msg('mbu')});
+    $('.muur .dimmer .minus.button').click(()=>{msg('mbd')});
 
 
     /* UPDATE WAARDEN */
