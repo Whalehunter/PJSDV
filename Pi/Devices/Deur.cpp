@@ -150,7 +150,7 @@ bool Deur::updateStatus()
     sendMsg("getStatus\r");
 
     /* send message and check if client is still connected */
-    if (recv(sock, buffer, 255, 0) < 1) {
+    if (!recvMsg(buffer)) {
         std::cout << "Deur disconnected from socket: " << sock << std::endl;
         return false;
     }

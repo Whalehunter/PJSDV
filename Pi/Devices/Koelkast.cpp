@@ -18,7 +18,7 @@ void Koelkast::operator()()//Operatie functie van koelkast
         sendMsg("getStatus\r");//Stuur getStatus naar device
 
         memset(buffer, 0, sizeof(buffer));
-        if (recv(sock, buffer, 255, 0) < 1) {
+        if (!recvMsg(buffer)) {
             std::cout << "Koelkast disconnected from socket: " << sock << std::endl;
             close(sock);
             return;

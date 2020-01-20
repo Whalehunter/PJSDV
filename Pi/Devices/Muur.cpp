@@ -61,7 +61,7 @@ bool Muur::updateStatus()
     char buffer[400] = {0};
     sendMsg("getStatus\r");
 
-    if (recv(sock, buffer, 399, 0) < 1) {
+    if (!recvMsg(buffer)) {
         std::cout << "Muur disconnected from socket: " << sock << std::endl;
         close(sock);
         return false;

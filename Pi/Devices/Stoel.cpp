@@ -16,10 +16,10 @@ void Stoel::operator()()//Opereratie functie van stoel
     char buffer[256] = {0};
     int drukknopPrev = 0;
 
-    while(1) {
+    while (1) {
         sendMsg("getStatus\r");//Stuur getStatus naar device
 
-        if(recv(sock, buffer, 255, 0) < 1) {
+        if (!recvMsg(buffer)) {
             std::cout << "Stoel disconnected from socket: " << sock << std::endl;
             close(sock);
             return;
@@ -27,21 +27,20 @@ void Stoel::operator()()//Opereratie functie van stoel
 
         try {
             auto j_stoel = json::parse(buffer);
-
             drukknop = j_stoel.at("drukknop");
             drukSensor = j_stoel.at("drukSensor");
         }
-        catch(json::exception& e) {
+        catch (json::exception& e) {
             std::cout << e.what() << std::endl;
         }
 
-        if (drukknop && !drukknopPrev){
+        if (drukknop && !drukknopPrev) {
             toggleLed();
         }
 
-        if (!drukSensor && trilStatus){
+        if (!drukSensor && trilStatus) {
             trilUit();
-        } else if (drukknop && !drukknopPrev && drukSensor){
+        } else if (drukknop && !drukknopPrev && drukSensor) {
             toggleTril();
         }
 
@@ -58,7 +57,8 @@ json Stoel::getStatus()//Get Status voor de GUI
     return stoel;
 }
 
-void Stoel::toggleLed() {//Leeslamp toggle
+void Stoel::toggleLed()//Leeslamp toggle
+{
     if (ledStatus) {
         Stoel::ledUit();
     } else {
@@ -66,17 +66,21 @@ void Stoel::toggleLed() {//Leeslamp toggle
     }
 }
 
-void Stoel::ledAan(){//Leeslamp Aan
+
+void Stoel::ledAan()//Leeslamp Aan
+{
     sendMsg("ledAan\r");
     ledStatus = 1;
 }
 
-void Stoel::ledUit(){//Leeslamp Uit
+void Stoel::ledUit()//Leeslamp Uit
+{
     sendMsg("ledUit\r");
     ledStatus = 0;
 }
 
-void Stoel::toggleTril() {//Trill element toggle
+void Stoel::toggleTril()//Trill element toggle
+{
     if (trilStatus) {
         Stoel::trilUit();
     } else {
@@ -84,12 +88,14 @@ void Stoel::toggleTril() {//Trill element toggle
     }
 }
 
-void Stoel::trilAan(){//Trill element Aan
+void Stoel::trilAan()//Trill element Aan
+{
     sendMsg("trilAan\r");
     trilStatus = 1;
 }
 
-void Stoel::trilUit(){//Trill element Uit
+void Stoel::trilUit()//Trill element Uit
+{
     sendMsg("trilUit\r");
     trilStatus = 0;
 }
