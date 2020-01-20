@@ -21,7 +21,7 @@ void Deur::operator()()
         /* get and store JSON values, break from while if Deur is #gone */
         if (!updateStatus()) break;
 
-        /* state machine */
+        /* state machine, if state = closed && knop == pressed, open door, etc  */
         switch (state) {
         case OPEN:
             if (knopBinnen == 2 && knopBinnenPrev != knopBinnen) {
@@ -35,7 +35,7 @@ void Deur::operator()()
             break;
         }
 
-        /* operations based on checks */
+        /* operations based on checks, check doorbell */
         if (knopBuiten == 1 && knopBuitenPrev != knopBuiten) {
             deurBelAan();
             buitenLampAan();
@@ -44,10 +44,12 @@ void Deur::operator()()
             deurBelUit();
         }
 
+        /* turn external led off after 30 seconds */
         if (ledBuiten == 1 && ((std::clock() - timer) / (double) CLOCKS_PER_SEC) >= 30.0) {
             buitenLampUit();
         }
 
+        /* if fire alarm, blink internal led */
         if (noodKnipper == 1 && ((std::clock() - knipperTimer) / (double) CLOCKS_PER_SEC) >= 1.0) {
             if (ledBinnen) {
                 binnenLampUit(true);

@@ -18,12 +18,14 @@ void Zuil::operator()()
     while (1) {
         sendMsg("getStatus\r");
 
+        /* receive msg and check if device is still connected to socket */
         if(!recvMsg(buffer)) {
             std::cout << "Zuil disconnected from socket: " << sock << std::endl;
             close(sock);
             return;
         }
 
+        /* try and catch json exception errors */
         try {
             auto j_zuil = json::parse(buffer);
 

@@ -29,6 +29,8 @@ void Appartement::createDevice(int sock, char id)
     Device * ob = NULL;
     switch(id){
 
+    /* create objects based on handshake ID, delete old pointer if not null */
+        
     case 'd':
         if(deur != 0) delete deur;
         deur = new Deur(sock, this);
@@ -60,8 +62,6 @@ void Appartement::createDevice(int sock, char id)
         break;
 
     case 'x':
-        // if(gui != 0) delete gui;
-        // gui = new Gui(sock, this);
         ob = new Gui(sock, this);
         break;
 
