@@ -15,7 +15,6 @@ void Bed::operator()()
     int knopPrev = 0;
 
     while (1) {
-        /*Get and store JSON values, break from while Bed is gone*/
         if (!updateStatus()) break;
 
         /*State Machine*/
@@ -45,7 +44,7 @@ bool Bed::updateStatus()
 {
     char buffer[256] = {0};
     sendMsg("getStatus\r");
-    if (recv(sock, buffer, 255, 0) < 1) {
+    if (!recvMsg(buffer)) {
         std::cout << "Bed disconnected from socket: " << sock << std::endl;
         close(sock);
         return false;
