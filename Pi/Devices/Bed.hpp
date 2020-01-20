@@ -5,24 +5,23 @@
 
 class Bed: public Device
 {
-    public:
-        Bed(int, Appartement*);
-        ~Bed();
+public:
+    Bed(int, Appartement*);     // Constructor
+    ~Bed();                     // Destructor
 
-        void operator()();
-        bool updateStatus();
-        nlohmann::json getStatus();
-        void updateWaardes();
-        void ToggleLed(int);
-        void ledAan();
-        void ledUit();
-        int getDruksensor();
-    private:
-        enum bedStatus {UIT, AAN};
+    void operator()();          // aparte thread loop
+    bool updateStatus();        // pakt waardes van operator (arduino) om zichzelf te updaten
+    nlohmann::json getStatus(); // output json object van eigen waarden
+    void ToggleLed(int);        // Lamp togglen
+    void ledAan();              // Lamp aanzetten
+    void ledUit();              // Lamp uitzetten
+    int getDruksensor();        // Druksensor op bed opvragen
+private:
+    enum bedStatus {UIT, AAN};  // lamp waarden
 
-        Bed::bedStatus state;
-        int druksensor;
-        int knop;
+    Bed::bedStatus state;       // Of de lamp aan of uit is
+    int druksensor;             // Of er op het bed gelegen wordt
+    int knop;                   // Knop van bed
 };
 
 #endif

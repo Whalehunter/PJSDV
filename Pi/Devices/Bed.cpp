@@ -14,21 +14,21 @@ void Bed::operator()()
 {
     int knopPrev = 0;
 
-    while(1){
+    while (1) {
         /*Get and store JSON values, break from while Bed is gone*/
-        if(!updateStatus()) break;
+        if (!updateStatus()) break;
 
         /*State Machine*/
-        switch(state){
-            case AAN:
-                if (knop && !knopPrev){
-                    ledUit();
-                }
-                break;
-            case UIT:
-                if (knop && !knopPrev){
-                    ledAan();
-                }
+        switch (state) {
+        case AAN:
+            if (knop && !knopPrev) {
+                ledUit();
+            }
+            break;
+        case UIT:
+            if (knop && !knopPrev) {
+                ledAan();
+            }
         }
         knopPrev = knop;
     }
@@ -45,7 +45,7 @@ bool Bed::updateStatus()
 {
     char buffer[256] = {0};
     sendMsg("getStatus\r");
-    if(recv(sock, buffer, 255, 0) < 1){
+    if (recv(sock, buffer, 255, 0) < 1) {
         std::cout << "Bed disconnected from socket: " << sock << std::endl;
         close(sock);
         return false;
@@ -57,13 +57,14 @@ bool Bed::updateStatus()
         knop = j_bed.at("knop");
         druksensor = j_bed.at("druksensor");
     }
-    catch(json::exception& e) {
+    catch (json::exception& e) {
         std::cout << "Parsing error at Bed on socket " << sock << std::endl;
     }
     return true;
 }
 
-void Bed::ToggleLed(int i){
+void Bed::ToggleLed(int i)
+{
     if (i) {
         ledAan();
     } else {
@@ -71,16 +72,19 @@ void Bed::ToggleLed(int i){
     }
 }
 
-void Bed::ledAan() {
+void Bed::ledAan()
+{
     sendMsg("lampAan\r");
     state = AAN;
 }
 
-void Bed::ledUit() {
+void Bed::ledUit()
+{
     sendMsg("lampUit\r");
     state = UIT;
 }
 
-int Bed::getDruksensor(){
+int Bed::getDruksensor()
+{
     return druksensor;
 }

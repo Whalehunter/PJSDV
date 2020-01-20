@@ -22,16 +22,16 @@ void Gui::operator()()
 {
     char buffer[256] = {0};     // initializeer lege buffer
 
-    while(recvMsg(buffer)) {    // Voor elk ontvangen bericht
+    while (recvMsg(buffer)) {    // Voor elk ontvangen bericht
         std::cout << buffer << std::endl;
         char *p = buffer;
 
         /* loop through string and call getStatus on found devices */
         /* append getStatus() and send to GUI as json */
-        if(*p == '-') {
+        if (*p == '-') {
             json deviceStatus;
             while(*p)
-                if(a->devices.count(*(++p)))
+                if (a->devices.count(*(++p)))
                     deviceStatus.push_back(a->devices.find(*p)->second->getStatus());
             sendMsg(deviceStatus.dump().c_str());
         }
@@ -54,7 +54,7 @@ void Gui::operator()()
             sendMsg("{\"success\":true}");
         }
 
-        else if(*p == 'd' && a->devices.count(*p)) { // Deur
+        else if (*p == 'd' && a->devices.count(*p)) { // Deur
             Deur * deur = dynamic_cast<Deur *>(a->devices.find(*p++)->second);
             if (*p == 'o') {    // openen
                 deur->openDeur();
@@ -73,17 +73,17 @@ void Gui::operator()()
             sendMsg("{\"success\":true}");
         }
 
-        else if(*p == 'f' && a->devices.count(*p)) { // Zuil
+        else if (*p == 'f' && a->devices.count(*p)) { // Zuil
             Zuil * zuil = dynamic_cast<Zuil *>(a->devices.find(*p++)->second);
-            if(*p == 'n') {     // nood alarm aan/uit
+            if (*p == 'n') {     // nood alarm aan/uit
                 if (*(++p) == 'a') zuil->noodAlarmAan();
                 else zuil->noodAlarmUit();
             }
-            else if(*p == 'b') { // brand alarm aan/uit
+            else if (*p == 'b') { // brand alarm aan/uit
                 if (*(++p) == 'a') zuil->brandAlarmAan();
                 else zuil->brandAlarmUit();
             }
-            else if(*p == 'z') { // zoemer aan/uit
+            else if (*p == 'z') { // zoemer aan/uit
                 if (*(++p) == 'a') zuil->zoemerAan();
                 else zuil->zoemerUit();
             }
@@ -125,7 +125,7 @@ void Gui::operator()()
             sendMsg("{\"success\":true}");
         }
 
-        else if(*p == 's' && a->devices.count(*p)) { // schemerlamp
+        else if (*p == 's' && a->devices.count(*p)) { // schemerlamp
             Schemerlamp * schemerlamp = dynamic_cast<Schemerlamp *>(a->devices.find(*p++)->second);
             if (*p == 'l') {    // lamp aan/uit
                 if (*(++p) == 'a') schemerlamp->aan();

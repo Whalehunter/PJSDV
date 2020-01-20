@@ -22,7 +22,7 @@ Muur::~Muur()
 
 void Muur::operator ()()
 {
-    while(1) {
+    while (1) {
         if (!updateStatus()) {
             break;
         }
@@ -34,7 +34,7 @@ void Muur::operator ()()
                 dynamic_cast<Deur *>(a->devices.find('d')->second)->binnenLampUit();
             }
         }
-        else if (!ldrOverride){
+        else if (!ldrOverride) {
             LCDdimmen();
             if (a->devices.count('d')) {
                 dynamic_cast<Deur *>(a->devices.find('d')->second)->binnenLampAan();
@@ -49,7 +49,7 @@ nlohmann::json Muur::getStatus()
 {
     json muurData;
     muurData["Muur"] = {{"LDR", ldr}, {"POT", pot}, {"Raam", raam}, {"Disco", disco}};
-    for (int i=0;i<LAMPEN;i++){
+    for (int i=0;i<LAMPEN;i++) {
         muurData["Muur"]["LED" + std::to_string(i)] = lampen[i].getKleur(isDisco());
     }
 
@@ -61,7 +61,7 @@ bool Muur::updateStatus()
     char buffer[400] = {0};
     sendMsg("getStatus\r");
 
-    if(recv(sock, buffer, 399, 0) < 1){
+    if (recv(sock, buffer, 399, 0) < 1) {
         std::cout << "Muur disconnected from socket: " << sock << std::endl;
         close(sock);
         return false;
@@ -81,7 +81,7 @@ bool Muur::updateStatus()
         }
 
     }
-    catch(json::exception& e){
+    catch (json::exception& e) {
         std::cout << "Parsing error: " << e.what() << std::endl;
     }
 
@@ -92,11 +92,11 @@ bool Muur::updateStatus()
         }
     }
 
-
     return true;
 }
 
-std::string Muur::arduinoStatus() {
+std::string Muur::arduinoStatus()
+{
     json msg = json::object();
     for (int i=0;i<LAMPEN;i++) {
         std::string name = "LED" + std::to_string(i);
@@ -116,22 +116,19 @@ void Muur::LCDdoorlaten()
     raam = 0;
 }
 
-bool Muur::isDisco() {
+bool Muur::isDisco()
+{
     return disco;
 }
 
 void Muur::RGBaan()
 {
-    for (int i=0;i<LAMPEN;i++) {
-        lampen[i].aan();
-    }
+    for (int i=0;i<LAMPEN;i++) lampen[i].aan();
 }
 
 void Muur::RGBuit()
 {
-    for (int i=0;i<LAMPEN;i++) {
-        lampen[i].uit();
-    }
+    for (int i=0;i<LAMPEN;i++) lampen[i].uit();
 }
 
 void Muur::setDisco(bool run)
@@ -151,7 +148,8 @@ void Muur::setDisco(bool run)
     disco = run;
 }
 
-void Muur::setBrightness(bool up) {
+void Muur::setBrightness(bool up)
+{
     int update = 25;
     for (int i=0;i<LAMPEN;i++) {
         int *b = &lampen[i].rgb->brightness;

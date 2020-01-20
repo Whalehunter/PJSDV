@@ -5,12 +5,12 @@
 
 class Gui: public Device
 {
-    public:
-        Gui(int, Appartement*);
-        ~Gui();
+public:
+    Gui(int, Appartement*);     // Constructor
+    ~Gui();                     // Destructor
 
-        void operator()();
-        nlohmann::json getStatus();
+    void operator()();          // Thread loop
+    nlohmann::json getStatus(); // Gedwongen implementatie (het is een "Device")
 };
 
 #endif

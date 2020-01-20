@@ -9,8 +9,7 @@ Deur::Deur(int n, Appartement* ap): Device(n, ap), state(DICHT), knopBinnen(0), 
 }
 
 Deur::~Deur()
-{
-}
+{}
 
 void Deur::operator()()
 {
@@ -18,24 +17,22 @@ void Deur::operator()()
     int knopBinnenPrev = 0;
     int knopBuitenPrev = 0;
 
-    while(1) {
+    while (1) {
         /* get and store JSON values, break from while if Deur is #gone */
-        if(!updateStatus()) break;
+        if (!updateStatus()) break;
 
         /* state machine */
-        switch(state) {
-            case OPEN:
-                if(knopBinnen == 2 && knopBinnenPrev != knopBinnen) {
-                    sluitDeur();
-                }
-                break;
-            case DICHT:
-                if(knopBinnen == 2 && knopBinnenPrev != knopBinnen) {
-                    openDeur();
-                }
-                break;
-            case OPSLOT:
-                break;
+        switch (state) {
+        case OPEN:
+            if (knopBinnen == 2 && knopBinnenPrev != knopBinnen) {
+                sluitDeur();
+            }
+            break;
+        case DICHT:
+            if (knopBinnen == 2 && knopBinnenPrev != knopBinnen) {
+                openDeur();
+            }
+            break;
         }
 
         /* operations based on checks */
@@ -52,11 +49,11 @@ void Deur::operator()()
         }
 
         if (noodKnipper == 1 && ((std::clock() - knipperTimer) / (double) CLOCKS_PER_SEC) >= 1.0) {
-            if(ledBinnen){
+            if (ledBinnen) {
                 binnenLampUit(true);
                 knipperTimer = std::clock();
             }
-            else if (!ledBinnen){
+            else if (!ledBinnen) {
                 binnenLampAan(true);
                 knipperTimer = std::clock();
             }
@@ -118,7 +115,7 @@ void Deur::buitenLampUit()
 
 void Deur::binnenLampAan(bool force)
 {
-    if(!noodKnipper || force) {
+    if (!noodKnipper || force) {
         sendMsg("binnenLampAan\r");
 
         ledBinnen = 1;
@@ -127,7 +124,7 @@ void Deur::binnenLampAan(bool force)
 
 void Deur::binnenLampUit(bool force)
 {
-    if(!noodKnipper || force) {
+    if (!noodKnipper || force) {
         sendMsg("binnenLampUit\r");
 
         ledBinnen = 0;
@@ -148,13 +145,12 @@ void Deur::noodKnipperUit()
 
 bool Deur::updateStatus()
 {
-    char buffer[256];
+    char buffer[256] = {0};
 
     sendMsg("getStatus\r");
 
-    memset(buffer, 0, sizeof(buffer));
     /* send message and check if client is still connected */
-    if(recv(sock, buffer, 255, 0) < 1) {
+    if (recv(sock, buffer, 255, 0) < 1) {
         std::cout << "Deur disconnected from socket: " << sock << std::endl;
         return false;
     }
@@ -166,7 +162,7 @@ bool Deur::updateStatus()
         knopBinnen = j_deur.at("binnenKnop");
         knopBuiten = j_deur.at("buitenKnop");
     }
-    catch(json::exception& e) {
+    catch (json::exception& e) {
         std::cout << "Exception error at Deur: " << e.what() << std::endl;
     }
     return true;

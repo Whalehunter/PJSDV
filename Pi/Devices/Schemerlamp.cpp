@@ -15,8 +15,7 @@ Schemerlamp::~Schemerlamp()
 
 void Schemerlamp::operator()()
 {
-
-    while(1) {
+    while (1) {
         if (!updateStatus()) break;
 
         if (isDisco() && ((std::clock() - discoTimer) / (double) COCKS_PER_SEC) >= 0.5) {
@@ -26,12 +25,12 @@ void Schemerlamp::operator()()
         }
 
         /* reset 5min timer als beweging */
-        if(isDisco() && beweging) {
+        if (isDisco() && beweging) {
             activityTimer = std::clock();
         }
 
         /* als 5 min voorbij zonder beweging -> disco uit */
-        if(isDisco() && ((std::clock() - activityTimer) / (double) COCKS_PER_SEC) >= 300) {
+        if (isDisco() && ((std::clock() - activityTimer) / (double) COCKS_PER_SEC) >= 300) {
             setDisco(false);
             activityTimer = 0;
         }

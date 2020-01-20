@@ -6,35 +6,33 @@
 
 class Muur: public Device
 {
-    static const int LAMPEN = 3;
+    static const int LAMPEN = 3; // Het aantal aanwezige LEDs
 
-    int ldr;
-    int pot;
-    RGBLed lampen[LAMPEN];
-    int raam;
+    int ldr;                    // Lichtsensor waarde
+    int pot;                    // Potentiometer waarde
+    RGBLed lampen[LAMPEN];      // Lijst van LEDs
+    int raam;                   // Raam status waarde
 
-    bool disco;
-    clock_t discoTimer;
+    bool disco;                 // Discostand aan/uit
+    clock_t discoTimer;         // Discotimer (halve seconde schakelen per licht)
 
 public:
-    Muur(int, Appartement*);
-    ~Muur();
-    bool ldrOverride = false;
+    Muur(int, Appartement*);    // Constructor
+    ~Muur();                    // Destructor
+    bool ldrOverride = false;   // Of lichtsensor wordt
 
-    void operator()();
-    nlohmann::json getStatus();
-    bool updateStatus();
-    void ToggleLed(int);
-    bool isDisco();
-    void RGBdimmen();
-    void RGBaan();
-    void RGBuit();
-    void setDisco(bool);
-    void LCDdimmen();
-    void LCDdoorlaten();
-    int potFilter(int);
-    void setBrightness(bool);
+    void operator()();          // thread loop
+    nlohmann::json getStatus(); // JSON object variabelen output
+    bool updateStatus();        // thread loop WEMOS afhandeling
+    void ToggleLed(int);        // Lamp aan/uit
+    bool isDisco();             // Kijken of discostand aan staat
+    void RGBaan();              // Lampen aan
+    void RGBuit();              // Lampen uit
+    void setDisco(bool);        // Discostand aan/uit
+    void LCDdimmen();           // Raam donker
+    void LCDdoorlaten();        // Raam doorzichtig
+    void setBrightness(bool);   // Helderheid van RGB aanpassen
 
-    std::string arduinoStatus();
+    std::string arduinoStatus(); // Wemos vertellen wat de status is van de variabelen
 };
 #endif

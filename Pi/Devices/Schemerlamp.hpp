@@ -20,13 +20,10 @@ class Schemerlamp: public Device
     ~Schemerlamp();
 
     void operator()();
-    void setLamp(bool);         // aan of uit bool (true = aan)
-    void setLamp(std::string);  // aan of uit string
-    bool getLamp();
-    void setKleur(int,int,int); // Kleur
-    bool isDisco();
-    void setDisco(bool);
-    int getDiscoKleur(std::string);
+    void setKleur(int,int,int); // Kleur setten voor lamp
+    bool isDisco();             // Discostand status ophalen
+    void setDisco(bool);        // Discostand aan/uit zetten
+    int getDiscoKleur(std::string); //
     void uit();
     void aan();
 
