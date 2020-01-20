@@ -135,7 +135,7 @@ $(document).ready(()=>{
 
             if (d.Muur) {
                 let m = d.Muur;
-                $('.muur .lamp .checkbox').checkbox(m.LED0?c:u);
+                $('.muur .lamp .checkbox').checkbox(isAan(m.LED0)?c:u);
                 $('.muur .screen .checkbox').checkbox(m.Raam?c:u);
                 $('.muur .disco .checkbox').checkbox(m.Disco?c:u);
             }

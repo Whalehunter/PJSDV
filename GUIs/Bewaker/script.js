@@ -276,7 +276,7 @@ $(document).ready(()=>{
             if (key.Muur) {
                 let m = key.Muur;
                 $('.muur .screen .checkbox').checkbox(m.Raam?'set checked':'set unchecked');
-                $('.muur .lamp .checkbox').checkbox(m.LED0?'set checked':'set unchecked');
+                $('.muur .lamp .checkbox').checkbox(isAan(m.LED0)?'set checked':'set unchecked');
                 $('.muur .disco .checkbox').checkbox(m.Disco?'set checked':'set unchecked');
             }
 
