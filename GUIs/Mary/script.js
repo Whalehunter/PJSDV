@@ -31,8 +31,8 @@ $(document).ready(()=>{
     });
 
     $('.schemerlamp .disco .checkbox').checkbox({
-        onChecked:()=>{msg('sda')}, // Discostand van schemerlamp aan
-        onUnchecked:()=>{msg('sdu')}, // Discostand van schemerlamp uit
+        onChecked:()=>{msg('sda');msg('mda')}, // Discostand van schemerlamp aan
+        onUnchecked:()=>{msg('sdu');msg('mdu')}, // Discostand van schemerlamp uit
     });
 
     // Stoel
@@ -83,8 +83,8 @@ $(document).ready(()=>{
     });
 
     $('.muur .disco .checkbox').checkbox({
-        onChecked:()=>{msg('mda')},
-        onUnchecked:()=>{msg('mdu')}
+        onChecked:()=>{msg('mda');msg('sda')},
+        onUnchecked:()=>{msg('mdu');msg('sdu')}
     });
 
     $('.muur .screen .checkbox').checkbox({

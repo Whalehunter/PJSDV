@@ -31,8 +31,8 @@ $(document).ready(()=>{
     });
 
     $('.schemerlamp .disco .checkbox').checkbox({
-        onChecked:()=>{msg('sda',afhandel)},
-        onUnchecked:()=>{msg('sdu',afhandel)}
+        onChecked:()=>{msg('sda',afhandel);msg('mda',afhandel)},
+        onUnchecked:()=>{msg('sdu',afhandel);msg('mdu',afhandel)}
     });
 
     /* STOEL */
@@ -99,8 +99,8 @@ $(document).ready(()=>{
     });
 
     $('.muur .disco .checkbox').checkbox({
-        onChecked:()=>{msg('mda',afhandel)},
-        onUnchecked:()=>{msg('mdu',afhandel)}
+        onChecked:()=>{msg('mda',afhandel);msg('sda',afhandel)},
+        onUnchecked:()=>{msg('mdu',afhandel);msg('sdu',afhandel)}
     });
 
     $('.muur .screen .checkbox').checkbox({
