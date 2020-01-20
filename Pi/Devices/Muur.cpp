@@ -150,3 +150,17 @@ void Muur::setDisco(bool run)
     }
     disco = run;
 }
+
+void Muur::setBrightness(bool up) {
+    int update = 25;
+    for (int i=0;i<LAMPEN;i++) {
+        int *b = &lampen[i].rgb->brightness;
+        if (up) {
+            if ((*b)+update <= 255) (*b) += update;
+            else update = 255;
+        } else {
+            if ((*b)-update >= 0) (*b) -= update;
+            else update =0;
+        }
+    }
+}

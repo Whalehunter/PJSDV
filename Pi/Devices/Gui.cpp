@@ -141,6 +141,13 @@ void Gui::operator()()
                     muur->LCDdoorlaten();
                 }
             }
+            else if (*p == 'b') {
+                if (*(++p) == 'u') {
+                    muur->setBrightness(true);
+                } else {
+                    muur->setBrightness(false);
+                }
+            }
             sendMsg("{\"success\":true}");
         }
 
