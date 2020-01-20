@@ -66,14 +66,7 @@ void loop() {
           StaticJsonDocument<BUFSIZE> data;
           
           deserializeJson(data, line);
-         Serial.println(line);
-         // JsonObject& pdata = data.parseObject(line);
-          /*if(!pdata.success()) {
-            Serial.println("parseObject() failed");
-            return;
-          }*/
-
-        //  Serial.println(data);
+          Serial.println(line);
 
           pixels.setPixelColor(0, pixels.Color(data["R"], data["G"], data["B"]));
           pixels.show();
