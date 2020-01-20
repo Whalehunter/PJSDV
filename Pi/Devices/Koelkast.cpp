@@ -1,10 +1,3 @@
-/*
- * Koelkast.cpp
- *
- *  Created on: Jan 8, 2020
- *      Author: programmer
- */
-
 #include "Koelkast.hpp"
 
 using json = nlohmann::json;
@@ -34,7 +27,7 @@ void Koelkast::operator()(){
 		}
 
 		try {
-			auto j_koelkast = json::parse(buffer); // hier moeten ook exceptions afgehandeld worden
+			auto j_koelkast = json::parse(buffer);
 
 			koelkastDeur = j_koelkast.at("deur");
 			NTC1 = j_koelkast.at("NTC1");

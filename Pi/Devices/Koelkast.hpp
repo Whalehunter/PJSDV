@@ -1,10 +1,3 @@
-/*
- * Koelkast.hpp
- *
- *  Created on: Jan 8, 2020
- *      Author: Fabian
- */
-
 #ifndef DEVICES_KOELKAST_HPP_
 #define DEVICES_KOELKAST_HPP_
 
