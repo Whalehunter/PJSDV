@@ -1,10 +1,6 @@
-//scp ProjectSD pi@192.168.2.90:/home/pi/ProjectSD/Kaas
-
 #include "Stoel.hpp"
 
-
 using json = nlohmann::json;
-
 
 Stoel::Stoel(int n, Appartement* ap): Device(n, ap)
 {
@@ -13,8 +9,7 @@ Stoel::Stoel(int n, Appartement* ap): Device(n, ap)
 }
 
 Stoel::~Stoel()
-{
-}
+{}
 
 void Stoel::operator()()//Overloaded functies moeten met 2 haakjes zodat je er zoveel mogelijk over kan sturen als je wilt.
 {

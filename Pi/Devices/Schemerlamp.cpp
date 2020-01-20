@@ -39,11 +39,13 @@ void Schemerlamp::operator()()
     std::cout << "Schemerlamp connection closed" << std::endl;
 }
 
-bool Schemerlamp::isDisco() {
+bool Schemerlamp::isDisco()
+{
     return disco;
 }
 
-void Schemerlamp::setDisco(bool d) {
+void Schemerlamp::setDisco(bool d)
+{
     if (disco && !d) {
         json msg = {{"R", 255},{"G", 255},{"B", 255}};
         sendMsg((msg.dump()+"\r").c_str());
@@ -57,19 +59,22 @@ void Schemerlamp::setDisco(bool d) {
     disco = d;
 }
 
-void Schemerlamp::setKleur(int r, int g, int b) {
+void Schemerlamp::setKleur(int r, int g, int b)
+{
     lamp.setKleur(r,g,b);
     json kleur = lamp.getKleur();
     kleur["cmd"] = "kleur";
     sendMsg((kleur.dump()+"\r").c_str());
 }
 
-void Schemerlamp::uit() {
+void Schemerlamp::uit()
+{
     lamp.uit();
     sendMsg((lamp.getKleur().dump()+"\r").c_str());
 }
 
-void Schemerlamp::aan() {
+void Schemerlamp::aan()
+{
     lamp.aan();
     sendMsg((lamp.getKleur().dump()+"\r").c_str());
 }
@@ -80,7 +85,7 @@ bool Schemerlamp::updateStatus()
     sendMsg("getStatus\r");
     memset(buf, 0, sizeof(buf));
 
-    if (recv(sock, buf, 255, 0) < 1) {
+    if (!recvMsg(buf)) {
         std::cout << "Schemerlamp is #gone" << std::endl;
         close(sock);
         return false;
