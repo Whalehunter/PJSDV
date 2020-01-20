@@ -35,6 +35,7 @@ void setup() {
     delay(500);
   }
   Serial.printf("Connected to ", SSID);
+  pixels.setPixelColor(0, pixels.Color(255, 255, 255)); // ff een testje
 }
 
 void loop() {
@@ -58,11 +59,12 @@ void loop() {
           data["groen"] = ((pixel>>8) & 0xFF);
           data["blauw"] = (pixel & 0xFF);
           data["beweging"] = (leesPIR()&0x01);
+          Serial.println((leesPIR()&0x01));
           serializeJson(data, buffer);
           client.print(String(buffer));
-        } else if (line != "") {
+        } else {
           StaticJsonDocument<BUFSIZE> data;
-
+          
           deserializeJson(data, line);
           Serial.println(line);
 
