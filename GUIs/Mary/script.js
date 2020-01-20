@@ -81,8 +81,8 @@ $(document).ready(()=>{
     });
 
     $('.muur .screen .checkbox').checkbox({
-        onChecked:()=>{msg('msa')},
-        onUnchecked:()=>{msg('msu')}
+        onChecked:()=>{msg('mra')},
+        onUnchecked:()=>{msg('mru')}
     });
 
 
@@ -134,9 +134,8 @@ $(document).ready(()=>{
             $('.bed .lamp .checkbox').checkbox(d.Bed && d.Bed.Lamp ? c : u);
 
             if (d.Muur) {
-                let m = d.Muur,
-                    aan = isAan(m.LED0);
-                $('.muur .lamp .checkbox').checkbox(aan?c:u);
+                let m = d.Muur;
+                $('.muur .lamp .checkbox').checkbox(m.LED0?c:u);
                 $('.muur .screen .checkbox').checkbox(m.Raam?c:u);
                 $('.muur .disco .checkbox').checkbox(m.Disco?c:u);
             }
