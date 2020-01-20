@@ -5,32 +5,30 @@
 #include <iostream>
 #include <iomanip>
 
+class Koelkast: public Device {
+    std::clock_t openTimer;
 
-class Koelkast: public Device{
+    int koelkastDeur{};
+    int fan{};
+    int timerAanUit{};
+    float NTC1{};
+    float NTC2{};
+    int koelAlarm{};
+    float tempOut{};
+    float tempIn{};
+    int koelelement{};
 
-	private:
-		std::clock_t openTimer;
-
-		int koelkastDeur{};
-		int fan{};
-		int timerAanUit{};
-		float NTC1{};
-		float NTC2{};
-		int koelAlarm{};
-		float tempOut{};
-		float tempIn{};
-		int koelelement{};
-	public:
-		Koelkast(int, Appartement*);
-		~Koelkast();
-		nlohmann::json getStatus();
-		void operator()();
-		void disableKoelAlarm();
-		void fanAan();
-		void fanUit();
-		void peltierAan();
-		void peltierUit();
-		float calculateCelsius(float i);
+public:
+    Koelkast(int, Appartement*);
+    ~Koelkast();
+    nlohmann::json getStatus();
+    void operator()();
+    void disableKoelAlarm();
+    void fanAan();
+    void fanUit();
+    void peltierAan();
+    void peltierUit();
+    float calculateCelsius(float i);
 };
 
 
