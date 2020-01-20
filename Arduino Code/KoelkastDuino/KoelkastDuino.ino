@@ -12,7 +12,7 @@ const char* host = "192.168.4.1";
 
 int deurOpenDicht();
 void turnOnOffFan(int i);
-int readNTC1(int i);
+int readNTC(int i);
 void turnOnPeltier();
 
 String line = "";
@@ -63,9 +63,9 @@ void loop(void) {
       if (line == "getStatus"){
         StaticJsonDocument<100> data;
         data["deur"] = deurOpenDicht();
-        data["NTC1"] = readNTC1(1);
-        data["NTC2"] = readNTC1(0);
-     
+        data["NTC1"] = readNTC(1);
+        data["NTC2"] = readNTC(0);
+
         char buffer[100];
 
         serializeJson(data, buffer);
@@ -89,9 +89,6 @@ void loop(void) {
       else {
         Serial.println("Invalid input");
       }
-      float C;
-      C = 1.00 / (1.00 / 298.15 + 1.00 / 3380.00*(log (1024.00 / (float) 480 - 1.00))) - 273.15;
-      Serial.print(C);
     }
   Serial.println("Failed connection.");
   client.stop();
@@ -139,19 +136,16 @@ void turnOnOffFan(int i){
   }
 }
 
-int readNTC1(int i){
+int readNTC(int i){
+  Wire.beginTransmission(0x36);
+  Wire.write(byte(0xA2));
+  Wire.write(byte(0x03));
+  Wire.endTransmission();
+  
   Wire.requestFrom(0x36, 4);   
-  unsigned int anin0 = Wire.read()&0x03;  
-  anin0=anin0<<8;
-  anin0 = anin0|Wire.read();  
-  unsigned int anin1 = Wire.read()&0x03;  
-  anin1=anin1<<8;
-  anin1 = anin1|Wire.read(); 
-  Serial.print("analog in 0: ");
-  Serial.println(anin0);   
-  Serial.print("analog in 1: ");
-  Serial.println(anin1);   
-  Serial.println("");
+  unsigned int anin0 = ((Wire.read()&0x03)<<8)|Wire.read();
+  unsigned int anin1 = ((Wire.read()&0x03)<<8)|Wire.read();
+  
   if (i){
     return anin0;
   }
@@ -168,10 +162,6 @@ void turnOnPeltier(int i){
   else {
     digitalWrite(D5, LOW);
   }
-  
 }
-
-
-
 
 
