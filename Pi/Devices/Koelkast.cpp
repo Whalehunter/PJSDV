@@ -52,11 +52,10 @@ void Koelkast::operator()(){
 			fanUit();
 			peltierUit();
 		}
-		else{
+		else {
 			openTimer = std::clock();
 			peltierAan();
 			fanAan();
-
 		}
 		tempOut = calculateCelsius(NTC1);
 		tempIn = calculateCelsius(NTC2);
