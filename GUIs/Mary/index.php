@@ -208,8 +208,8 @@
                                 <div class="column dimmer">
                                     <p><b>Dimmer</b></p>
                                     <div class="ui mini buttons">
-                                        <div class="ui icon basic button"><i class="minus icon"></i></div>
-                                        <div class="ui icon basic button"><i class="plus icon"></i></div>
+                                        <div class="ui icon minus basic button"><i class="minus icon"></i></div>
+                                        <div class="ui icon plus basic button"><i class="plus icon"></i></div>
                                     </div>
                                 </div>
                                 <div class="column screen">
