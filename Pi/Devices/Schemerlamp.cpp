@@ -81,10 +81,8 @@ void Schemerlamp::aan()
 
 bool Schemerlamp::updateStatus()
 {
-    char buf[256];
+    char buf[256] = {0};
     sendMsg("getStatus\r");
-    memset(buf, 0, sizeof(buf));
-
     if (!recvMsg(buf)) {
         std::cout << "Schemerlamp is #gone" << std::endl;
         close(sock);
