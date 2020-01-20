@@ -16,7 +16,7 @@
                     <h1 class="ui header"><i class="desktop icon"></i><div class="content">Mary - Control Panel<div class="sub header">Made by van Adrichem, Hooghuis, Meissen, Olsthoorn</div></div></h1>
                 </div>
                 <div class="eight wide column">
-                    <button class="ui red massive labeled icon button">
+                    <button id="mary-nood-knop" class="ui red massive labeled icon button">
                         <i class="exclamation triangle icon" style="scroll-behavior: unset;"></i>
                         NOOD
                     </button>

@@ -20,6 +20,10 @@ function msg(txt, fun=null) {
 }
 
 $(document).ready(()=>{
+
+    // MARY NOOD KNOP
+    $('#mary-nood-knop').click(()=>{msg('fna')});
+
     // Schemerlamp
     $('.schemerlamp .lamp .checkbox').checkbox({
         onChecked:()=>{msg('sla')}, // Schemerlamp lamp aan
