@@ -19,39 +19,31 @@ Gui::~Gui()
 
 void Gui::operator()()
 {
-    char buffer[256];
-    memset(buffer, 0, sizeof(buffer));
+    char buffer[256] = {0};     // initializeer lege buffer
 
-    while(recvMsg(buffer)) {
+    while(recvMsg(buffer)) {    // Voor elk ontvangen bericht
         std::cout << buffer << std::endl;
         char *p = buffer;
 
         /* loop through string and call getStatus on found devices */
-        /* append getStatus returns and send to GUI as json */
+        /* append getStatus() and send to GUI as json */
         if(*p == '-') {
             json deviceStatus;
-            /*for(std::map<char, Device*>::iterator i = a->devices.begin(); i != a->devices.end(); ++i) {
-              deviceStatus.push_back(i->second->getStatus());
-              }
-              sendMsg(deviceStatus.dump().c_str());*/
             while(*p)
-                if(a->devices.count(*(++p))) {
+                if(a->devices.count(*(++p)))
                     deviceStatus.push_back(a->devices.find(*p)->second->getStatus());
-                }
             sendMsg(deviceStatus.dump().c_str());
-
         }
 
-        else if (*p == 'z' && a->devices.count(*p)) {
+        else if (*p == 'z' && a->devices.count(*p)) { // Stoel
             Stoel * stoel = dynamic_cast<Stoel*>(a->devices.find(*p++)->second);
-
-            if (*p == 't') {    // trillen
+            if (*p == 't') {    // Trillen aan/uit
                 if (*(++p) == 'a') {
                     stoel->trilAan();
                 } else {
                     stoel->trilUit();
                 }
-            } else if (*p == 'l') {   // lamp
+            } else if (*p == 'l') {   // Lamp aan/uit
                 if (*(++p) == 'a') {
                     stoel->ledAan();
                 } else {
@@ -61,76 +53,53 @@ void Gui::operator()()
             sendMsg("{\"success\":true}");
         }
 
-        else if(*p == 'd' && a->devices.count(*p)) {
+        else if(*p == 'd' && a->devices.count(*p)) { // Deur
             Deur * deur = dynamic_cast<Deur *>(a->devices.find(*p++)->second);
-
-            if (*p == 'o') {
+            if (*p == 'o') {    // openen
                 deur->openDeur();
             }
-            else if (*p == 's') {
+            else if (*p == 's') { // sluiten
                 deur->sluitDeur();
             }
-            else if (*p == 'l') { // dla voor binnenlamp
+            else if (*p == 'l') { // binnen lamp aan/uit
                 if (*(++p) == 'a') deur->binnenLampAan();
                 else deur->binnenLampUit();
             }
-            else if (*p == 'b') { // dba voor buitenlamp
+            else if (*p == 'b') { // buiten lamp aan/uit
                 if (*(++p) == 'a') deur->buitenLampAan();
                 else deur->buitenLampUit();
             }
             sendMsg("{\"success\":true}");
         }
 
-        else if(*p == 'f' && a->devices.count(*p)) {
+        else if(*p == 'f' && a->devices.count(*p)) { // Zuil
             Zuil * zuil = dynamic_cast<Zuil *>(a->devices.find(*p++)->second);
-            if(*p == 'n') {
+            if(*p == 'n') {     // nood alarm aan/uit
                 if (*(++p) == 'a') zuil->noodAlarmAan();
                 else zuil->noodAlarmUit();
             }
-            else if(*p == 'b') {
+            else if(*p == 'b') { // brand alarm aan/uit
                 if (*(++p) == 'a') zuil->brandAlarmAan();
                 else zuil->brandAlarmUit();
             }
-            else if(*p == 'z') {
+            else if(*p == 'z') { // zoemer aan/uit
                 if (*(++p) == 'a') zuil->zoemerAan();
                 else zuil->zoemerUit();
             }
             sendMsg("{\"success\":true}");
         }
 
-        else if(*p == 's' && a->devices.count(*p)) {
-            Schemerlamp * schemerlamp = dynamic_cast<Schemerlamp *>(a->devices.find(*p++)->second);
-            if (*p == 'l') {
-                if (*(++p) == 'a') schemerlamp->aan();
-                else schemerlamp->uit();
-            }
-            else if (*p == 'd') {
-                if (*(++p) == 'a') schemerlamp->setDisco(true);
-                else schemerlamp->setDisco(false);
-            }
-            sendMsg("{\"success\":true}");
-        }
-
-        else if (*p == 'y' && a->devices.count(*p)) {
-            Bed * bed = dynamic_cast<Bed *>(a->devices.find(*p++)->second);
-            if (*p == 'l') {
-                if (*(++p) == 'a') bed->ledAan();
-                else bed->ledUit();
-            }
-            sendMsg("{\"success\":true}");
-        }
-
-        else if (*p == 'm' && a->devices.count(*p)) {
+        else if (*p == 'm' && a->devices.count(*p)) { // muur
             Muur * muur = dynamic_cast<Muur *>(a->devices.find(*p++)->second);
-            if (*p == 'd') {
+            if (*p == 'd') {    // disco aan/uit
                 if (*(++p) == 'a') muur->setDisco(true);
                 else muur->setDisco(false);
             }
-            else if (*p == 'l') {
+            else if (*p == 'l') { // lampen aan/uit
                 if (*(++p) == 'a') muur->RGBaan();
                 else muur->RGBuit();
             }
-            else if (*p == 'r') {
+            else if (*p == 'r') { // raam dimmer aan/uit
                 if (*(++p) == 'a') {
                     if (muur->ldrOverride) muur->ldrOverride = false;
                     else muur->ldrOverride = true;
@@ -141,7 +110,7 @@ void Gui::operator()()
                     muur->LCDdoorlaten();
                 }
             }
-            else if (*p == 'b') {
+            else if (*p == 'b') { // lamp helderheid +/-
                 if (*(++p) == 'u') {
                     muur->setBrightness(true);
                 } else {
@@ -151,8 +120,29 @@ void Gui::operator()()
             sendMsg("{\"success\":true}");
         }
 
-        // sendMsg(buffer);
-        memset(buffer, 0, sizeof(buffer));
+        else if(*p == 's' && a->devices.count(*p)) { // schemerlamp
+            Schemerlamp * schemerlamp = dynamic_cast<Schemerlamp *>(a->devices.find(*p++)->second);
+            if (*p == 'l') {    // lamp aan/uit
+                if (*(++p) == 'a') schemerlamp->aan();
+                else schemerlamp->uit();
+            }
+            else if (*p == 'd') { // disco aan/uit
+                if (*(++p) == 'a') schemerlamp->setDisco(true);
+                else schemerlamp->setDisco(false);
+            }
+            sendMsg("{\"success\":true}");
+        }
+
+        else if (*p == 'y' && a->devices.count(*p)) { // Bed
+            Bed * bed = dynamic_cast<Bed *>(a->devices.find(*p++)->second);
+            if (*p == 'l') {    // lamp aan/uit
+                if (*(++p) == 'a') bed->ledAan();
+                else bed->ledUit();
+            }
+            sendMsg("{\"success\":true}");
+        }
+
+        memset(buffer, 0, sizeof(buffer)); // reset buffer
     }
     close(sock);
     std::cout << "Connection closed on socket " << sock << std::endl;
@@ -160,6 +150,5 @@ void Gui::operator()()
 
 json Gui::getStatus()
 {
-    json data = {"Placeholder", 0};
-    return data; // placeholder, we gaan hoop ik JSON gebruiken
+    return json::object();
 }
