@@ -9,26 +9,20 @@ Zuil::Zuil(int n, Appartement* ap): Device(n, ap), nood(0), brand(0), zoemer(0),
 }
 
 Zuil::~Zuil()
-{
-}
+{}
 
 void Zuil::operator()()
 {
-    char buffer[256];
+    char buffer[256] = {0};
 
-    while(1) {
-        /* get and store JSON values */
-
+    while (1) {
         sendMsg("getStatus\r");
 
-        memset(buffer, 0, sizeof(buffer));
-        if(recv(sock, buffer, 255, 0) < 1) {
+        if(!recvMsg(buffer)) {
             std::cout << "Zuil disconnected from socket: " << sock << std::endl;
             close(sock);
             return;
         }
-
-      //  std::cout << buffer << std::endl;
 
         try {
             auto j_zuil = json::parse(buffer);
@@ -36,20 +30,16 @@ void Zuil::operator()()
             knopValue = j_zuil.at("knopValue");
             sensorValue = j_zuil.at("sensorValue");
         }
-        catch(json::exception& e) {
+        catch (json::exception& e) {
             std::cout << "Exception error at Zuil: " << e.what() << std::endl;
         }
 
-        if(getKnop()) {
+        if (getKnop()) {
             noodAlarmAan();
         }
-        if(getSensor() >= 920) {
+        if (getSensor() >= 920) {
             brandAlarmAan();
         }
-
-        /*if(timer != 0 && zoemer == 1 && (((std::clock() - timer) / (double) CLOCKS_PER_SEC) >= 1.5) && nood == 0) {
-            deurBelUit();
-        }*/
     }
 
     close(sock);
@@ -103,12 +93,14 @@ void Zuil::deurBelUit()
     timer = 0;
 }
 
-void Zuil::zoemerAan() {
+void Zuil::zoemerAan()
+{
     sendMsg("zoemerAan\r");
     zoemer = 1;
 }
 
-void Zuil::zoemerUit() {
+void Zuil::zoemerUit()
+{
     sendMsg("zoemerUit\r");
     zoemer = 0;
 }
