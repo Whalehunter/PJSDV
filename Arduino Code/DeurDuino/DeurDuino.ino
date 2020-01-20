@@ -125,7 +125,7 @@ void buitenLampAanUit(int i){
   else {
     Wire.beginTransmission(0x38);
     Wire.write(byte(0x01));           
-    Wire.write(byte(hex &= !(0x10)));            
+    Wire.write(byte(hex &= ~(0x10)));            
     Wire.endTransmission(); 
   }
 }
@@ -145,7 +145,7 @@ void binnenLampAanUit(int i){
   else {
     Wire.beginTransmission(0x38);
     Wire.write(byte(0x01));           
-    Wire.write(byte(hex &= !(0x20)));            
+    Wire.write(byte(hex &= ~(0x20)));            
     Wire.endTransmission(); 
   }
 }

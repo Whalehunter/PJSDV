@@ -60,18 +60,11 @@ void loop() {
           data["beweging"] = (leesPIR()&0x01);
           serializeJson(data, buffer);
           client.print(String(buffer));
-        } else {
+        } else if (line != "") {
           StaticJsonDocument<BUFSIZE> data;
-          
-          deserializeJson(data, line);
-         Serial.println(line);
-         // JsonObject& pdata = data.parseObject(line);
-          /*if(!pdata.success()) {
-            Serial.println("parseObject() failed");
-            return;
-          }*/
 
-        //  Serial.println(data);
+          deserializeJson(data, line);
+          Serial.println(line);
 
           pixels.setPixelColor(0, pixels.Color(data["R"], data["G"], data["B"]));
           pixels.show();

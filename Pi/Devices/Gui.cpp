@@ -4,6 +4,7 @@
 #include "Schemerlamp.hpp"
 #include "Stoel.hpp"
 #include "Bed.hpp"
+#include "Muur.hpp"
 #include <string>
 
 using json = nlohmann::json;
@@ -29,10 +30,10 @@ void Gui::operator()()
         /* append getStatus returns and send to GUI as json */
         if(*p == '-') {
             json deviceStatus;
-               /*for(std::map<char, Device*>::iterator i = a->devices.begin(); i != a->devices.end(); ++i) {
-                 deviceStatus.push_back(i->second->getStatus());
-                 }
-                 sendMsg(deviceStatus.dump().c_str());*/
+            /*for(std::map<char, Device*>::iterator i = a->devices.begin(); i != a->devices.end(); ++i) {
+              deviceStatus.push_back(i->second->getStatus());
+              }
+              sendMsg(deviceStatus.dump().c_str());*/
             while(*p)
                 if(a->devices.count(*(++p))) {
                     deviceStatus.push_back(a->devices.find(*p)->second->getStatus());
@@ -116,6 +117,31 @@ void Gui::operator()()
                 if (*(++p) == 'a') bed->ledAan();
                 else bed->ledUit();
             }
+            sendMsg("{\"success\":true}");
+        }
+
+        else if (*p == 'm' && a->devices.count(*p)) {
+            Muur * muur = dynamic_cast<Muur *>(a->devices.find(*p++)->second);
+            if (*p == 'd') {
+                if (*(++p) == 'a') muur->setDisco(true);
+                else muur->setDisco(false);
+            }
+            else if (*p == 'l') {
+                if (*(++p) == 'a') muur->RGBaan();
+                else muur->RGBuit();
+            }
+            else if (*p == 'r') {
+                if (*(++p) == 'a') {
+                    if (muur->ldrOverride) muur->ldrOverride = false;
+                    else muur->ldrOverride = true;
+                    muur->LCDdimmen();
+                } else {
+                    if (muur->ldrOverride) muur->ldrOverride = false;
+                    else muur->ldrOverride = true;
+                    muur->LCDdoorlaten();
+                }
+            }
+            sendMsg("{\"success\":true}");
         }
 
         // sendMsg(buffer);
