@@ -116,8 +116,8 @@ $(document).ready(()=>{
             if (d.Koelkast) {
                 let k = d.Koelkast;
                 $('.koelkast .deur span').text(k.Deur ? "Dicht" : "Open");
-                $('#fridge-temp-2').text(k.m1);
-                $('#fridge-temp-1').text(k.m2);
+                $('#fridge-temp-2').text(k.m1.toFixed(2));
+                $('#fridge-temp-1').text(k.m2.toFixed(2));
             }
 
             if (d.Deur) {

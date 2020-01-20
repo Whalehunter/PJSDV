@@ -217,8 +217,8 @@ $(document).ready(()=>{
                     $('.koelkast .fan .checkbox').checkbox('set unchecked');
                 }
 
-                $('#fridge-temp-2').text(k.m1);
-                $('#fridge-temp-1').text(k.m2);
+                $('#fridge-temp-2').text(k.m1.toFixed(2));
+                $('#fridge-temp-1').text(k.m2.toFixed(2));
             }
 
             /* DEUR */
