@@ -12,6 +12,7 @@ public:
     int blue;
     int brightness = 255;
     int polPot;
+    bool lock;
     RGB(int r,int g,int b):red(r),green(g),blue(b){};
 };
 
@@ -28,12 +29,16 @@ public:
         return 0;
     }
     void updateDiscoColor() {
-        if (currentDiscoColor == "rood") {
-            currentDiscoColor = "groen";
-        } else if (currentDiscoColor == "groen") {
-            currentDiscoColor = "blauw";
-        } else {
-            currentDiscoColor = "rood";
+        lock = true;
+        if (!lock) {
+            if (currentDiscoColor == "rood") {
+                currentDiscoColor = "groen";
+            } else if (currentDiscoColor == "groen") {
+                currentDiscoColor = "blauw";
+            } else {
+                currentDiscoColor = "rood";
+            }
+            lock = false;
         }
     }
     void setBrightness(int pot) {
