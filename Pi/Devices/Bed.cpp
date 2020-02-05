@@ -35,6 +35,8 @@ void Bed::operator()()
 	/* store current button value in prev for debouncing */
 	knopPrev = knopValue;
     }
+    /* close connection before exiting the thread */
+    close(sock);
 }
 
 nlohmann::json Bed::getStatus()
@@ -66,7 +68,7 @@ bool Bed::updateStatus()
 	sensorValue = j_bed.at("druksensor");
     }
     catch (json::exception& e) {
-	std::cout << "Parsing error at Bed on socket " << sock << std::endl;
+	std::cout << "Exception error at Bed: " << e.what() << std::endl;
     }
     return true;
 }

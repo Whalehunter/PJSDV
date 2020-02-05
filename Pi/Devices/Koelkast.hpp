@@ -15,8 +15,8 @@ class Koelkast: public Device {
     float tempIn{};             // Omgerekende temperatuur binnen
     bool koelelement{false};          // Peltier element aan/uit
 
-    std::mutex fan_mutex;
-    std::mutex peltier_mutex;
+    std::mutex fan_mutex;	// Beschermt de fan functie tegen thread collision
+    std::mutex peltier_mutex;	// Beschermt de peltier functie
 public:
     Koelkast(int, Appartement*); // Constructor
     ~Koelkast();                 // Destructor

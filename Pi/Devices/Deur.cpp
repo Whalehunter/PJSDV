@@ -81,6 +81,7 @@ void Deur::setDeur(const char* s)
         sendMsg("deurDicht\r");
         state = DICHT;
     }
+    /* mutex is automatically unlocked upon leaving the scope */
 }
 
 void Deur::setDeurBel(bool x)
@@ -97,6 +98,7 @@ void Deur::setBuitenLamp(bool x)
     /* mutual exclusivity in critical section is guaranteed */
     const std::lock_guard<std::mutex>lock (buitenlamp_mutex);
     if (x) {
+	/* buitenLamp pff and reset timer */
         sendMsg("buitenLampAan\r");
         timer = std::clock();
     } else {
@@ -110,6 +112,7 @@ void Deur::setBinnenLamp(bool x, bool force)
 {
     /* light can only be accessed if the fire alarm isn't on, fire alarm uses force */
     if (!noodKnipper || force) {
+	/* mutex lock to guard critical data */
         const std::lock_guard<std::mutex>lock (binnenlamp_mutex);
         if (x) {
             sendMsg("binnenLampAan\r");
@@ -122,6 +125,7 @@ void Deur::setBinnenLamp(bool x, bool force)
 
 void Deur::setNoodKnipper(bool x)
 {
+    /* mutex lock to protect critcal data */
     const std::lock_guard<std::mutex>lock (noodknipper_mutex);
     if (x) {
         knipperTimer = std::clock();
