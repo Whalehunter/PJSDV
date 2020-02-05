@@ -18,7 +18,8 @@ void Schemerlamp::operator()()
     while (1) {
         if (!updateStatus()) break;
 
-        if (isDisco() && ((std::clock() - discoTimer) / (double) COCKS_PER_SEC) >= 0.5) {
+	/* verander disco kleurtjes om de 0.5s */
+        if (isDisco() && compareTime(discoTimer, 0.5)) {
             json msg = lamp.getKleur(isDisco());
             sendMsg((msg.dump()+"\r").c_str());
             lamp.updateDiscoColor();
@@ -30,7 +31,7 @@ void Schemerlamp::operator()()
         }
 
         /* als 5 min voorbij zonder beweging -> disco uit */
-        if (isDisco() && ((std::clock() - activityTimer) / (double) COCKS_PER_SEC) >= 300) {
+        if (isDisco() && compareTime(activityTimer, 300.0)) {
             setDisco(false);
             activityTimer = 0;
         }
@@ -46,6 +47,7 @@ bool Schemerlamp::isDisco()
 
 void Schemerlamp::setDisco(bool d)
 {
+    const std::lock_guard<std::mutex> lock (kleur_mutex);
     if (disco && !d) {
         json msg = {{"R", 255},{"G", 255},{"B", 255}};
         sendMsg((msg.dump()+"\r").c_str());
@@ -61,6 +63,7 @@ void Schemerlamp::setDisco(bool d)
 
 void Schemerlamp::setKleur(int r, int g, int b)
 {
+    const std::lock_guard<std::mutex> lock (kleur_mutex);
     lamp.setKleur(r,g,b);
     json kleur = lamp.getKleur();
     kleur["cmd"] = "kleur";

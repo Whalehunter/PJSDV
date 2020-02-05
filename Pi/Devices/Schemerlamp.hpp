@@ -12,6 +12,9 @@ class Schemerlamp: public Device
     bool disco;                 // Disco status
     clock_t discoTimer;         // Disco timer waarde
     clock_t activityTimer;      // Activity timer waarde
+    std::mutex disco_mutex;
+    std::mutex kleur_mutex;
+    std::mutex led_mutex;
 
 public:
     Schemerlamp(int, Appartement*); // Constructor

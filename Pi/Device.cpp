@@ -1,9 +1,6 @@
 #include "Device.hpp"
-//#include "nlohmann/json.hpp"
 
-//using json = nlohmann::json;
-
-Device::Device(int n, Appartement* ap): sock(n), a(ap), knopValue(0), sensorValue(0)
+Device::Device(int n, Appartement* ap): sock(n), a(ap), knopValue(0), sensorValue(0), timer(0)
 {}
 
 Device::~Device()
@@ -29,6 +26,14 @@ int Device::getSock()
 void Device::setSock(int x)
 {
     sock = x;
+}
+
+bool Device::compareTime(std::clock_t timer, double timeLimit)
+{
+    /* compare timer with set time, return true/false depending on whether
+     * it has passed the configured time limit
+     */
+    return (((std::clock() - timer) / (double) CLOCKS_PER_SEC) >= timeLimit);
 }
 
 int Device::getSensor()

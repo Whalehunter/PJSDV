@@ -2,7 +2,7 @@
 
 using json = nlohmann::json;
 
-Bed::Bed(int n, Appartement* ap): Device(n, ap), state(UIT), druksensor(0), knop(0)
+Bed::Bed(int n, Appartement* ap): Device(n, ap), state(UIT)
 {
     std::cout << "Bed aangemaakt" << std::endl;
 }
@@ -15,28 +15,33 @@ void Bed::operator()()
     int knopPrev = 0;
 
     while (1) {
-        if (!updateStatus()) break;
+	/* check if device is still connected, else break from while */
+	if (!updateStatus()) break;
 
-        /*State Machine*/
-        switch (state) {
-        case AAN:
-            if (knop && !knopPrev) {
-                ledUit();
-            }
-            break;
-        case UIT:
-            if (knop && !knopPrev) {
-                ledAan();
-            }
-        }
-        knopPrev = knop;
+	/* state machine */
+	switch (state) {
+	    case AAN:
+		/* if button is pressed and led = on -> led off */
+		if (knopValue && !knopPrev) {
+		    setLed(false);
+		}
+		break;
+	    case UIT:
+		/* if button is pressed and led = off -> led on */
+		if (knopValue && !knopPrev) {
+		    setLed(true);
+		}
+	}
+	/* store current button value in prev for debouncing */
+	knopPrev = knopValue;
     }
 }
 
 nlohmann::json Bed::getStatus()
 {
+    /* store data in json object and return json */
     json bedData;
-    bedData["Bed"] = {{"Lamp", state}, {"knop", knop}, {"drukSensor", druksensor ? "Bezet" : "Beschikbaar"}};
+    bedData["Bed"] = {{"Lamp", state}, {"knop", knopValue}, {"drukSensor", sensorValue ? "Bezet" : "Beschikbaar"}};
     return bedData;
 }
 
@@ -44,46 +49,38 @@ bool Bed::updateStatus()
 {
     char buffer[256] = {0};
     sendMsg("getStatus\r");
+
+    /* if recv returns < 0 then device has disconnected */
     if (!recvMsg(buffer)) {
-        std::cout << "Bed disconnected from socket: " << sock << std::endl;
-        close(sock);
-        return false;
+	std::cout << "Bed disconnected from socket: " << sock << std::endl;
+	close(sock);
+	return false;
     }
 
+    /* try and catch exceptions */
     try {
-        auto j_bed = json::parse(buffer);
+	auto j_bed = json::parse(buffer);
 
-        knop = j_bed.at("knop");
-        druksensor = j_bed.at("druksensor");
+	/* store values */
+	knopValue = j_bed.at("knop");
+	sensorValue = j_bed.at("druksensor");
     }
     catch (json::exception& e) {
-        std::cout << "Parsing error at Bed on socket " << sock << std::endl;
+	std::cout << "Parsing error at Bed on socket " << sock << std::endl;
     }
     return true;
 }
 
-void Bed::ToggleLed(int i)
+void Bed::setLed(bool x)
 {
-    if (i) {
-        ledAan();
+    /* lock the mutex to protect critical data */
+    const std::lock_guard<std::mutex>lock (led_mutex);
+    if (x) {
+	sendMsg("lampAan\r");
+	state = AAN;
     } else {
-        ledUit();
+	sendMsg("lampUit\r");
+	state = UIT;
     }
-}
-
-void Bed::ledAan()
-{
-    sendMsg("lampAan\r");
-    state = AAN;
-}
-
-void Bed::ledUit()
-{
-    sendMsg("lampUit\r");
-    state = UIT;
-}
-
-int Bed::getDruksensor()
-{
-    return druksensor;
+    /* mutex lock is automatically released upon leaving the function */
 }

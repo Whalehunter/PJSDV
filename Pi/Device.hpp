@@ -16,7 +16,8 @@ protected:
     Appartement* a;
     int knopValue;
     int sensorValue;
-
+    std::clock_t timer;
+    std::mutex mtx;
 
 public:
     Device(int, Appartement*);
@@ -30,6 +31,8 @@ public:
     void setSock(int);
     int getSensor();
     int getKnop();
+    bool compareTime(std::clock_t, double);
+
     virtual nlohmann::json getStatus() = 0;
 };
 

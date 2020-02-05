@@ -30,7 +30,6 @@ void Appartement::createDevice(int sock, char id)
     switch(id){
 
     /* create objects based on handshake ID, delete old pointer if not null */
-        
     case 'd':
         if(deur != 0) delete deur;
         deur = new Deur(sock, this);
@@ -79,8 +78,11 @@ void Appartement::createDevice(int sock, char id)
     }
 
     if (ob != NULL) {
+	/* insert device into devices map, id(char) + pointer to object */
         devices.insert(std::pair<char, Device*>(id, ob));
+	/* pass pointer to function and object to thread */
         std::thread obThread(&Device::operator(), ob);
+	/* detach so that it may operate independently of other threads */
         obThread.detach();
     }
 }
