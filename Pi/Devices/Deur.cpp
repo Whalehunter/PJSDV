@@ -74,7 +74,7 @@ void Deur::setDeur(const char* s)
 {
     /* mutual exclusivity in critical section is guaranteed */
     const std::lock_guard<std::mutex> lock (deur_mutex);
-    if(s == "open") {
+    if(strcmp(s, "open") == 0) {
         sendMsg("deurOpen\r");
         state = OPEN;
     } else {
