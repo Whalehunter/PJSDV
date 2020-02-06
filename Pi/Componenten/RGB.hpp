@@ -102,7 +102,7 @@ public:
     }
 
     /**
-     * Kleuren ophalen in format die verzonden kan worden aan de device en aan de GUI
+     * Kleuren ophalen in json datatype
      *
      * param disco: Indien er discostand is, alleen de kleur ophalen die wordt gewenst
      *
