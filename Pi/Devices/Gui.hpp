@@ -11,7 +11,7 @@ class Gui
     SocketConnection socket;
 
 public:
-    Gui(int, std::map<char, Device*>);     // Constructor
+    Gui(int, std::map<char, Device*>&);     // Constructor
     ~Gui();                     // Destructor
 
     void operator()();          // Thread loop

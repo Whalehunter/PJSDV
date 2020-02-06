@@ -10,7 +10,7 @@
 
 using json = nlohmann::json;
 
-Gui::Gui(int n, std::map<char, Device*>* devices): devices(devices), socket(n, 256)
+Gui::Gui(int n, std::map<char, Device*>& devices): devices(&devices), socket(SocketConnection(n, 256))
 {
     std::cout << "gui aangemaakt" << std::endl;
 }
@@ -18,6 +18,9 @@ Gui::Gui(int n, std::map<char, Device*>* devices): devices(devices), socket(n, 2
 Gui::~Gui()
 {}
 
+/**
+ * Functor voor het gooien van deze receive functie in een thread
+ */
 void Gui::operator()()
 {
     char buffer[256] = {0};     // initializeer lege buffer
