@@ -18,7 +18,8 @@ void Schemerlamp::operator()()
     while (1) {
         if (!updateStatus()) break;
 
-        if (isDisco() && ((std::clock() - discoTimer) / (double) COCKS_PER_SEC) >= 0.5) {
+	/* verander disco kleurtjes om de 0.5s */
+        if (isDisco() && compareTime(discoTimer, 0.5)) {
             json msg = lamp.getKleur(isDisco());
             socket.sendBuffer((msg.dump()+"\r").c_str());
             lamp.updateDiscoColor();
@@ -30,11 +31,12 @@ void Schemerlamp::operator()()
         }
 
         /* als 5 min voorbij zonder beweging -> disco uit */
-        if (isDisco() && ((std::clock() - activityTimer) / (double) COCKS_PER_SEC) >= 300) {
+        if (isDisco() && compareTime(activityTimer, 300.0)) {
             setDisco(false);
             activityTimer = 0;
         }
     }
+    /* close connectie voordat de thread sluit */
     close(socket.getId());
     std::cout << "Schemerlamp connection closed" << std::endl;
 }
@@ -46,6 +48,10 @@ bool Schemerlamp::isDisco()
 
 void Schemerlamp::setDisco(bool d)
 {
+    /* lock mutex so only one thread can access critical data at a time */
+    const std::lock_guard<std::mutex> lock (kleur_mutex);
+    /* if disco = on and input = false -> turn disco off
+     * if disco = off and input = true -> turn disco on */
     if (disco && !d) {
         json msg = {{"R", 255},{"G", 255},{"B", 255}};
         socket.sendBuffer((msg.dump()+"\r").c_str());
@@ -57,25 +63,28 @@ void Schemerlamp::setDisco(bool d)
         activityTimer = std::clock();
     }
     disco = d;
+    /* mutex is automatically unlocked upon leaving its scope */
 }
 
 void Schemerlamp::setKleur(int r, int g, int b)
 {
+    /* lock mutex */
+    const std::lock_guard<std::mutex> lock (kleur_mutex);
     lamp.setKleur(r,g,b);
     json kleur = lamp.getKleur();
     kleur["cmd"] = "kleur";
     socket.sendBuffer((kleur.dump()+"\r").c_str());
 }
 
-void Schemerlamp::uit()
+void Schemerlamp::setLamp(bool x)
 {
-    lamp.uit();
-    socket.sendBuffer((lamp.getKleur().dump()+"\r").c_str());
-}
-
-void Schemerlamp::aan()
-{
-    lamp.aan();
+    /* lock mutex */
+    const std::lock_guard<std::mutex> lock (lamp_mutex);
+    if (x) {
+	lamp.aan();
+    } else {
+	lamp.uit();
+    }
     socket.sendBuffer((lamp.getKleur().dump()+"\r").c_str());
 }
 
@@ -90,12 +99,12 @@ bool Schemerlamp::updateStatus()
     }
 
     try {
-        auto jSL = json::parse(buf);
-        lamp.setKleur(jSL.at("rood"), jSL.at("groen"), jSL.at("blauw"));
-        beweging = jSL.at("beweging");
+	auto jSL = json::parse(buf);
+	lamp.setKleur(jSL.at("rood"), jSL.at("groen"), jSL.at("blauw"));
+	beweging = jSL.at("beweging");
     }
     catch(json::exception& e) {
-        std::cout << "Exception error at Deur: " << e.what() << std::endl;
+	std::cout << "Exception error at Deur: " << e.what() << std::endl;
     }
     return true;
 }

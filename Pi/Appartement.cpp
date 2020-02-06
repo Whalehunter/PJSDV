@@ -40,8 +40,11 @@ bool Appartement::createDevice(int sock, char id)
     }
 
     if (ob != NULL) {
+	/* insert device into devices map, id(char) + pointer to object */
         devices.insert(std::pair<char, Device*>(id, ob));
+	/* pass pointer to function and object to thread */
         std::thread obThread(&Device::operator(), ob);
+	/* detach so that it may operate independently of other threads */
         obThread.detach();
         return true;
     }

@@ -6,33 +6,34 @@
 class Deur: public Device
 {
 private:
-    enum deurStatus {DICHT, OPEN}; // status van de deur
-    Deur::deurStatus state;        // ^
-    int knopBinnen;                // Of de binnenknop ingedrukt is of niet
-    int knopBuiten;                // Zelfde, maar voor buitenknop
-    int ledBinnen;                 // Of de binnenled aan staat
-    int ledBuiten;                 // Zelfde, maar voor buiten lamp
-    int noodKnipper;               // Of de binnenlamp in de noodstand moet knipperen
-    std::clock_t timer;            // Buitenlamp aan timer
-    std::clock_t knipperTimer;     // Binnenlamp knipper timer
+    enum deurStatus {DICHT, OPEN}; 	// status van de deur
+    Deur::deurStatus state;        	// ^
+    int knopBinnen;                	// Of de binnenknop ingedrukt is of niet
+    int knopBuiten;                	// Zelfde, maar voor buitenknop
+    bool ledBinnen;                 	// Of de binnenled aan staat
+    bool ledBuiten;                 	// Zelfde, maar voor buiten lamp
+    bool noodKnipper;               	// Of de binnenlamp in de noodstand moet knipperen
+
+    std::mutex deur_mutex;		// Beschermt setDeur() 
+    std::mutex deurbel_mutex;		// Beschermt setDeurBel()
+    std::mutex buitenlamp_mutex;	// Beschermt setBuitenLamp()
+    std::mutex binnenlamp_mutex;	// Beschermt setBinnenLamp()
+    std::mutex noodknipper_mutex;	// Beschermt setNoodKnipper()
+
+    std::clock_t knipperTimer;     	// Binnenlamp knipper timer
 public:
-    Deur(int, Appartement*); // Constructor
-    ~Deur();                 // Destructor
+    Deur(int, Appartement*); 		// Constructor
+    ~Deur();                 		// Destructor
 
-    void operator()();      // Thread loop
-    void openDeur();        // Deur openen
-    void sluitDeur();       // Deur sluiten
-    void deurBelAan();      // Deurbel aan
-    void deurBelUit();      // Deurbel uit
-    void buitenLampAan();   // Buitenlamp aan
-    void buitenLampUit();   // Buitenlamp uit
-    void binnenLampAan(bool force = false); // Binnenlamp aan
-    void binnenLampUit(bool force = false); // Binnenlamp uit
-    void noodKnipperAan();                  // Nood knipperlicht aan
-    void noodKnipperUit();                  // Nood knipperlicht uit
+    void operator()();      		// Thread loop
+    void setDeur(const char*); 		// Deur open/dicht
+    void setDeurBel(bool);  		// Deurbel
+    void setBuitenLamp(bool); 		// Buitenlamp aan/uit
+    void setBinnenLamp(bool, bool force = false); // Binnenlamp aan/uit, force wordt gebruikt om prioriteit aan het brandalarm te geven
+    void setNoodKnipper(bool); 		// Knipperlicht bij brand aan/uit
 
-    bool updateStatus();    // Thread loop data verwerker (vanuit WEMOS)
-    nlohmann::json getStatus(); // JSON object met de deur waarden voor GUI
+    bool updateStatus();    		// Thread loop data verwerker (vanuit WEMOS)
+    nlohmann::json getStatus(); 	// JSON object met de deur waarden voor GUI
 };
 
 #endif

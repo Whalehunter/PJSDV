@@ -15,6 +15,11 @@ class Muur: public Device
 
     bool disco;                 // Discostand aan/uit
     clock_t discoTimer;         // Discotimer (halve seconde schakelen per licht)
+    
+    std::mutex RGB_mutex;	// Beschermt de RGB functie tegen thread collisions
+    std::mutex disco_mutex;	// Beschermt de disco functie
+    std::mutex LCD_mutex;	// Beschermt de LCD functie
+    std::mutex brightness_mutex;// Beschermt de brightness functie
 
 public:
     Muur(int, Appartement*);    // Constructor
@@ -26,11 +31,9 @@ public:
     bool updateStatus();        // thread loop WEMOS afhandeling
     void ToggleLed(int);        // Lamp aan/uit
     bool isDisco();             // Kijken of discostand aan staat
-    void RGBaan();              // Lampen aan
-    void RGBuit();              // Lampen uit
+    void setRGB(bool);		// RGB aan/uit
     void setDisco(bool);        // Discostand aan/uit
-    void LCDdimmen();           // Raam donker
-    void LCDdoorlaten();        // Raam doorzichtig
+    void setLCD(int);        	// LCD donker(1) of transparant(0)
     void setBrightness(bool);   // Helderheid van RGB aanpassen
 
     std::string arduinoStatus(); // Wemos vertellen wat de status is van de variabelen

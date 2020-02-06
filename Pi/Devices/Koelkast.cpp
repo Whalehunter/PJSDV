@@ -2,7 +2,7 @@
 
 using json = nlohmann::json;
 
-Koelkast::Koelkast(int n, Appartement* ap): Device(n, ap), openTimer(0)//Koelkast aanmaken
+Koelkast::Koelkast(int n, Appartement* ap): Device(n, ap)//Koelkast aanmaken
 {
     std::cout << "Koelkast aangemaakt" << std::endl;
 }
@@ -32,26 +32,26 @@ void Koelkast::operator()()//Operatie functie van koelkast
             NTC1 = j_koelkast.at("NTC1");
             NTC2 = j_koelkast.at("NTC2");
         }
-        catch (json::parse_error) {
-            std::cout << "parse error" << std::endl;
+        catch (json::exception& e) {
+            std::cout << "Exception error at koelkast: " << e.what() << std::endl;
         }
 
         if (koelkastDeur && koelAlarm) {
-            disableKoelAlarm();
+            setKoelAlarm(false);
         }
 
-        if ((koelkastDeur == 0) && (((std::clock() - openTimer) / (double) CLOCKS_PER_SEC) <= 5.0)) {
-            peltierUit();
+        if ((koelkastDeur == 0) && (((std::clock() - timer) / (double) CLOCKS_PER_SEC) <= 5.0)) {
+            setPeltier(false);
         }
-        else if ((koelkastDeur == 0) && (((std::clock() - openTimer) / (double) CLOCKS_PER_SEC) >= 5.0)) {
-            koelAlarm = 1;
-            fanUit();
-            peltierUit();
+        else if ((koelkastDeur == 0) && (((std::clock() - timer) / (double) CLOCKS_PER_SEC) >= 5.0)) {
+            setKoelAlarm(true);
+	    setFan(false);
+            setPeltier(false);
         }
         else {
-            openTimer = std::clock();
-            peltierAan();
-            fanAan();
+            timer = std::clock();
+            setPeltier(true);
+            setFan(true);
         }
         tempOut = calculateCelsius(NTC1);
         tempIn = calculateCelsius(NTC2);
@@ -67,31 +67,32 @@ json Koelkast::getStatus()//GetStatus voor de GUI
     return koelk;
 }
 
-void Koelkast::disableKoelAlarm()//Koelalarm uit
+void Koelkast::setKoelAlarm(bool x)//Koelalarm uit
 {
-    koelAlarm = 0;
+    const std::lock_guard<std::mutex>lock (koel_mutex);
+    koelAlarm = x;
 }
 
-void Koelkast::fanAan()//Fan aan
+void Koelkast::setFan(bool x) // Fan aan/uit
 {
-    socket.sendBuffer("fanAan\r");
+    const std::lock_guard<std::mutex> lock (fan_mutex);
+    if (x) {
+        socket.sendBuffer("fanAan\r");
+    } else {
+	socket.sendBuffer("fanUit\r");
+    }
+    fan = x;
 }
 
-void Koelkast::fanUit()//Fan uit
+void Koelkast::setPeltier(bool x)//Peltier aan
 {
-    socket.sendBuffer("fanUit\r");
-}
-
-void Koelkast::peltierAan()//Peltier aan
-{
-    socket.sendBuffer("peltierAan\r");
-    koelelement = 1;
-}
-
-void Koelkast::peltierUit()//Peltier uit
-{
-    socket.sendBuffer("peltierUit\r");
-    koelelement = 0;
+    const std::lock_guard<std::mutex> lock (peltier_mutex);
+    if (x) {
+	socket.sendBuffer("peltierAan\r");
+    } else {
+	socket.sendBuffer("peltierUit\r");
+    }
+    koelelement = x;
 }
 
 float Koelkast::calculateCelsius(float i)//Berekent de temperatuur in Celcius

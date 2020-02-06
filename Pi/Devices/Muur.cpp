@@ -5,7 +5,7 @@
 using json = nlohmann::json;
 using namespace std;
 
-Muur::Muur(int n, Appartement* ap): Device(n, ap), ldr(0), pot(0), disco(false), discoTimer(0)
+Muur::Muur(int n, Appartement* ap): Device(n, ap), ldr(0), pot(0), disco(false)
 {
     std::cout << "Muur aangemaakt" << std::endl;
 
@@ -23,21 +23,24 @@ Muur::~Muur()
 void Muur::operator ()()
 {
     while (1) {
+	/* get and store JSON values, break from while if Muur is gone */
         if (!updateStatus()) {
             break;
         }
 
-        /* Indien LDR hoger is dan 500, lamp uit en raam zichtbaar houden */
+        /* Indien LDR hoger is dan 500 en er is geen user input (ldrOverride), lamp uit en raam zichtbaar houden */
         if (ldr >= 500 && !ldrOverride) {
-            LCDdoorlaten();
+            setLCD(0);
+	    /* kijk of deur bestaat, zo ja: cast deur pointer en call functie */
             if (a->devices.count('d')) {
-                dynamic_cast<Deur *>(a->devices.find('d')->second)->binnenLampUit();
+                dynamic_cast<Deur *>(a->devices.find('d')->second)->setBinnenLamp(false);
             }
         }
+	/* dim LCD als <500 en er is geen user input */
         else if (!ldrOverride) {
-            LCDdimmen();
+            setLCD(1);
             if (a->devices.count('d')) {
-                dynamic_cast<Deur *>(a->devices.find('d')->second)->binnenLampAan();
+                dynamic_cast<Deur *>(a->devices.find('d')->second)->setBinnenLamp(true);
             }
         }
 
@@ -86,8 +89,8 @@ bool Muur::updateStatus()
         std::cout << "Parsing error: " << e.what() << std::endl;
     }
 
-    if (isDisco() && ((std::clock() - discoTimer) / (double) CLOCKS_PER_SEC) >= 0.5) {
-        discoTimer = std::clock();
+    if (isDisco() && compareTime(timer, 0.5)) {
+        timer = std::clock();
         for (int i = 0; i < LAMPEN; i++) {
             lampen[i].updateDiscoColor();
         }
@@ -107,14 +110,12 @@ std::string Muur::arduinoStatus()
     return (msg.dump()+"\r");
 }
 
-void Muur::LCDdimmen()
+void Muur::setLCD(int x)
 {
-    raam = 1;
-}
-
-void Muur::LCDdoorlaten()
-{
-    raam = 0;
+    /* lock the mutex to ensure only one thread has access to raam */
+    const std::lock_guard<std::mutex> lock(LCD_mutex);
+    raam = x;
+    /* LCD_mutex is automatically unlocked upon leaving this function */
 }
 
 bool Muur::isDisco()
@@ -122,18 +123,22 @@ bool Muur::isDisco()
     return disco;
 }
 
-void Muur::RGBaan()
+void Muur::setRGB(bool x)
 {
+    /* lock the mutex to protect the critical section */
+    const std::lock_guard<std::mutex> lock(RGB_mutex);
+    if (x) {
     for (int i=0;i<LAMPEN;i++) lampen[i].aan();
-}
-
-void Muur::RGBuit()
-{
-    for (int i=0;i<LAMPEN;i++) lampen[i].uit();
+    } else {
+	for (int i=0;i<LAMPEN;i++) lampen[i].uit();
+    }
+    /* RGB_mutex is automatically unlocked upon leaving this function */
 }
 
 void Muur::setDisco(bool run)
 {
+    /* lock the mutex to protect the critical section */
+    const std::lock_guard<std::mutex> lock(disco_mutex);
     if (disco && !run) {
         for (int i=0;i<LAMPEN;i++) {
             lampen[i].setKleur(255,255,255);
@@ -143,23 +148,27 @@ void Muur::setDisco(bool run)
         for (int i=0;i<LAMPEN;i++) {
             lampen[i].setKleur(0,0,0);
         }
-        discoTimer = std::clock();
+        timer = std::clock();
         socket.sendBuffer(arduinoStatus().c_str());
     }
     disco = run;
+    /* mutex is automatically unlocked upon leaving this function */
 }
 
 void Muur::setBrightness(bool up)
 {
+    /* lock the mutex to protect the critical section */
+    const std::lock_guard<std::mutex> lock(brightness_mutex);
     int update = 25;
     for (int i=0;i<LAMPEN;i++) {
-        int *b = &lampen[i].rgb->brightness;
-        if (up) {
-            if ((*b)+update <= 255) (*b) += update;
-            else update = 255;
-        } else {
-            if ((*b)-update >= 0) (*b) -= update;
-            else update =0;
-        }
+	int *b = &lampen[i].rgb->brightness;
+	if (up) {
+	    if ((*b)+update <= 255) (*b) += update;
+	    else update = 255;
+	} else {
+	    if ((*b)-update >= 0) (*b) -= update;
+	    else update =0;
+	}
     }
+    /* mutex is automatically unlocked upon leaving this function */
 }

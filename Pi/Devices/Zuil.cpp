@@ -3,7 +3,7 @@
 
 using json = nlohmann::json;
 
-Zuil::Zuil(int n, Appartement* ap): Device(n, ap), nood(0), brand(0), zoemer(0), timer(0)
+Zuil::Zuil(int n, Appartement* ap): Device(n, ap), nood(0), brand(0), zoemer(0)
 {
     std::cout << "Zuil aangemaakt" << std::endl;
 }
@@ -19,97 +19,93 @@ void Zuil::operator()()
     while (1) {
         socket.sendBuffer("getStatus\r");
 
-        /* receive msg and check if device is still connected to socket */
-        if(!socket.receiveBuffer(buffer)) {
-            std::cout << "Zuil disconnected from socket: " << socketId << std::endl;
-            close(socketId);
-            return;
-        }
+	/* receive msg and check if device is still connected to socket */
+	if(!socket.receiveBuffer(buffer)) {
+	    std::cout << "Zuil disconnected from socket: " << socketId << std::endl;
+	    close(socketId);
+	    return;
+	}
 
-        /* try and catch json exception errors */
-        try {
-            auto j_zuil = json::parse(buffer);
+	/* try and catch json exception errors */
+	try {
+	    auto j_zuil = json::parse(buffer);
 
-            knopValue = j_zuil.at("knopValue");
-            sensorValue = j_zuil.at("sensorValue");
-        }
-        catch (json::exception& e) {
-            std::cout << "Exception error at Zuil: " << e.what() << std::endl;
-        }
+	    /* store json values */
+	    knopValue = j_zuil.at("knopValue");
+	    sensorValue = j_zuil.at("sensorValue");
+	}
+	catch (json::exception& e) {
+	    std::cout << "Exception error at Zuil: " << e.what() << std::endl;
+	}
 
-        if (getKnop()) {
-            noodAlarmAan();
-        }
-        if (getSensor() >= 920) {
-            brandAlarmAan();
-        }
+	if (getKnop()) {
+	    setNoodAlarm(true);
+	}
+	if (getSensor() >= 920) {
+	    setBrandAlarm(true);
+	}
     }
-
+    /* close connection before exiting thread */
     close(socketId);
 }
 
-void Zuil::noodAlarmAan()
+void Zuil::setNoodAlarm(bool x)
 {
-    zoemerAan();
-
-    nood = 1;
-}
-
-void Zuil::noodAlarmUit()
-{
-    if (!brand && !timer)
-        zoemerUit();
-    nood = 0;
-}
-
-void Zuil::brandAlarmAan()
-{
-    if (!nood && !timer)
-        zoemerAan();
-    brand = 1;
-    if (a->devices.count('d')) {
-        dynamic_cast<Deur *>(a->devices.find('d')->second)->noodKnipperAan();
+    /* lock the mutex and turn nood alarm on/off, only allow alarm off if there is no fire alarm */
+    const std::lock_guard<std::mutex>lock (noodalarm_mutex);
+    if (x) {
+	setZoemer(x);
+    } else {
+	if(!brand) {
+	    setZoemer(x);
+	}
     }
+    nood = x;
+    /* lock is automatically released upon leaving the function */
 }
 
-void Zuil::brandAlarmUit()
+void Zuil::setBrandAlarm(bool x)
 {
-    if (!nood && !timer)
-        zoemerUit();
-    brand = 0;
-    if (a->devices.count('d')) {
-        dynamic_cast<Deur *>(a->devices.find('d')->second)->noodKnipperUit();
+    /* lock the mutex, fire alarm on/off */
+    const std::lock_guard<std::mutex>lock (brandalarm_mutex);
+    if (!nood) {
+	setZoemer(x);
     }
+    brand = x;
+    /* check if deur exists, then call its setNoodKnipper function with true/false */
+    if (a->devices.count('d')) {
+	dynamic_cast<Deur *>(a->devices.find('d')->second)->setNoodKnipper(x);
+    }
+    /* lock is automatically released upon leaving the function */
 }
 
-void Zuil::deurBelAan()
+void Zuil::setDeurBel(bool x)
 {
-    if (!nood && !brand)
-        zoemerAan();
-    timer = clock();
+    /* lock the mutex, only alter zoemer value if no emergency or fire alarm */
+    const std::lock_guard<std::mutex>lock (deurbel_mutex);
+    if (!nood && !brand) {
+	setZoemer(x);
+    }
+    /* lock is automatically released upon leaving the function */
 }
 
-void Zuil::deurBelUit()
+void Zuil::setZoemer(bool x)
 {
-    if (!nood && !brand)
-        zoemerUit();
-    timer = 0;
-}
-
-void Zuil::zoemerAan()
-{
-    socket.sendBuffer("zoemerAan\r");
-    zoemer = 1;
-}
-
-void Zuil::zoemerUit()
-{
-    socket.sendBuffer("zoemerUit\r");
-    zoemer = 0;
+    /* lock the mutex, zoemer on/off */
+    const std::lock_guard<std::mutex>lock (zoemer_mutex);
+    if (x) {
+	socket.sendBuffer("zoemerAan\r");
+    } else {
+	socket.sendBuffer("zoemerUit\r");
+    }
+    zoemer = x;
+    /* lock is automatically released upon leaving the function */
 }
 
 json Zuil::getStatus()
 {
+    /* MUTEX LOCK REQ */
+    /* store class variables in json object and return it */
     json zuilData;
     zuilData["Zuil"] = {{"Zoemer", zoemer}, {"Noodalarm", nood}, {"Brandalarm", brand}, {"Gasmeter", sensorValue}, {"Knop", knopValue}};
 

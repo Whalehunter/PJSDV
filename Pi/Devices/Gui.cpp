@@ -33,6 +33,7 @@ void Gui::operator()()
         /* loop through string and call getStatus on found devices */
         /* append getStatus() and send to GUI as json */
         if (*p == '-') {
+	    /* MUTEX LOCK REQ */
             json deviceStatus;
             while(*p)
                 if (devices->count(*(++p)))
@@ -44,15 +45,15 @@ void Gui::operator()()
             Stoel * stoel = dynamic_cast<Stoel*>(devices->find(*p++)->second);
             if (*p == 't') {    // Trillen aan/uit
                 if (*(++p) == 'a') {
-                    stoel->trilAan();
+                    stoel->setTril(true);
                 } else {
-                    stoel->trilUit();
+                    stoel->setTril(false);
                 }
             } else if (*p == 'l') {   // Lamp aan/uit
                 if (*(++p) == 'a') {
-                    stoel->ledAan();
+                    stoel->setLed(true);
                 } else {
-                    stoel->ledUit();
+                    stoel->setLed(false);
                 }
             }
             socket.sendBuffer("{\"success\":true}");
@@ -61,18 +62,18 @@ void Gui::operator()()
         else if (*p == 'd' && devices->count(*p)) { // Deur
             Deur * deur = dynamic_cast<Deur *>(devices->find(*p++)->second);
             if (*p == 'o') {    // openen
-                deur->openDeur();
+                deur->setDeur("open");
             }
             else if (*p == 's') { // sluiten
-                deur->sluitDeur();
+                deur->setDeur("dicht");
             }
             else if (*p == 'l') { // binnen lamp aan/uit
-                if (*(++p) == 'a') deur->binnenLampAan();
-                else deur->binnenLampUit();
+                if (*(++p) == 'a') deur->setBinnenLamp(true);
+                else deur->setBinnenLamp(false);
             }
             else if (*p == 'b') { // buiten lamp aan/uit
-                if (*(++p) == 'a') deur->buitenLampAan();
-                else deur->buitenLampUit();
+                if (*(++p) == 'a') deur->setBuitenLamp(true);
+                else deur->setBuitenLamp(false);
             }
             socket.sendBuffer("{\"success\":true}");
         }
@@ -80,22 +81,22 @@ void Gui::operator()()
         else if (*p == 'f' && devices->count(*p)) { // Zuil
             Zuil * zuil = dynamic_cast<Zuil *>(devices->find(*p++)->second);
             if (*p == 'n') {     // nood alarm aan/uit
-                if (*(++p) == 'a') zuil->noodAlarmAan();
-                else zuil->noodAlarmUit();
+                if (*(++p) == 'a') zuil->setNoodAlarm(true);
+                else zuil->setNoodAlarm(false);
             }
             else if (*p == 'b') { // brand alarm aan/uit
-                if (*(++p) == 'a') zuil->brandAlarmAan();
-                else zuil->brandAlarmUit();
+                if (*(++p) == 'a') zuil->setBrandAlarm(true);
+                else zuil->setBrandAlarm(false);
             }
             else if (*p == 'z') { // zoemer aan/uit
-                if (*(++p) == 'a') zuil->zoemerAan();
-                else zuil->zoemerUit();
+                if (*(++p) == 'a') zuil->setZoemer(true);
+                else zuil->setZoemer(false);
             }
             socket.sendBuffer("{\"success\":true}");
         }
 
         else if (*p == 'k' && devices->count(*p)) { // Koelkast
-            dynamic_cast<Koelkast *>(devices->find(*p)->second)->disableKoelAlarm();
+            dynamic_cast<Koelkast *>(devices->find(*p)->second)->setKoelAlarm(false);
         }
 
         else if (*p == 'm' && devices->count(*p)) { // Muur
@@ -105,18 +106,18 @@ void Gui::operator()()
                 else muur->setDisco(false);
             }
             else if (*p == 'l') { // lampen aan/uit
-                if (*(++p) == 'a') muur->RGBaan();
-                else muur->RGBuit();
+                if (*(++p) == 'a') muur->setRGB(true);
+                else muur->setRGB(false);
             }
             else if (*p == 'r') { // raam dimmer aan/uit
                 if (*(++p) == 'a') {
                     if (muur->ldrOverride) muur->ldrOverride = false;
                     else muur->ldrOverride = true;
-                    muur->LCDdimmen();
+                    muur->setLCD(1);
                 } else {
                     if (muur->ldrOverride) muur->ldrOverride = false;
                     else muur->ldrOverride = true;
-                    muur->LCDdoorlaten();
+                    muur->setLCD(0);
                 }
             }
             else if (*p == 'b') { // lamp helderheid +/-
@@ -132,8 +133,8 @@ void Gui::operator()()
         else if (*p == 's' && devices->count(*p)) { // schemerlamp
             Schemerlamp * schemerlamp = dynamic_cast<Schemerlamp *>(devices->find(*p++)->second);
             if (*p == 'l') {    // lamp aan/uit
-                if (*(++p) == 'a') schemerlamp->aan();
-                else schemerlamp->uit();
+                if (*(++p) == 'a') schemerlamp->setLamp(true);
+                else schemerlamp->setLamp(false);
             }
             else if (*p == 'd') { // disco aan/uit
                 if (*(++p) == 'a') schemerlamp->setDisco(true);
@@ -145,8 +146,8 @@ void Gui::operator()()
         else if (*p == 'y' && devices->count(*p)) { // Bed
             Bed * bed = dynamic_cast<Bed *>(devices->find(*p++)->second);
             if (*p == 'l') {    // lamp aan/uit
-                if (*(++p) == 'a') bed->ledAan();
-                else bed->ledUit();
+                if (*(++p) == 'a') bed->setLed(true);
+                else bed->setLed(false);
             }
             socket.sendBuffer("{\"success\":true}");
         }

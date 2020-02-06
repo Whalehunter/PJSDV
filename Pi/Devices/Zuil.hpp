@@ -6,26 +6,25 @@
 class Zuil: public Device
 {
     private:
-        int nood;
-        int brand;
-        int zoemer;
+        bool nood;
+        bool brand;
+        bool zoemer;
 
-        clock_t timer;
+	std::mutex deurbel_mutex;	// beschermt de deurbel functie zodat maar 1 thread op een gegeven moment de variables kan aanpassen
+	std::mutex noodalarm_mutex;	// beschermt de noodalarm functie
+	std::mutex zoemer_mutex;	// beschermt de zoemer functie
+	std::mutex brandalarm_mutex;	// beschermt de brandalarm functie
     public:
         Zuil(int, Appartement*);
         ~Zuil();
 
-        void operator()();    // thread loop
-        void noodAlarmAan();  // noodalarm aan
-        void noodAlarmUit();  // noodalarm uit
-        void brandAlarmAan(); // brandalarm aan
-        void brandAlarmUit(); // brandalarm uit
-        void deurBelAan();    // deurbel aan
-        void deurBelUit();    // deurbel uit
-        void zoemerAan();     // zoemer aan
-        void zoemerUit();     // zoemer uit
+        void operator()();    		// thread loop
+	void setNoodAlarm(bool); 	// noodalarm aan/uit
+	void setBrandAlarm(bool); 	// brandalarm aan/uit
+        void setDeurBel(bool);    	// deurbel uit
+	void setZoemer(bool); 		// zoemer aan/uit
 
-        nlohmann::json getStatus(); // json object met alle variables van zuil
+        nlohmann::json getStatus(); 	// json object met alle variables van zuil
 };
 
 #endif
