@@ -40,15 +40,13 @@ void Koelkast::operator()()//Operatie functie van koelkast
             setKoelAlarm(false);
         }
 
-        if ((koelkastDeur == 0) && (((std::clock() - timer) / (double) CLOCKS_PER_SEC) <= 5.0)) {
+        if (!koelkastDeur && !compareTime(timer, 5.0)) {
             setPeltier(false);
-        }
-        else if ((koelkastDeur == 0) && (((std::clock() - timer) / (double) CLOCKS_PER_SEC) >= 5.0)) {
+        } else if (!koelkastDeur && compareTime(timer, 5.0)) {
             setKoelAlarm(true);
 	    setFan(false);
             setPeltier(false);
-        }
-        else {
+        } else {
             timer = std::clock();
             setPeltier(true);
             setFan(true);

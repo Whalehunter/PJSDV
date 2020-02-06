@@ -6,7 +6,7 @@
 #include <iomanip>
 
 class Koelkast: public Device {
-    int koelkastDeur{};         // Deur open/dicht
+    int koelkastDeur{};         // Deur open/dicht: 0 = open
     bool fan{false};                  // Waaier aan/uit
     float NTC1{};               // Temperatuursensor buiten
     float NTC2{};               // Temperatuursensor binnen

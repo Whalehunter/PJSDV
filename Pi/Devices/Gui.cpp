@@ -154,6 +154,7 @@ void Gui::operator()()
 
         memset(buffer, 0, sizeof(buffer)); // reset buffer
     }
+    delete this;
     close(socketId);
     std::cout << "Connection closed on socket " << socketId << std::endl;
 }

@@ -37,21 +37,21 @@ void Deur::operator()()
 	}
 
 	/* operations based on checks, check doorbell */
-	if (knopBuiten == 1 && knopBuitenPrev != knopBuiten) {
+	if (knopBuiten && knopBuitenPrev != knopBuiten) {
 	    setDeurBel(true);
 	    setBuitenLamp(true);
 	}
-	else if (knopBuiten == 0 && knopBuitenPrev != knopBuiten) {
+	else if (!knopBuiten && knopBuitenPrev != knopBuiten) {
 	    setDeurBel(false);
 	}
 
 	/* turn external led off after 30 seconds */
-	if (ledBuiten == 1 && compareTime(timer, 30.0)) {
+	if (ledBuiten && compareTime(timer, 30.0)) {
 	    setBuitenLamp(false);
 	}
 
 	/* if fire alarm, blink internal led (1s interval) */
-	if (noodKnipper == 1 && compareTime(knipperTimer, 1.0)) {
+	if (noodKnipper && compareTime(knipperTimer, 1.0)) {
 	    if (ledBinnen) {
 		/* setBinnenLamp: first parameter = on/off, second is to force priority */
 		setBinnenLamp(false, true);
