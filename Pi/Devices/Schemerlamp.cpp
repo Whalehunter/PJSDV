@@ -20,7 +20,7 @@ void Schemerlamp::operator()()
 
         if (isDisco() && ((std::clock() - discoTimer) / (double) COCKS_PER_SEC) >= 0.5) {
             json msg = lamp.getKleur(isDisco());
-            sendMsg((msg.dump()+"\r").c_str());
+            socket.sendBuffer((msg.dump()+"\r").c_str());
             lamp.updateDiscoColor();
         }
 
@@ -35,7 +35,7 @@ void Schemerlamp::operator()()
             activityTimer = 0;
         }
     }
-    close(sock);
+    close(socket.getId());
     std::cout << "Schemerlamp connection closed" << std::endl;
 }
 
@@ -48,11 +48,11 @@ void Schemerlamp::setDisco(bool d)
 {
     if (disco && !d) {
         json msg = {{"R", 255},{"G", 255},{"B", 255}};
-        sendMsg((msg.dump()+"\r").c_str());
+        socket.sendBuffer((msg.dump()+"\r").c_str());
         activityTimer = 0;
     } else if (!disco && d) {
         json msg = {{"R", 0},{"G", 0},{"B", 0}};
-        sendMsg((msg.dump()+"\r").c_str());
+        socket.sendBuffer((msg.dump()+"\r").c_str());
         discoTimer = std::clock();
         activityTimer = std::clock();
     }
@@ -64,28 +64,28 @@ void Schemerlamp::setKleur(int r, int g, int b)
     lamp.setKleur(r,g,b);
     json kleur = lamp.getKleur();
     kleur["cmd"] = "kleur";
-    sendMsg((kleur.dump()+"\r").c_str());
+    socket.sendBuffer((kleur.dump()+"\r").c_str());
 }
 
 void Schemerlamp::uit()
 {
     lamp.uit();
-    sendMsg((lamp.getKleur().dump()+"\r").c_str());
+    socket.sendBuffer((lamp.getKleur().dump()+"\r").c_str());
 }
 
 void Schemerlamp::aan()
 {
     lamp.aan();
-    sendMsg((lamp.getKleur().dump()+"\r").c_str());
+    socket.sendBuffer((lamp.getKleur().dump()+"\r").c_str());
 }
 
 bool Schemerlamp::updateStatus()
 {
     char buf[256] = {0};
-    sendMsg("getStatus\r");
-    if (!recvMsg(buf)) {
+    socket.sendBuffer("getStatus\r");
+    if (!socket.receiveBuffer(buf)) {
         std::cout << "Schemerlamp is #gone" << std::endl;
-        close(sock);
+        close(socket.getId());
         return false;
     }
 

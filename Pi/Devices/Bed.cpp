@@ -2,7 +2,7 @@
 
 using json = nlohmann::json;
 
-Bed::Bed(int n, Appartement* ap): Device(n, ap), state(UIT), druksensor(0), knop(0)
+Bed::Bed(int sockId, Appartement* ap) : Device(sockId, ap)
 {
     std::cout << "Bed aangemaakt" << std::endl;
 }
@@ -43,10 +43,11 @@ nlohmann::json Bed::getStatus()
 bool Bed::updateStatus()
 {
     char buffer[256] = {0};
-    sendMsg("getStatus\r");
-    if (!recvMsg(buffer)) {
-        std::cout << "Bed disconnected from socket: " << sock << std::endl;
-        close(sock);
+    int socketId = socket.getId();
+    socket.sendBuffer("getStatus\r");
+    if (!socket.receiveBuffer(buffer)) {
+        std::cout << "Bed disconnected from socket: " << socketId << std::endl;
+        close(socketId);
         return false;
     }
 
@@ -57,7 +58,7 @@ bool Bed::updateStatus()
         druksensor = j_bed.at("druksensor");
     }
     catch (json::exception& e) {
-        std::cout << "Parsing error at Bed on socket " << sock << std::endl;
+        std::cout << "Parsing error at Bed on socket " << socketId << std::endl;
     }
     return true;
 }
@@ -73,13 +74,13 @@ void Bed::ToggleLed(int i)
 
 void Bed::ledAan()
 {
-    sendMsg("lampAan\r");
+    socket.sendBuffer("lampAan\r");
     state = AAN;
 }
 
 void Bed::ledUit()
 {
-    sendMsg("lampUit\r");
+    socket.sendBuffer("lampUit\r");
     state = UIT;
 }
 

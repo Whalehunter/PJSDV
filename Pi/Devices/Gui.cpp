@@ -10,7 +10,7 @@
 
 using json = nlohmann::json;
 
-Gui::Gui(int n, Appartement* ap): Device(n, ap)
+Gui::Gui(int n, std::map<char, Device*>* devices): devices(devices), socket(n, 256)
 {
     std::cout << "gui aangemaakt" << std::endl;
 }
@@ -21,8 +21,9 @@ Gui::~Gui()
 void Gui::operator()()
 {
     char buffer[256] = {0};     // initializeer lege buffer
+    int socketId = socket.getId();
 
-    while (recvMsg(buffer)) {    // Voor elk ontvangen bericht
+    while (socket.receiveBuffer(buffer)) {    // Voor elk ontvangen bericht
         std::cout << buffer << std::endl;
         char *p = buffer;
 
@@ -31,13 +32,13 @@ void Gui::operator()()
         if (*p == '-') {
             json deviceStatus;
             while(*p)
-                if (a->devices.count(*(++p)))
-                    deviceStatus.push_back(a->devices.find(*p)->second->getStatus());
-            sendMsg(deviceStatus.dump().c_str());
+                if (devices->count(*(++p)))
+                    deviceStatus.push_back(devices->find(*p)->second->getStatus());
+            socket.sendBuffer(deviceStatus.dump().c_str());
         }
 
-        else if (*p == 'z' && a->devices.count(*p)) { // Stoel
-            Stoel * stoel = dynamic_cast<Stoel*>(a->devices.find(*p++)->second);
+        else if (*p == 'z' && devices->count(*p)) { // Stoel
+            Stoel * stoel = dynamic_cast<Stoel*>(devices->find(*p++)->second);
             if (*p == 't') {    // Trillen aan/uit
                 if (*(++p) == 'a') {
                     stoel->trilAan();
@@ -51,11 +52,11 @@ void Gui::operator()()
                     stoel->ledUit();
                 }
             }
-            sendMsg("{\"success\":true}");
+            socket.sendBuffer("{\"success\":true}");
         }
 
-        else if (*p == 'd' && a->devices.count(*p)) { // Deur
-            Deur * deur = dynamic_cast<Deur *>(a->devices.find(*p++)->second);
+        else if (*p == 'd' && devices->count(*p)) { // Deur
+            Deur * deur = dynamic_cast<Deur *>(devices->find(*p++)->second);
             if (*p == 'o') {    // openen
                 deur->openDeur();
             }
@@ -70,11 +71,11 @@ void Gui::operator()()
                 if (*(++p) == 'a') deur->buitenLampAan();
                 else deur->buitenLampUit();
             }
-            sendMsg("{\"success\":true}");
+            socket.sendBuffer("{\"success\":true}");
         }
 
-        else if (*p == 'f' && a->devices.count(*p)) { // Zuil
-            Zuil * zuil = dynamic_cast<Zuil *>(a->devices.find(*p++)->second);
+        else if (*p == 'f' && devices->count(*p)) { // Zuil
+            Zuil * zuil = dynamic_cast<Zuil *>(devices->find(*p++)->second);
             if (*p == 'n') {     // nood alarm aan/uit
                 if (*(++p) == 'a') zuil->noodAlarmAan();
                 else zuil->noodAlarmUit();
@@ -87,15 +88,15 @@ void Gui::operator()()
                 if (*(++p) == 'a') zuil->zoemerAan();
                 else zuil->zoemerUit();
             }
-            sendMsg("{\"success\":true}");
+            socket.sendBuffer("{\"success\":true}");
         }
 
-        else if (*p == 'k' && a->devices.count(*p)) { // Koelkast
-            dynamic_cast<Koelkast *>(a->devices.find(*p)->second)->disableKoelAlarm();
+        else if (*p == 'k' && devices->count(*p)) { // Koelkast
+            dynamic_cast<Koelkast *>(devices->find(*p)->second)->disableKoelAlarm();
         }
 
-        else if (*p == 'm' && a->devices.count(*p)) { // Muur
-            Muur * muur = dynamic_cast<Muur *>(a->devices.find(*p++)->second);
+        else if (*p == 'm' && devices->count(*p)) { // Muur
+            Muur * muur = dynamic_cast<Muur *>(devices->find(*p++)->second);
             if (*p == 'd') {    // disco aan/uit
                 if (*(++p) == 'a') muur->setDisco(true);
                 else muur->setDisco(false);
@@ -122,11 +123,11 @@ void Gui::operator()()
                     muur->setBrightness(false);
                 }
             }
-            sendMsg("{\"success\":true}");
+            socket.sendBuffer("{\"success\":true}");
         }
 
-        else if (*p == 's' && a->devices.count(*p)) { // schemerlamp
-            Schemerlamp * schemerlamp = dynamic_cast<Schemerlamp *>(a->devices.find(*p++)->second);
+        else if (*p == 's' && devices->count(*p)) { // schemerlamp
+            Schemerlamp * schemerlamp = dynamic_cast<Schemerlamp *>(devices->find(*p++)->second);
             if (*p == 'l') {    // lamp aan/uit
                 if (*(++p) == 'a') schemerlamp->aan();
                 else schemerlamp->uit();
@@ -135,25 +136,20 @@ void Gui::operator()()
                 if (*(++p) == 'a') schemerlamp->setDisco(true);
                 else schemerlamp->setDisco(false);
             }
-            sendMsg("{\"success\":true}");
+            socket.sendBuffer("{\"success\":true}");
         }
 
-        else if (*p == 'y' && a->devices.count(*p)) { // Bed
-            Bed * bed = dynamic_cast<Bed *>(a->devices.find(*p++)->second);
+        else if (*p == 'y' && devices->count(*p)) { // Bed
+            Bed * bed = dynamic_cast<Bed *>(devices->find(*p++)->second);
             if (*p == 'l') {    // lamp aan/uit
                 if (*(++p) == 'a') bed->ledAan();
                 else bed->ledUit();
             }
-            sendMsg("{\"success\":true}");
+            socket.sendBuffer("{\"success\":true}");
         }
 
         memset(buffer, 0, sizeof(buffer)); // reset buffer
     }
-    close(sock);
-    std::cout << "Connection closed on socket " << sock << std::endl;
-}
-
-json Gui::getStatus()
-{
-    return json::object();
+    close(socketId);
+    std::cout << "Connection closed on socket " << socketId << std::endl;
 }

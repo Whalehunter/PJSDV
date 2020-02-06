@@ -16,6 +16,7 @@ void Deur::operator()()
     /* used to check previous values to avoid jittery button presses */
     int knopBinnenPrev = 0;
     int knopBuitenPrev = 0;
+    int socketId = socket.getId();
 
     while (1) {
         /* get and store JSON values, break from while if Deur is #gone */
@@ -66,19 +67,19 @@ void Deur::operator()()
         knopBuitenPrev = knopBuiten;
     }
 
-    close(sock);
+    close(socketId);
 }
 
 void Deur::openDeur()
 {
-    sendMsg("deurOpen\r");
+    socket.sendBuffer("deurOpen\r");
 
     state = OPEN;
 }
 
 void Deur::sluitDeur()
 {
-    sendMsg("deurDicht\r");
+    socket.sendBuffer("deurDicht\r");
 
     state = DICHT;
 }
@@ -101,7 +102,7 @@ void Deur::deurBelUit()
 
 void Deur::buitenLampAan()
 {
-    sendMsg("buitenLampAan\r");
+    socket.sendBuffer("buitenLampAan\r");
 
     ledBuiten = 1;
     timer = std::clock();
@@ -109,7 +110,7 @@ void Deur::buitenLampAan()
 
 void Deur::buitenLampUit()
 {
-    sendMsg("buitenLampUit\r");
+    socket.sendBuffer("buitenLampUit\r");
 
     ledBuiten = 0;
     timer = 0;
@@ -118,7 +119,7 @@ void Deur::buitenLampUit()
 void Deur::binnenLampAan(bool force)
 {
     if (!noodKnipper || force) {
-        sendMsg("binnenLampAan\r");
+        socket.sendBuffer("binnenLampAan\r");
 
         ledBinnen = 1;
     }
@@ -127,7 +128,7 @@ void Deur::binnenLampAan(bool force)
 void Deur::binnenLampUit(bool force)
 {
     if (!noodKnipper || force) {
-        sendMsg("binnenLampUit\r");
+        socket.sendBuffer("binnenLampUit\r");
 
         ledBinnen = 0;
     }
@@ -148,12 +149,12 @@ void Deur::noodKnipperUit()
 bool Deur::updateStatus()
 {
     char buffer[256] = {0};
-
-    sendMsg("getStatus\r");
+    int socketId = socket.getId();
+    socket.sendBuffer("getStatus\r");
 
     /* send message and check if client is still connected */
-    if (!recvMsg(buffer)) {
-        std::cout << "Deur disconnected from socket: " << sock << std::endl;
+    if (!socket.receiveBuffer(buffer)) {
+        std::cout << "Deur disconnected from socket: " << socketId << std::endl;
         return false;
     }
 

@@ -1,16 +1,20 @@
 #ifndef GUI_HPP
 #define GUI_HPP
 
-#include "../Device.hpp"
+#include "../SocketConnection.hpp"
+#include <map>
 
-class Gui: public Device
+class Device;
+class Gui
 {
+    std::map<char, Device*>* devices;
+    SocketConnection socket;
+
 public:
-    Gui(int, Appartement*);     // Constructor
+    Gui(int, std::map<char, Device*>);     // Constructor
     ~Gui();                     // Destructor
 
     void operator()();          // Thread loop
-    nlohmann::json getStatus(); // Gedwongen implementatie (het is een "Device")
 };
 
 #endif

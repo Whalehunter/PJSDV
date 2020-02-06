@@ -73,18 +73,10 @@ void SocketServer::handshake(int sock)
         cout << "Error listening" << endl;
     }
 
-    /* if valid ID -> create device object in Appartement */
-    switch(response[0]) {
-        case 'd':
-        case 'f':
-        case 'k':
-        case 's':
-        case 'm':
-        case 'x':
-        case 'y':
-        case 'z': a.createDevice(sock, response[0]);
-                  strcpy(response, "OK\r");
-                  send(sock, response, strlen(response), 0); break;
-        default: cout << "Wrong ID on socket " << sock << endl; close(sock); break;
+    if (a.createDevice(sock, response[0])) {
+        strcpy(response, "OK\r");
+        send(sock, response, strlen(response), 0);
+    } else {
+        cout << "Wrong ID on socket " << sock << endl; close(sock);
     }
 }

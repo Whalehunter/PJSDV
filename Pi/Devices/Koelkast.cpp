@@ -13,14 +13,15 @@ Koelkast::~Koelkast()//Koelkast vernietigen
 void Koelkast::operator()()//Operatie functie van koelkast
 {
     char buffer[256] = {0};
+    int socketId = socket.getId();
 
     while (1) {
-        sendMsg("getStatus\r");//Stuur getStatus naar device
+        socket.sendBuffer("getStatus\r");//Stuur getStatus naar device
 
         memset(buffer, 0, sizeof(buffer));
-        if (!recvMsg(buffer)) {
-            std::cout << "Koelkast disconnected from socket: " << sock << std::endl;
-            close(sock);
+        if (!socket.receiveBuffer(buffer)) {
+            std::cout << "Koelkast disconnected from socket: " << socketId << std::endl;
+            close(socketId);
             return;
         }
 
@@ -55,8 +56,8 @@ void Koelkast::operator()()//Operatie functie van koelkast
         tempOut = calculateCelsius(NTC1);
         tempIn = calculateCelsius(NTC2);
     }
-    close(sock);
-    std::cout << "Connection closed on socket " << sock << std::endl;
+    close(socketId);
+    std::cout << "Connection closed on socket " << socketId << std::endl;
 }
 
 json Koelkast::getStatus()//GetStatus voor de GUI
@@ -73,23 +74,23 @@ void Koelkast::disableKoelAlarm()//Koelalarm uit
 
 void Koelkast::fanAan()//Fan aan
 {
-    sendMsg("fanAan\r");
+    socket.sendBuffer("fanAan\r");
 }
 
 void Koelkast::fanUit()//Fan uit
 {
-    sendMsg("fanUit\r");
+    socket.sendBuffer("fanUit\r");
 }
 
 void Koelkast::peltierAan()//Peltier aan
 {
-    sendMsg("peltierAan\r");
+    socket.sendBuffer("peltierAan\r");
     koelelement = 1;
 }
 
 void Koelkast::peltierUit()//Peltier uit
 {
-    sendMsg("peltierUit\r");
+    socket.sendBuffer("peltierUit\r");
     koelelement = 0;
 }
 

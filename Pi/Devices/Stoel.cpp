@@ -15,13 +15,14 @@ void Stoel::operator()()//Opereratie functie van stoel
 {
     char buffer[256] = {0};
     int drukknopPrev = 0;
+    int socketId = socket.getId();
 
     while (1) {
-        sendMsg("getStatus\r");//Stuur getStatus naar device
+        socket.sendBuffer("getStatus\r");//Stuur getStatus naar device
 
-        if (!recvMsg(buffer)) {
-            std::cout << "Stoel disconnected from socket: " << sock << std::endl;
-            close(sock);
+        if (!socket.receiveBuffer(buffer)) {
+            std::cout << "Stoel disconnected from socket: " << socketId << std::endl;
+            close(socketId);
             return;
         }
 
@@ -46,8 +47,8 @@ void Stoel::operator()()//Opereratie functie van stoel
 
         drukknopPrev = drukknop;
     }
-    close(sock);
-    std::cout << "Connection closed on socket " << sock << std::endl;
+    close(socketId);
+    std::cout << "Connection closed on socket " << socket.getId() << std::endl;
 }
 
 json Stoel::getStatus()//Get Status voor de GUI
@@ -69,13 +70,13 @@ void Stoel::toggleLed()//Leeslamp toggle
 
 void Stoel::ledAan()//Leeslamp Aan
 {
-    sendMsg("ledAan\r");
+    socket.sendBuffer("ledAan\r");
     ledStatus = 1;
 }
 
 void Stoel::ledUit()//Leeslamp Uit
 {
-    sendMsg("ledUit\r");
+    socket.sendBuffer("ledUit\r");
     ledStatus = 0;
 }
 
@@ -90,12 +91,12 @@ void Stoel::toggleTril()//Trill element toggle
 
 void Stoel::trilAan()//Trill element Aan
 {
-    sendMsg("trilAan\r");
+    socket.sendBuffer("trilAan\r");
     trilStatus = 1;
 }
 
 void Stoel::trilUit()//Trill element Uit
 {
-    sendMsg("trilUit\r");
+    socket.sendBuffer("trilUit\r");
     trilStatus = 0;
 }

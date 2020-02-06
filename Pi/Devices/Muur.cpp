@@ -41,7 +41,7 @@ void Muur::operator ()()
             }
         }
 
-        sendMsg(arduinoStatus().c_str());
+        socket.sendBuffer(arduinoStatus().c_str());
     }
 }
 
@@ -59,11 +59,12 @@ nlohmann::json Muur::getStatus()
 bool Muur::updateStatus()
 {
     char buffer[400] = {0};
-    sendMsg("getStatus\r");
+    socket.sendBuffer("getStatus\r");
 
-    if (!recvMsg(buffer)) {
-        std::cout << "Muur disconnected from socket: " << sock << std::endl;
-        close(sock);
+    if (!socket.receiveBuffer(buffer)) {
+        int socketId = socket.getId();
+        std::cout << "Muur disconnected from socket: " << socketId << std::endl;
+        close(socketId);
         return false;
     }
 
@@ -72,12 +73,12 @@ bool Muur::updateStatus()
         ldr = j_muur.at("ldr");
         pot = j_muur.at("pot");
         for (int i=0;i<LAMPEN;i++) {
-            int currentPot = lampen[i].rgb->polPot;
+            int currentPot = lampen[i].rgb->pot;
             if (currentPot - pot > 10 || currentPot - pot < -10)
                 lampen[i].setBrightness(pot/4);
             json o = j_muur.at(std::to_string(i));
             lampen[i].setKleur(o.at("r"), o.at("g"), o.at("b"));
-            lampen[i].rgb->polPot = pot;
+            lampen[i].rgb->pot = pot;
         }
 
     }
@@ -137,13 +138,13 @@ void Muur::setDisco(bool run)
         for (int i=0;i<LAMPEN;i++) {
             lampen[i].setKleur(255,255,255);
         }
-        sendMsg(arduinoStatus().c_str());
+        socket.sendBuffer(arduinoStatus().c_str());
     } else if (!disco && run) {
         for (int i=0;i<LAMPEN;i++) {
             lampen[i].setKleur(0,0,0);
         }
         discoTimer = std::clock();
-        sendMsg(arduinoStatus().c_str());
+        socket.sendBuffer(arduinoStatus().c_str());
     }
     disco = run;
 }

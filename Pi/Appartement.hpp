@@ -3,6 +3,8 @@
 
 #include <thread>
 #include <map>
+#include <vector>
+#include "Devices/Gui.hpp"
 
 class Device;
 class Appartement
@@ -11,17 +13,10 @@ public:
     Appartement();
     ~Appartement();
 
-    std::map<char, Device*> devices; // map met device pointers en ID
-    Device* deur{};
-    Device* gui{};
-    Device* bed{};
-    Device* stoel{};
-    Device* zuil{};
-    Device* schemerlamp{};
-    Device* muur{};
-    Device* koelkast{};
+    std::map<char, Device*> devices;
+    std::vector<Gui*> guis;
 
-    void createDevice(int, char);
+    bool createDevice(int, char);
 };
 
 #endif

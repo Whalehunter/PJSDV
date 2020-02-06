@@ -14,14 +14,15 @@ Zuil::~Zuil()
 void Zuil::operator()()
 {
     char buffer[256] = {0};
+    int socketId = socket.getId();
 
     while (1) {
-        sendMsg("getStatus\r");
+        socket.sendBuffer("getStatus\r");
 
         /* receive msg and check if device is still connected to socket */
-        if(!recvMsg(buffer)) {
-            std::cout << "Zuil disconnected from socket: " << sock << std::endl;
-            close(sock);
+        if(!socket.receiveBuffer(buffer)) {
+            std::cout << "Zuil disconnected from socket: " << socketId << std::endl;
+            close(socketId);
             return;
         }
 
@@ -44,7 +45,7 @@ void Zuil::operator()()
         }
     }
 
-    close(sock);
+    close(socketId);
 }
 
 void Zuil::noodAlarmAan()
@@ -97,13 +98,13 @@ void Zuil::deurBelUit()
 
 void Zuil::zoemerAan()
 {
-    sendMsg("zoemerAan\r");
+    socket.sendBuffer("zoemerAan\r");
     zoemer = 1;
 }
 
 void Zuil::zoemerUit()
 {
-    sendMsg("zoemerUit\r");
+    socket.sendBuffer("zoemerUit\r");
     zoemer = 0;
 }
 
