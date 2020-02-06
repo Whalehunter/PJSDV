@@ -13,19 +13,29 @@ Device::Device(int n, Appartement* ap): socket(SocketConnection(n, 255)), a(ap),
 Device::~Device()
 {}
 
+/* compare timer with set time, return true/false depending on whether
+ * it has passed the configured time limit
+ */
 bool Device::compareTime(std::clock_t timer, double timeLimit)
 {
-    /* compare timer with set time, return true/false depending on whether
-     * it has passed the configured time limit
-     */
     return (((std::clock() - timer) / (double) CLOCKS_PER_SEC) >= timeLimit);
 }
 
+/**
+ * Sensor waarde ophalen
+ *
+ * Return integer: De sensor waarde
+ */
 int Device::getSensor()
 {
     return sensorValue;
 }
 
+/**
+ * Knop waarde ophalen
+ *
+ * Return integer: De knop waarde
+ */
 int Device::getKnop()
 {
     return knopValue;

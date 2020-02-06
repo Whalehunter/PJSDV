@@ -70,7 +70,7 @@ bool Muur::updateStatus()
         close(socketId);
         return false;
     }
-
+    // comment deze shit
     try {
         auto j_muur = json::parse(buffer);
         ldr = j_muur.at("ldr");
@@ -98,7 +98,11 @@ bool Muur::updateStatus()
 
     return true;
 }
-
+/**
+ * Status ophalen om terug te sturen naar WEMOS
+ *
+ * return string: De string om op te sturen naar de WEMOS
+ */
 std::string Muur::arduinoStatus()
 {
     json msg = json::object();

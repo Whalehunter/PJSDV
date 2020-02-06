@@ -18,7 +18,6 @@ protected:
     int knopValue;
     int sensorValue;
     std::clock_t timer;
-    std::mutex mtx;
 
 public:
     Device(int, Appartement*);

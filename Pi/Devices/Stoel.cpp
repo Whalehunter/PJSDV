@@ -10,7 +10,7 @@ Stoel::Stoel(int n, Appartement* ap): Device(n, ap)//Stoel Aanmaken
 Stoel::~Stoel()//Stoel vernietigen
 {}
 
-void Stoel::operator()()//Opereratie functie van stoel
+void Stoel::operator()()//Operrerererererererereeratie functie van stoel
 {
     char buffer[256] = {0};
     int knopPrev = 0;

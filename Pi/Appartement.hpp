@@ -7,6 +7,7 @@
 #include "Devices/Gui.hpp"
 #include <mutex>
 
+// forward decleration
 class Device;
 class Appartement
 {

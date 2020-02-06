@@ -11,8 +11,8 @@
 
 class SocketConnection
 {
-    int sockId;
-    int buflen;
+    int sockId;                 // Socket ID
+    int buflen;                 // Buffer length om mee te sturen over socket
 public:
     SocketConnection(int, int);
     ~SocketConnection();

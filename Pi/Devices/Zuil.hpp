@@ -6,9 +6,9 @@
 class Zuil: public Device
 {
     private:
-        bool nood;
-        bool brand;
-        bool zoemer;
+        bool nood;              // Nood status
+        bool brand;             // Brand status
+        bool zoemer;            // Zoemer status
 
 	std::mutex deurbel_mutex;	// beschermt de deurbel functie zodat maar 1 thread op een gegeven moment de variables kan aanpassen
 	std::mutex noodalarm_mutex;	// beschermt de noodalarm functie

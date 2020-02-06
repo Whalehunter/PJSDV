@@ -47,6 +47,11 @@ nlohmann::json Bed::getStatus()
     return bedData;
 }
 
+/**
+ * Variabelen in de class updaten vanuit arduino
+ *
+ * return bool: of de update is gelukt
+ */
 bool Bed::updateStatus()
 {
     char buffer[256] = {0};

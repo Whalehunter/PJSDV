@@ -63,6 +63,12 @@ void SocketServer::acceptConnection()
     }
 }
 
+/**
+ * Identificeer device op socket verbinding
+ * aan de hand van
+ *
+ * param sock: Socket Id
+ */
 void SocketServer::handshake(int sock)
 {
     char response[100];

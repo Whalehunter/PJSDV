@@ -66,6 +66,15 @@ void Schemerlamp::setDisco(bool d)
     /* mutex is automatically unlocked upon leaving its scope */
 }
 
+/**
+ * Kleur updaten van RGB lED
+ *
+ * param r: Rode kleur
+ * param g: Groene kleur
+ * param b: Blauwe kleur
+ *
+ * return void
+ */
 void Schemerlamp::setKleur(int r, int g, int b)
 {
     /* lock mutex */

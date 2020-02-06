@@ -33,7 +33,6 @@ void Gui::operator()()
         /* loop through string and call getStatus on found devices */
         /* append getStatus() and send to GUI as json */
         if (*p == '-') {
-	    /* MUTEX LOCK REQ */
             json deviceStatus;
             while(*p)
                 if (devices->count(*(++p)))

@@ -25,7 +25,7 @@ class SocketServer
         int sockfd;
         struct sockaddr_in server_addr;
         void handshake(int);
-        unsigned int socksize;
+        unsigned int socksize;  // Socket buffer size
 };
 
 #endif

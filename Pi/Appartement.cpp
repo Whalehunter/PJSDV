@@ -20,6 +20,14 @@ Appartement::~Appartement()
     }
 }
 
+/**
+ * Maak nieuwe device aan op basis van
+ *
+ * param sock: Socket ID
+ * param id:   Identificatie van de device
+ *
+ * Return Boolean: Is het aanmaken van de device gelukt?
+ */
 bool Appartement::createDevice(int sock, char id)
 {
     Device * ob = NULL;
@@ -40,6 +48,14 @@ bool Appartement::createDevice(int sock, char id)
     }
 
     if (ob != NULL) {
+        /**
+         * Delete bestaande devices als een andere socket zich aangeeft als de device
+         */
+        auto search = devices.find(id);
+        if (search != devices.end()) {
+            delete search->second;
+            devices.erase(search);
+        }
 	/* insert device into devices map, id(char) + pointer to object */
         devices.insert(std::pair<char, Device*>(id, ob));
 	/* pass pointer to function and object to thread */
