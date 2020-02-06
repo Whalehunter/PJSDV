@@ -19,53 +19,53 @@ void Deur::operator()()
     int socketId = socket.getId();
 
     while (1) {
-	/* get and store JSON values, break from while if Deur is #gone */
-	if (!updateStatus()) break;
+        /* get and store JSON values, break from while if Deur is #gone */
+        if (!updateStatus()) break;
 
-	/* state machine, if state = closed && knop == pressed, open door, etc  */
-	switch (state) {
-	    case OPEN:
-		if (knopBinnen == 2 && knopBinnenPrev != knopBinnen) {
-		    setDeur("dicht");
-		}
-		break;
-	    case DICHT:
-		if (knopBinnen == 2 && knopBinnenPrev != knopBinnen) {
-		    setDeur("open");
-		}
-		break;
-	}
+        /* state machine, if state = closed && knop == pressed, open door, etc  */
+        switch (state) {
+            case OPEN:
+                if (knopBinnen == 2 && knopBinnenPrev != knopBinnen) {
+                    setDeur("dicht");
+                }
+                break;
+            case DICHT:
+                if (knopBinnen == 2 && knopBinnenPrev != knopBinnen) {
+                    setDeur("open");
+                }
+                break;
+        }
 
-	/* operations based on checks, check doorbell */
-	if (knopBuiten && knopBuitenPrev != knopBuiten) {
-	    setDeurBel(true);
-	    setBuitenLamp(true);
-	}
-	else if (!knopBuiten && knopBuitenPrev != knopBuiten) {
-	    setDeurBel(false);
-	}
+        /* operations based on checks, check doorbell */
+        if (knopBuiten && knopBuitenPrev != knopBuiten) {
+            setDeurBel(true);
+            setBuitenLamp(true);
+        }
+        else if (!knopBuiten && knopBuitenPrev != knopBuiten) {
+            setDeurBel(false);
+        }
 
-	/* turn external led off after 30 seconds */
-	if (ledBuiten && compareTime(timer, 30.0)) {
-	    setBuitenLamp(false);
-	}
+        /* turn external led off after 30 seconds */
+        if (ledBuiten && compareTime(timer, 30.0)) {
+            setBuitenLamp(false);
+        }
 
-	/* if fire alarm, blink internal led (1s interval) */
-	if (noodKnipper && compareTime(knipperTimer, 1.0)) {
-	    if (ledBinnen) {
-		/* setBinnenLamp: first parameter = on/off, second is to force priority */
-		setBinnenLamp(false, true);
-		knipperTimer = std::clock();
-	    }
-	    else if (!ledBinnen) {
-		setBinnenLamp(true, true);
-		knipperTimer = std::clock();
-	    }
-	}
+        /* if fire alarm, blink internal led (1s interval) */
+        if (noodKnipper && compareTime(knipperTimer, 1.0)) {
+            if (ledBinnen) {
+                /* setBinnenLamp: first parameter = on/off, second is to force priority */
+                setBinnenLamp(false, true);
+                knipperTimer = std::clock();
+            }
+            else if (!ledBinnen) {
+                setBinnenLamp(true, true);
+                knipperTimer = std::clock();
+            }
+        }
 
-	/* store old value in Prev variables */
-	knopBinnenPrev = knopBinnen;
-	knopBuitenPrev = knopBuiten;
+        /* store old value in Prev variables */
+        knopBinnenPrev = knopBinnen;
+        knopBuitenPrev = knopBuiten;
     }
     /* close connection when dropping out of while and before exiting the thread */
     close(socketId);
@@ -99,7 +99,7 @@ void Deur::setBuitenLamp(bool x)
     /* mutual exclusivity in critical section is guaranteed */
     const std::lock_guard<std::mutex>lock (buitenlamp_mutex);
     if (x) {
-	/* buitenLamp pff and reset timer */
+        /* buitenLamp pff and reset timer */
         socket.sendBuffer("buitenLampAan\r");
         timer = std::clock();
     } else {
@@ -113,7 +113,7 @@ void Deur::setBinnenLamp(bool x, bool force)
 {
     /* light can only be accessed if the fire alarm isn't on, fire alarm uses force */
     if (!noodKnipper || force) {
-	/* mutex lock to guard critical data */
+        /* mutex lock to guard critical data */
         const std::lock_guard<std::mutex>lock (binnenlamp_mutex);
         if (x) {
             socket.sendBuffer("binnenLampAan\r");
@@ -142,7 +142,7 @@ bool Deur::updateStatus()
     int socketId = socket.getId();
     socket.sendBuffer("getStatus\r");
 
-    /* send message and check if client is still connected */
+    /* check if client is still connected */
     if (!socket.receiveBuffer(buffer)) {
         std::cout << "Deur disconnected from socket: " << socketId << std::endl;
         return false;

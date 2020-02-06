@@ -25,9 +25,11 @@ void Koelkast::operator()()//Operatie functie van koelkast
             return;
         }
 
+        /* try and catch exceptions */
         try {
             auto j_koelkast = json::parse(buffer);
 
+            /* store values extracted from json */
             koelkastDeur = j_koelkast.at("deur");
             NTC1 = j_koelkast.at("NTC1");
             NTC2 = j_koelkast.at("NTC2");
@@ -44,7 +46,7 @@ void Koelkast::operator()()//Operatie functie van koelkast
             setPeltier(false);
         } else if (!koelkastDeur && compareTime(timer, 5.0)) {
             setKoelAlarm(true);
-	    setFan(false);
+            setFan(false);
             setPeltier(false);
         } else {
             timer = std::clock();
@@ -54,12 +56,14 @@ void Koelkast::operator()()//Operatie functie van koelkast
         tempOut = calculateCelsius(NTC1);
         tempIn = calculateCelsius(NTC2);
     }
+    /* close socket connection before the thread exits the function */
     close(socketId);
     std::cout << "Connection closed on socket " << socketId << std::endl;
 }
 
 json Koelkast::getStatus()//GetStatus voor de GUI
 {
+    /* store local variables in json object and return it */
     json koelk;
     koelk["Koelkast"] = {{"Deur", koelkastDeur}, {"Koelelement", koelelement}, {"m1", tempOut}, {"m2", tempIn}, {"Fan", fan}, {"Alarm", koelAlarm}};
     return koelk;
@@ -67,28 +71,31 @@ json Koelkast::getStatus()//GetStatus voor de GUI
 
 void Koelkast::setKoelAlarm(bool x)//Koelalarm uit
 {
+    /* mutex lock */
     const std::lock_guard<std::mutex>lock (koel_mutex);
     koelAlarm = x;
 }
 
 void Koelkast::setFan(bool x) // Fan aan/uit
 {
+    /* mutex lock */
     const std::lock_guard<std::mutex> lock (fan_mutex);
     if (x) {
         socket.sendBuffer("fanAan\r");
     } else {
-	socket.sendBuffer("fanUit\r");
+        socket.sendBuffer("fanUit\r");
     }
     fan = x;
 }
 
 void Koelkast::setPeltier(bool x)//Peltier aan
 {
+    /* mutex lock */
     const std::lock_guard<std::mutex> lock (peltier_mutex);
     if (x) {
-	socket.sendBuffer("peltierAan\r");
+        socket.sendBuffer("peltierAan\r");
     } else {
-	socket.sendBuffer("peltierUit\r");
+        socket.sendBuffer("peltierUit\r");
     }
     koelelement = x;
 }

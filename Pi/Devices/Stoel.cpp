@@ -10,7 +10,7 @@ Stoel::Stoel(int n, Appartement* ap): Device(n, ap)//Stoel Aanmaken
 Stoel::~Stoel()//Stoel vernietigen
 {}
 
-void Stoel::operator()()//Operrerererererererereeratie functie van stoel
+void Stoel::operator()()//Operatie functie van stoel
 {
     char buffer[256] = {0};
     int knopPrev = 0;
@@ -19,12 +19,14 @@ void Stoel::operator()()//Operrerererererererereeratie functie van stoel
     while (1) {
         socket.sendBuffer("getStatus\r");//Stuur getStatus naar device
 
+        /* receive message and check if device is still connected, if disconnected -> close socket */
         if (!socket.receiveBuffer(buffer)) {
             std::cout << "Stoel disconnected from socket: " << socketId << std::endl;
             close(socketId);
             return;
         }
 
+        /* try and catch exceptions, store json values in local variables */
         try {
             auto j_stoel = json::parse(buffer);
             knopValue = j_stoel.at("drukknop");
@@ -38,7 +40,7 @@ void Stoel::operator()()//Operrerererererererereeratie functie van stoel
             toggleLed();
         }
 
-        if (!sensorValue && trilStatus) {
+        if (!sensorValue && trilStatus) { // trilfunctie uit als deze aan staat en er wordt niks meer gemeten
             setTril(false);
         } else if (knopValue && !knopPrev && sensorValue) {
             toggleTril();
@@ -46,6 +48,7 @@ void Stoel::operator()()//Operrerererererererereeratie functie van stoel
 
         knopPrev = knopValue;
     }
+    /* close socket before exiting the thread */
     close(socketId);
     std::cout << "Connection closed on socket " << socket.getId() << std::endl;
 }
@@ -65,22 +68,24 @@ void Stoel::toggleLed() // Leeslamp toggle
 
 void Stoel::setLed(bool x) // Leeslamp aan/uit
 {
+    /* lock the mutex to ensure mutual exclusivity */
     const std::lock_guard<std::mutex> lock (led_mutex);
     if (x) {
-	socket.sendBuffer("ledAan\r");
+        socket.sendBuffer("ledAan\r");
     } else {
-	socket.sendBuffer("ledUit\r");
+        socket.sendBuffer("ledUit\r");
     }
     ledStatus = x;
 }
 
 void Stoel::setTril(bool x) // Tril modus aan/uit
 {
+    /* mutex lock */
     const std::lock_guard<std::mutex> lock (tril_mutex);
     if (x) {
-	socket.sendBuffer("trilAan\r");
+        socket.sendBuffer("trilAan\r");
     } else {
-	socket.sendBuffer("trilUit\r");
+        socket.sendBuffer("trilUit\r");
     }
     trilStatus = x;
 }

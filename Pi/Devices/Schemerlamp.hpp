@@ -12,9 +12,9 @@ class Schemerlamp: public Device
     bool disco;                 // Disco status
     clock_t discoTimer;         // Disco timer waarde
     clock_t activityTimer;      // Activity timer waarde
-    std::mutex disco_mutex;	// Beschermt de setDisco functie tegen thread collisions
-    std::mutex kleur_mutex;	// Beschermt de setKleur functie
-    std::mutex lamp_mutex;	// Beschermt de setLamp functie
+    std::mutex disco_mutex;	    // Beschermt de setDisco functie tegen gelijktijdige mutatie van variabelen door multiple threads
+    std::mutex kleur_mutex;	    // Beschermt de setKleur functie
+    std::mutex lamp_mutex;	    // Beschermt de setLamp functie
 
 public:
     Schemerlamp(int, Appartement*); // Constructor
@@ -24,7 +24,7 @@ public:
     void setKleur(int,int,int); // Kleur setten voor lamp
     bool isDisco();             // Discostand status ophalen
     void setDisco(bool);        // Discostand aan/uit zetten
-    void setLamp(bool);		// Lamp aan/uit zetten
+    void setLamp(bool);		    // Lamp aan/uit zetten
 
     bool updateStatus();        // WEMOS import status update
     nlohmann::json getStatus(); // JSON object met schemerlamp waarden

@@ -23,7 +23,7 @@ class SocketServer
 
         int csock;
         int sockfd;
-        struct sockaddr_in server_addr;
+        struct sockaddr_in server_addr; // Struct waar addressen in gestored worden
         void handshake(int);
         unsigned int socksize;  // Socket buffer size
 };

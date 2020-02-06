@@ -16,7 +16,7 @@ class Muur: public Device
     bool disco;                 // Discostand aan/uit
     clock_t discoTimer;         // Discotimer (halve seconde schakelen per licht)
     
-    std::mutex RGB_mutex;	// Beschermt de RGB functie tegen thread collisions
+    std::mutex RGB_mutex;	// Beschermt de RGB functie tegen gelijktijdige mutatie van variables door multiple threads
     std::mutex disco_mutex;	// Beschermt de disco functie
     std::mutex LCD_mutex;	// Beschermt de LCD functie
     std::mutex brightness_mutex;// Beschermt de brightness functie

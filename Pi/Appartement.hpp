@@ -18,7 +18,7 @@ public:
     std::map<char, Device*> devices;
     std::vector<Gui*> guis;
 
-    bool createDevice(int, char);
+    bool createDevice(int, char); // maakt objecten aan voor de connecting devices
 };
 
 #endif

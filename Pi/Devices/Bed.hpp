@@ -16,7 +16,7 @@ public:
 private:
     enum bedStatus {UIT, AAN};  // lamp waarden
 
-    std::mutex led_mutex;	// beschermt de setLed functie tegen thread collision
+    std::mutex led_mutex;	// beschermt de setLed functie tegen gelijktijdige mutatie van variables
     Bed::bedStatus state;       // Of de lamp aan of uit is
 };
 

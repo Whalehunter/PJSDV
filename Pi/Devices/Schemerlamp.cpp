@@ -1,6 +1,5 @@
 #include "Schemerlamp.hpp"
 #include <ctime>
-#define COCKS_PER_SEC CLOCKS_PER_SEC
 
 using json = nlohmann::json;
 
@@ -16,9 +15,10 @@ Schemerlamp::~Schemerlamp()
 void Schemerlamp::operator()()
 {
     while (1) {
+        /* update status and check if device is still connected, break if disconnected */
         if (!updateStatus()) break;
 
-	/* verander disco kleurtjes om de 0.5s */
+        /* verander disco kleurtjes om de 0.5s */
         if (isDisco() && compareTime(discoTimer, 0.5)) {
             json msg = lamp.getKleur(isDisco());
             socket.sendBuffer((msg.dump()+"\r").c_str());
@@ -90,9 +90,9 @@ void Schemerlamp::setLamp(bool x)
     /* lock mutex */
     const std::lock_guard<std::mutex> lock (lamp_mutex);
     if (x) {
-	lamp.aan();
+        lamp.aan();
     } else {
-	lamp.uit();
+        lamp.uit();
     }
     socket.sendBuffer((lamp.getKleur().dump()+"\r").c_str());
 }
@@ -108,12 +108,12 @@ bool Schemerlamp::updateStatus()
     }
 
     try {
-	auto jSL = json::parse(buf);
-	lamp.setKleur(jSL.at("rood"), jSL.at("groen"), jSL.at("blauw"));
-	beweging = jSL.at("beweging");
+        auto jSL = json::parse(buf);
+        lamp.setKleur(jSL.at("rood"), jSL.at("groen"), jSL.at("blauw"));
+        beweging = jSL.at("beweging");
     }
     catch(json::exception& e) {
-	std::cout << "Exception error at Deur: " << e.what() << std::endl;
+        std::cout << "Exception error at Deur: " << e.what() << std::endl;
     }
     return true;
 }

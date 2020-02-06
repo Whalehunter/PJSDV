@@ -14,6 +14,9 @@ Appartement::Appartement()
 
 Appartement::~Appartement()
 {
+    /*
+     * Iterate door map met devices en delete de inhoud
+     */
     std::map<char, Device*>::iterator deviceIterator = devices.begin();
     while (deviceIterator != devices.end()) {
         delete deviceIterator->second;
@@ -32,19 +35,19 @@ bool Appartement::createDevice(int sock, char id)
 {
     Device * ob = NULL;
     switch (id) {
-    case 'd': ob = new Deur(sock, this); break;
-    case 'f': ob = new Zuil(sock, this); break;
-    case 'm': ob = new Muur(sock, this); break;
-    case 'k': ob = new Koelkast(sock, this); break;
-    case 's': ob = new Schemerlamp(sock, this); break;
-    case 'y': ob = new Bed(sock, this); break;
-    case 'z': ob = new Stoel(sock, this); break;
-    case 'x':
-        Gui * gui = new Gui(sock, devices);
-        guis.push_back(gui);
-        std::thread guiThread(&Gui::operator(), gui);
-        guiThread.detach();
-        return true;
+        case 'd': ob = new Deur(sock, this); break;
+        case 'f': ob = new Zuil(sock, this); break;
+        case 'm': ob = new Muur(sock, this); break;
+        case 'k': ob = new Koelkast(sock, this); break;
+        case 's': ob = new Schemerlamp(sock, this); break;
+        case 'y': ob = new Bed(sock, this); break;
+        case 'z': ob = new Stoel(sock, this); break;
+        case 'x':
+                  Gui * gui = new Gui(sock, devices);
+                  guis.push_back(gui);
+                  std::thread guiThread(&Gui::operator(), gui);
+                  guiThread.detach();
+                  return true;
     }
 
     if (ob != NULL) {
@@ -56,11 +59,11 @@ bool Appartement::createDevice(int sock, char id)
             delete search->second;
             devices.erase(search);
         }
-	/* insert device into devices map, id(char) + pointer to object */
+        /* insert device into devices map, id(char) + pointer to object */
         devices.insert(std::pair<char, Device*>(id, ob));
-	/* pass pointer to function and object to thread */
+        /* pass pointer to function and object to thread */
         std::thread obThread(&Device::operator(), ob);
-	/* detach so that it may operate independently of other threads */
+        /* detach so that it may operate independently of other threads */
         obThread.detach();
         return true;
     }
