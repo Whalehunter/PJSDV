@@ -10,11 +10,10 @@ Stoel::Stoel(int n, Appartement* ap): Device(n, ap)//Stoel Aanmaken
 Stoel::~Stoel()//Stoel vernietigen
 {}
 
-//Overloaded functies moeten met 2 haakjes zodat je er zoveel als je wilt over kan sturen.
 void Stoel::operator()()//Opereratie functie van stoel
 {
     char buffer[256] = {0};
-    int drukknopPrev = 0;
+    int knopPrev = 0;
 
     while (1) {
         sendMsg("getStatus\r");//Stuur getStatus naar device
@@ -27,75 +26,65 @@ void Stoel::operator()()//Opereratie functie van stoel
 
         try {
             auto j_stoel = json::parse(buffer);
-            drukknop = j_stoel.at("drukknop");
-            drukSensor = j_stoel.at("drukSensor");
+            knopValue = j_stoel.at("drukknop");
+            sensorValue = j_stoel.at("drukSensor");
         }
         catch (json::exception& e) {
             std::cout << e.what() << std::endl;
         }
 
-        if (drukknop && !drukknopPrev) {
+        if (knopValue && !knopPrev) {
             toggleLed();
         }
 
-        if (!drukSensor && trilStatus) {
-            trilUit();
-        } else if (drukknop && !drukknopPrev && drukSensor) {
+        if (!sensorValue && trilStatus) {
+            setTril(false);
+        } else if (knopValue && !knopPrev && sensorValue) {
             toggleTril();
         }
 
-        drukknopPrev = drukknop;
+        knopPrev = knopValue;
     }
     close(sock);
     std::cout << "Connection closed on socket " << sock << std::endl;
 }
 
-json Stoel::getStatus()//Get Status voor de GUI
+json Stoel::getStatus() //Get Status voor de GUI
 {
     json stoel;
-    stoel["Stoel"] = {{"Knop", drukknop}, {"Lamp", ledStatus}, {"Massage", trilStatus}, {"Drukplaat", drukSensor}};
+    stoel["Stoel"] = {{"Knop", knopValue}, {"Lamp", ledStatus}, {"Massage", trilStatus}, {"Drukplaat", sensorValue}};
     return stoel;
 }
 
-void Stoel::toggleLed()//Leeslamp toggle
+void Stoel::toggleLed() // Leeslamp toggle
 {
-    if (ledStatus) {
-        Stoel::ledUit();
+    setLed(!ledStatus);
+}
+
+
+void Stoel::setLed(bool x) // Leeslamp aan/uit
+{
+    const std::lock_guard<std::mutex> lock (led_mutex);
+    if (x) {
+	sendMsg("ledAan\r");
     } else {
-        Stoel::ledAan();
+	sendMsg("ledUit\r");
     }
+    ledStatus = x;
 }
 
-
-void Stoel::ledAan()//Leeslamp Aan
+void Stoel::setTril(bool x) // Tril modus aan/uit
 {
-    sendMsg("ledAan\r");
-    ledStatus = 1;
-}
-
-void Stoel::ledUit()//Leeslamp Uit
-{
-    sendMsg("ledUit\r");
-    ledStatus = 0;
-}
-
-void Stoel::toggleTril()//Trill element toggle
-{
-    if (trilStatus) {
-        Stoel::trilUit();
+    const std::lock_guard<std::mutex> lock (tril_mutex);
+    if (x) {
+	sendMsg("trilAan\r");
     } else {
-        Stoel::trilAan();
+	sendMsg("trilUit\r");
     }
+    trilStatus = x;
 }
 
-void Stoel::trilAan()//Trill element Aan
+void Stoel::toggleTril() // Toggle tril modus
 {
-    sendMsg("trilAan\r");
-    trilStatus = 1;
-}
-
-void Stoel::trilUit()//Trill element Uit
-{
-    sendMsg("trilUit\r");
-    trilStatus = 0;
+    setLed(!trilStatus);
 }

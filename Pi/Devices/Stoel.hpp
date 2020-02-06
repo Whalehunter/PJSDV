@@ -6,22 +6,21 @@
 
 class Stoel: public Device
 {
-    int drukknop{};             // Drukknop status
-    int drukSensor{};           // Zit sensor status
     int ledStatus{};            // Lamp status
     int trilStatus{};           // Tristand status
+
+    std::mutex tril_mutex;	// Beschermt de trilfunctie
+    std::mutex led_mutex;	// Beschermt de setLed functie
 
 public:
     Stoel(int, Appartement*); // Constructor
     ~Stoel();                 // Destructor
     void operator()();        // Thread loop
     nlohmann::json getStatus(); // JSON object status naar GUI
-    void ledAan();              // Lamp aan
-    void ledUit();              // Lamp uit
-    void trilAan();             // Trilstand aan
-    void trilUit();             // Trilstand uit
-    void toggleLed();           // Toggle lamp
-    void toggleTril();          // Toggle trilstand
+    void setLed(bool);		// Led aan/uit
+    void toggleLed();           // Toggle led
+    void setTril(bool);		// Trilfunctie aan/uit
+    void toggleTril();		// toggle trilfunctie
 };
 
 #endif
