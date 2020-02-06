@@ -43,8 +43,8 @@ void Koelkast::operator()()//Operatie functie van koelkast
             setPeltier(false);
         }
         else if ((koelkastDeur == 0) && (((std::clock() - timer) / (double) CLOCKS_PER_SEC) >= 5.0)) {
-            koelAlarm = 1;
-            setFan(false);
+            setKoelAlarm(true);
+	    setFan(false);
             setPeltier(false);
         }
         else {
@@ -66,9 +66,10 @@ json Koelkast::getStatus()//GetStatus voor de GUI
     return koelk;
 }
 
-void Koelkast::disableKoelAlarm()//Koelalarm uit
+void Koelkast::setKoelAlarm(bool x)//Koelalarm uit
 {
-    koelAlarm = 0;
+    const std::lock_guard<std::mutex>lock (koel_mutex);
+    koelAlarm = x;
 }
 
 void Koelkast::setFan(bool x) // Fan aan/uit
