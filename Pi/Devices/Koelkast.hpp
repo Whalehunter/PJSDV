@@ -10,7 +10,7 @@ class Koelkast: public Device {
     bool fan{false};                  // Waaier aan/uit
     float NTC1{};               // Temperatuursensor buiten
     float NTC2{};               // Temperatuursensor binnen
-    bool koelAlarm{};            // Aan als deur te lang open staat
+    bool koelAlarm{false};            // Aan als deur te lang open staat
     float tempOut{};            // Omgerekende temperatuur buiten
     float tempIn{};             // Omgerekende temperatuur binnen
     bool koelelement{false};          // Peltier element aan/uit
